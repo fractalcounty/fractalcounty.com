@@ -1,0 +1,125 @@
+---
+import { getCollection } from 'astro:content';
+import Container from '@components/Container.astro';
+import PageLayout from '@layouts/PageLayout.astro';
+import ArrowCard from '@components/ArrowCard.astro';
+import Link from '@components/Link.astro';
+// import { dateRange } from '@lib/utils';
+import { SITE, HOME, LINKS_FOOTER } from '@consts';
+
+const blogPosts = (await getCollection('blog'))
+  .filter(post => !post.data.draft);
+
+const projectsInBlog = (await getCollection('projects'))
+  .filter(project => !project.data.draft && project.data.showInBlog);
+
+const allBlogPosts = [...blogPosts, ...projectsInBlog]
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE);
+
+const projects = (await getCollection('projects'))
+  .filter(project => !project.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, SITE.NUM_PROJECTS_ON_HOMEPAGE);
+---
+
+<PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
+  <Container>
+    <h4 class="animate font-semibold uppercase">
+      Hello, I'm Chip
+    </h4>
+    <div class="space-y-16">
+      <section>
+        <article class="space-y-4">
+          <p class="animate">
+            I make stuff on the internet. Usually silly stuff, sometimes artistic stuff, and very rarely useful stuff.
+            This is my website where I dump thoughts and blog posts that can't fit on my <Link href="https://x.com/fractalcounty" aria-label="X" external> Twitter </Link>,
+            as well as various projects I'm working on and other miscellaneous things that don't fit elsewhere.
+          </p>
+          <p class="animate">
+            This website is still a work-in-progress. Once I'm done filling it with what I currently have, I probably won't post on here all too often. Regardless, I'll try to keep it updated with whatever I'm working on at the time.
+            If anything, it's a decent archive.
+          </p>
+          <p class="animate">
+            I made this website using the
+            <Link href="https://astro.build/" aria-label="Astro on GitHub" external>
+              Astro
+            </Link>
+            framework, with some help from 
+            <Link href="https://astro.build/integrations/tailwind/" aria-label="Tailwind on GitHub" external>
+              TailwindCSS
+            </Link>
+            and 
+            <Link href="https://daisyui.com/" aria-label="DaisyUI" external>
+              DaisyUI
+            </Link>
+            for styling and UI.
+          </p>
+        </article>
+      </section>
+
+      <section class="animate space-y-6">
+        <div class="flex flex-wrap gap-y-2 items-center justify-between">
+          <h5 class="font-bold uppercase">
+            Latest posts
+          </h5>
+          <Link href="/blog">
+            See all posts
+          </Link>
+        </div>
+        <ul class="flex flex-col gap-4">
+          {allBlogPosts.map(post => (
+            <li>
+              <ArrowCard entry={post} context="blog" />
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="animate space-y-6">
+        <div class="flex flex-wrap gap-y-2 items-center justify-between">
+          <h5 class="font-bold uppercase">
+            Recent projects
+          </h5>
+          <Link href="/projects">
+            See all projects
+          </Link>
+        </div>
+        <ul class="flex flex-col gap-4">
+          {projects.map(project => (
+            <li>
+              <ArrowCard entry={project} context="projects" />
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="animate space-y-4">
+        <h5 class="font-semibold uppercase">
+          Contact me
+        </h5>
+        <article>
+          <p>
+            If you want to get in touch with me about something or just to say hi,
+            reach out on social media or send me an email.
+          </p>
+        </article>
+        <ul class="flex flex-wrap gap-2">
+          {LINKS_FOOTER.map(SOCIAL => (
+            <li class="flex gap-x-2 text-nowrap">
+              <Link href={SOCIAL.HREF} external aria-label={`${SITE.NAME} on ${SOCIAL.ICON}`}>
+                {SOCIAL.ICON}
+              </Link>
+              {'/'}
+            </li>
+          ))}
+          <li class="line-clamp-1">
+            <Link href={`mailto:${SITE.EMAIL}`} aria-label={`Email ${SITE.NAME}`}>
+              {SITE.EMAIL}
+            </Link>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </Container>
+</PageLayout>

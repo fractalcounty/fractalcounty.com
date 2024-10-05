@@ -1,0 +1,46 @@
+---
+import Head from '@components/Head.astro';
+import Header from '@components/Header.astro';
+import Footer from '@components/Footer.astro';
+import { SEO } from 'astro-seo';
+import { getImagePath } from 'astro-opengraph-images';
+import { SITE } from '@consts';
+
+type Props = {
+  title: string;
+  description: string;
+};
+
+const { title, description } = Astro.props;
+const { url, site } = Astro;
+const openGraphImageUrl = getImagePath({ url, site });
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <SEO
+      openGraph={
+        {
+          basic: {
+            title: title,
+            type: 'website',
+            image: openGraphImageUrl,
+            url: url,
+          },
+          optional: {
+            description: 'description',
+          },
+        }
+      }
+    />
+    <Head title={`${title} | ${SITE.NAME}`} description={description} />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

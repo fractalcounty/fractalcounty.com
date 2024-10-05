@@ -1,0 +1,34 @@
+---
+import Container from '@components/Container.astro';
+import Link from '@components/Link.astro';
+import { SITE } from '@consts';
+---
+
+<header>
+  <Container>
+    <div class="flex flex-wrap gap-y-2 justify-between">
+      <Link href="/" underline={false}>
+        <div class="font-bold uppercase hover:scale-105 transition-transform ease-out duration-500">
+          {SITE.NAME}
+        </div>
+      </Link>
+      <nav class="flex gap-1">
+        <Link href="/blog">
+          blog
+        </Link>
+        <span>
+          {`/`}
+        </span>
+        <Link href="/projects">
+          projects
+        </Link>
+        <span>
+          {`/`}
+        </span>
+        <Link href="https://links.fractalcounty.com/">
+          links
+        </Link>
+      </nav>
+    </div>
+  </Container>
+</header>

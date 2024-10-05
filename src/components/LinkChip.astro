@@ -1,0 +1,15 @@
+---
+import { Icon } from 'astro-icon/components';
+
+export interface Props {
+  icon: string;
+  url: string;
+}
+
+const { icon, url } = Astro.props;
+---
+
+<a href={url} target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center bg-transparent text-white hover:opacity-80 transition-opacity">
+  <Icon name={icon} class="text-4xl sm:text-2xl" />
+  <span class="sr-only">{icon}</span>
+</a>

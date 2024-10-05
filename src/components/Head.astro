@@ -1,0 +1,167 @@
+---
+import '../global.css';
+import { ViewTransitions } from 'astro:transitions';
+import { AstroFont } from 'astro-font';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+}
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+const { title, description, image = '/nano.png' } = Astro.props;
+---
+
+<!-- Global Metadata -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon-dark.svg" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="/favicon-light.svg" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/x-icon" href="/favicon-light.svg">
+<meta name="generator" content={Astro.generator} />
+
+<!-- Canonical URL -->
+<link rel="canonical" href={canonicalURL} />
+
+<!-- Primary Meta Tags -->
+<title>{title}</title>
+<meta name="title" content={title} />
+<meta name="description" content={description} />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={Astro.url} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={new URL(image, Astro.url)} />
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content={Astro.url} />
+<meta property="twitter:title" content={title} />
+<meta property="twitter:description" content={description} />
+<meta property="twitter:image" content={new URL(image, Astro.url)} />
+
+<!-- Fonts -->
+
+<AstroFont
+config={[
+  {
+    name: 'AlteHaasGrotesk',
+    src: [
+      {
+        style: 'normal',
+        weight: 'normal',
+        path: './public/fonts/AlteHaasGroteskRegular.woff2'
+      },
+      {
+        style: 'bold',
+        weight: 'bold',
+        path: './public/fonts/AlteHaasGroteskBold.woff2'
+      },
+    ],
+    preload: false,
+    display: 'swap',
+    selector: 'body',
+    fallback: 'sans-serif',
+  },
+  {
+    name: 'CommitMono',
+    src: [
+      {
+        style: 'normal',
+        weight: '400',
+        path: './public/fonts/CommitMono.woff2',
+      },
+    ],
+    preload: false,
+    display: 'swap',
+    selector: 'code',
+    fallback: 'monospace',
+  }
+]}
+/>
+
+<ViewTransitions  />
+<script>
+  import type { TransitionBeforeSwapEvent } from 'astro:transitions/client';
+  document.addEventListener('astro:before-swap', (e) =>
+    [
+      ...(e as TransitionBeforeSwapEvent).newDocument.head.querySelectorAll(
+        'link[as="font"]'
+      ),
+    ].forEach((link) => link.remove())
+  );
+</script>
+
+<script is:inline>
+
+  function getTheme() {
+    if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+      return localStorage.getItem('theme');
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'laramie' : 'casper');
+    localStorage.setItem('theme', theme);
+  }
+
+  function updateTheme() {
+    const theme = getTheme();
+    setTheme(theme);
+  }
+
+  updateTheme();
+
+  window.addEventListener('storage', (event) => {
+    if (event.key === 'theme') {
+      updateTheme();
+    }
+  });
+  
+  function init() {
+    onScroll();
+    animate();
+
+    const backToTop = document.getElementById('back-to-top');
+    backToTop?.addEventListener('click', (event) => scrollToTop(event));
+
+    const backToPrev = document.getElementById('back-to-prev');
+    backToPrev?.addEventListener('click', () => window.history.back());
+
+    document.addEventListener('scroll', onScroll);
+  }
+
+  function animate() {
+    const animateElements = document.querySelectorAll('.animate');
+
+    animateElements.forEach((element, index) => {
+      setTimeout(() => {
+        element.classList.add('show');
+      }, index * 150);
+    });
+  }
+
+  function onScroll() {
+    if (window.scrollY > 0) {
+      document.documentElement.classList.add('scrolled');
+    } else {
+      document.documentElement.classList.remove('scrolled');
+    }
+  }
+
+  function scrollToTop(event) {
+    event.preventDefault();
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => init());
+  document.addEventListener('astro:after-swap', () => init());
+</script>

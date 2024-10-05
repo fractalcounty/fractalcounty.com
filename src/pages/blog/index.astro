@@ -1,0 +1,61 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import PageLayout from '@layouts/PageLayout.astro';
+import Container from '@components/Container.astro';
+import ArrowCard from '@components/ArrowCard.astro';
+import { BLOG } from '@consts';
+
+const blogPosts = (await getCollection('blog'))
+  .filter(post => !post.data.draft);
+
+const projectsInBlog = (await getCollection('projects'))
+  .filter(project => !project.data.draft && project.data.showInBlog);
+
+const allPosts = [...blogPosts, ...projectsInBlog]
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+type Acc = {
+  [year: string]: (CollectionEntry<'blog'> | CollectionEntry<'projects'>)[];
+}
+
+const posts = allPosts.reduce((acc: Acc, post) => {
+    const year = post.data.date.getFullYear().toString();
+    if (!acc[year]) {
+      acc[year] = [];
+    }
+    acc[year].push(post);
+    return acc;
+  }, {});
+
+const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a)); 
+---
+
+<PageLayout title={BLOG.TITLE} description={BLOG.DESCRIPTION}>
+  <Container>
+    <div class="space-y-10">
+      <div class="animate font-bold uppercase">
+        Blog
+      </div>
+      <div class="space-y-4">
+        {years.map(year => (
+          <section class="animate space-y-4">
+            <div class="font-bold uppercase">
+              {year}
+            </div>
+            <div>
+              <ul class="flex flex-col gap-4">
+                {
+                  posts[year].map((post) => (
+                    <li>
+                      <ArrowCard entry={post} context="blog" />
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
+          </section>
+        ))}
+      </div>
+    </div>
+  </Container>
+</PageLayout>
