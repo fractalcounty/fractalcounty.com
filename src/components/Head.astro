@@ -2,6 +2,8 @@
 import '../global.css';
 import { ViewTransitions } from 'astro:transitions';
 import { AstroFont } from 'astro-font';
+import { SEO } from 'astro-seo';
+import { getImagePath } from 'astro-opengraph-images';
 
 interface Props {
   title: string;
@@ -9,9 +11,9 @@ interface Props {
   image?: string;
 }
 
+const { title, description, image } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-
-const { title, description = '/octangula.png' } = Astro.props;
+const openGraphImageUrl = image || getImagePath({ url: Astro.url, site: Astro.site });
 ---
 
 <!-- Global Metadata -->
@@ -24,6 +26,26 @@ const { title, description = '/octangula.png' } = Astro.props;
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
+
+<SEO
+  title={title}
+  description={description}
+  openGraph={{
+    basic: {
+      title: title,
+      type: 'website',
+      image: openGraphImageUrl,
+      url: Astro.url,
+    },
+    image: {
+      url: openGraphImageUrl,
+      secureUrl: openGraphImageUrl,
+      type: 'image/png',
+      width: 1200,
+      height: 630,
+    },
+  }}
+/>
 
 <!-- Primary Meta Tags -->
 <title>{title}</title>
@@ -41,6 +63,8 @@ const { title, description = '/octangula.png' } = Astro.props;
 <meta property="twitter:url" content={Astro.url} />
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
+
+<!-- Open Graph Image -->
 
 <!-- Fonts -->
 
