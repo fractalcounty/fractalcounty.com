@@ -10,18 +10,19 @@ export const SITE: Site = {
 
 export const HOME: Metadata = {
   TITLE: 'Home',
-  DESCRIPTION: 'Astro Nano is a minimal and lightweight blog and portfolio.',
+  DESCRIPTION:
+    "Chip fractalcounty's personal blog and portfolio website dedicated to various things and stuff.",
 };
 
 export const BLOG: Metadata = {
   TITLE: 'Blog',
-  DESCRIPTION: 'A collection of articles on topics I am passionate about.',
+  DESCRIPTION: 'Various thoughts and writings on topics I think are neat.',
 };
 
 export const PROJECTS: Metadata = {
   TITLE: 'Projects',
   DESCRIPTION:
-    'A collection of my projects, with links to repositories and demos.',
+    "A collection of my projects and other works I've made over the years.",
 };
 
 export const LINKS: Metadata = {
