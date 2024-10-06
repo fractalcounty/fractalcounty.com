@@ -16,7 +16,8 @@ import BackToTop from '@components/BackToTop.astro';
         &copy; 2024 {`|`} {SITE.NAME}
       </div>
       <div class="flex flex-wrap gap-1 items-center">
-        <label class="swap swap-rotate">
+        <label class="swap swap-rotate" for="theme-button">
+          <span class="sr-only">Toggle theme</span>
           <input type="checkbox" class="theme-controller" id="theme-button" value="laramie" />
           <svg
             class="swap-off h-6 w-6 fill-current"

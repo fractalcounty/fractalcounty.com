@@ -4,7 +4,7 @@ import { ViewTransitions } from 'astro:transitions';
 import { AstroFont } from 'astro-font';
 import { SEO } from 'astro-seo';
 import { getImagePath } from 'astro-opengraph-images';
-
+import { SITE } from '@consts';
 interface Props {
   title: string;
   description: string;
@@ -16,19 +16,17 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const openGraphImageUrl = image || getImagePath({ url: Astro.url, site: Astro.site });
 ---
 
-<!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon-dark.svg" media="(prefers-color-scheme: dark)">
 <link rel="icon" type="image/svg+xml" href="/favicon-light.svg" media="(prefers-color-scheme: light)">
 <link rel="icon" type="image/x-icon" href="/favicon-light.svg">
 <meta name="generator" content={Astro.generator} />
-
-<!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
 
 <SEO
   title={title}
+  titleTemplate={`%s | ${SITE.NAME}`}
   description={description}
   openGraph={{
     basic: {

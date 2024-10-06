@@ -9,7 +9,7 @@
     "preview": "astro preview",
     "preview:host": "astro preview --host",
     "astro": "astro",
-    "flush": "fish .dev/flush.fish",
+    "regen": "fish -c 'npmregen'",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
