@@ -5,15 +5,21 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatDateForOpenGraph(date: string): string {
-  // Assuming the input date is in a format that can be parsed by Date constructor
-  const parsedDate = new Date(date);
+export function formatDateForOpenGraph(date: string | Date): string {
+  let parsedDate: Date;
+
+  if (typeof date === 'string') {
+    parsedDate = new Date(date);
+  } else {
+    parsedDate = date;
+  }
+
   if (isNaN(parsedDate.getTime())) {
     // If the date is invalid, return the original string
-    return date;
+    return typeof date === 'string' ? date : '';
   }
   // Format the date as ISO 8601
-  return parsedDate.toISOString();
+  return parsedDate.toISOString().substring(0, 10);
 }
 
 export function formatDate(date: Date) {

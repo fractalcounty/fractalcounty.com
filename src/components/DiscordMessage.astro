@@ -1,0 +1,107 @@
+---
+import type { JSX } from 'astro/jsx-runtime';
+import ImageCard from './ImageCard.astro';
+
+interface Props {
+  author: string;
+  content: (string | JSX.Element)[];
+  avatar?: string;
+  date?: string;
+}
+
+const { author, content, avatar = '/default-avatar.png', date } = Astro.props;
+---
+
+<div class="discord-message group">
+  <div class="avatar-wrapper">
+    <ImageCard
+      imagePath={avatar}
+      altText={`${author}'s avatar`}
+      showShadow={false}
+      rounded={true}
+      showCaption={false}
+      scale={1}
+      class="avatar"
+    />
+  </div>
+  <div class="message-content">
+    <div class="message-header">
+      <span class="author">{author}</span>
+      {date && <span class="date">{date}</span>}
+    </div>
+    {content.map((item, index) => (
+      <div class={`content ${index > 0 ? 'follow-up' : ''}`}>
+        {typeof item === 'string' ? item : <Fragment set:html={item} />}
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .discord-message {
+    font-family: 'gg-sans', sans-serif;
+    display: flex;
+    align-items: flex-start;
+    color: #dcddde;
+    transition: background-color 0.2s ease;
+  }
+  .avatar-wrapper {
+    width: 48px;
+    height: 48px;
+    margin-right: 16px;
+    margin-top: -32px;
+    align-self: flex-start;
+    flex-shrink: 0;
+  }
+  .avatar-wrapper :global(.custom-image-card-wrapper) {
+    width: 100%;
+    height: 100%;
+  }
+  .avatar-wrapper :global(.custom-image-card) {
+    width: 100%;
+    height: 100%;
+  }
+  .avatar-wrapper :global(.custom-image-card img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+  .message-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .message-header {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 2px;
+  }
+  .author {
+    font-weight: bold;
+    color: #ffffff;
+    font-size: 1rem;
+    line-height: 1.375rem;
+    margin-right: 0.25rem;
+  }
+  .date {
+    color: #949BA4;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  .content {
+    color: #dcddde;
+    font-size: 1rem;
+    line-height: 1.375rem;
+    margin-bottom: 0.25rem;
+  }
+  .content.follow-up {
+    margin-top: 0.25rem;
+  }
+  .content :global(.redacted) {
+    display: inline-block;
+    background-color: #202225;
+    border-radius: 3px;
+    padding: 0 2px;
+  }
+</style>

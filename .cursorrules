@@ -1,0 +1,48 @@
+This project is a minimalist, content-driven personal website built with the Astro framework.
+
+Features:
+- Homepage (/)
+- Blog (/blog)
+- Portfolio page (/projects)
+- Social media links collection (/links)
+
+Technologies used:
+- Framework: Astro
+- CSS: Tailwind CSS with DaisyUI
+- Markdown: MDX
+- Language: TypeScript
+- Package Manager: bun
+- Deployment: Cloudflare Pages (Premium/paid plan, Static)
+
+Key directories and files:
+
+- src/components/Head.astro: HTML <head>, Astro SEO and OpenGraph stuff goes Header
+- src/components/content/index.ts: Reusable content-specific components
+
+- src/content/blog/godot/index.mdx: A post in the 'blog' content collection
+- src/content/projects/smpearth/index.mdx: A project in the 'projects' content collection
+- src/content/config.ts: Astro content schemas 
+
+- src/content/icons/: Icons used by astro-icon package
+
+- src/layouts/PageLayout.astro: Global layout
+
+- src/lib/utils.ts: Generic helper functions
+
+- src/pages/index.astro: Homepage
+- src/pages/blog/index.astro: Blog post directory
+- src/pages/blog/[...slug].astro: Blog post
+- src/pages/projects/index.astro: Project post directory
+- src/pages/projects/[...slug].astro: Project post
+- src/pages/links/index.astro: Links page (WIP)
+
+- src/consts.ts: Global constants
+- src/env.d.ts: Global references
+- src/global.css: Global stylesheet
+- src/ogRenderer.tsx: OpenGraph image generator
+- src/types.ts: Global types
+
+- astro.config.mjs: Astro configuration
+- eslint.config.mjs: ESLint configuration
+- package.json: Project dependencies
+- tailwind.config.mjs: Tailwind CSS configuration

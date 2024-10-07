@@ -3,6 +3,7 @@ import { type CollectionEntry, getCollection } from 'astro:content';
 import PageLayout from '@layouts/PageLayout.astro';
 import Container from '@components/Container.astro';
 import ArrowCard from '@components/ArrowCard.astro';
+import CollectionPageStructuredData from '@components/CollectionPageStructuredData.astro';
 import { BLOG } from '@consts';
 
 const blogPosts = (await getCollection('blog'))
@@ -31,6 +32,12 @@ const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a));
 ---
 
 <PageLayout title={BLOG.TITLE} description={BLOG.DESCRIPTION}>
+  <CollectionPageStructuredData 
+    slot="structured-data"
+    type="BlogPosting"
+    name={BLOG.TITLE}
+    description={BLOG.DESCRIPTION}
+  />
   <Container>
     <div class="space-y-10">
       <div class="animate font-bold uppercase">

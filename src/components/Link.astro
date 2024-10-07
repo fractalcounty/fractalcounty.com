@@ -1,22 +1,31 @@
 ---
 import { cn } from '@lib/utils';
+import { Link as AstroLink } from 'astro-link';
 
 type Props = {
   href: string;
-  external?: boolean;
+  title?: string;
+  externalInNewTab?: boolean;
   underline?: boolean;
+  class?: string;
 }
 
-const { href, external, underline = true, ...rest } = Astro.props;
+const { href, title, externalInNewTab, underline = true, class: className, ...rest } = Astro.props;
 ---
 
-<a 
-  href={href} 
-  target={ external ? '_blank' : '_self' } 
+<AstroLink
+  href={href}
+  title={title}
+  externalInNewTab={externalInNewTab}
   class={cn(
-    'inline-block decoration-primary/65 hover:text-primary hover:decoration-primary transition-colors duration-300 ease-in-out',
-    underline && 'underline underline-offset-2'
+    'inline-block transition-colors duration-300 ease-in-out',
+    underline
+      ? 'underline decoration-primary/65 underline-offset-2 hover:decoration-primary'
+      : 'no-underline',
+    'hover:text-primary',
+    className
   )}
-  {...rest}>
+  {...rest}
+>
   <slot/>
-</a>
+</AstroLink>

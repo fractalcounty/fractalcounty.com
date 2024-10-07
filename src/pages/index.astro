@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import WebsiteStructuredData from '@components/WebsiteStructuredData.astro';
 import Container from '@components/Container.astro';
 import PageLayout from '@layouts/PageLayout.astro';
 import ArrowCard from '@components/ArrowCard.astro';
@@ -24,6 +25,7 @@ const projects = (await getCollection('projects'))
 ---
 
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
+  <WebsiteStructuredData slot="structured-data" />
   <Container>
     <h4 class="animate font-semibold uppercase">
       Hello, I'm Chip
@@ -32,25 +34,48 @@ const projects = (await getCollection('projects'))
       <section>
         <article class="space-y-4">
           <p class="animate">
-            I make stuff on the internet. Usually silly stuff, sometimes artistic stuff, and very rarely useful stuff.
-            This is my website where I dump thoughts and blog posts that can't fit on my <Link href="https://x.com/fractalcounty" aria-label="X" external> Twitter </Link>,
+            I make stuff on the internet.
+            Usually silly stuff, sometimes artistic stuff, and very rarely useful stuff.
+            This is my website where I dump thoughts and blog posts that can't fit on my
+            <Link
+              href="https://x.com/fractalcounty"
+              title="X"
+              externalInNewTab={true}
+            >
+              Twitter
+            </Link>,
             as well as various projects I'm working on and other miscellaneous things that don't fit elsewhere.
           </p>
           <p class="animate">
-            This website is still a work-in-progress. Once I'm done filling it with what I currently have, I probably won't post on here all too often. Regardless, I'll try to keep it updated with whatever I'm working on at the time.
+            This website is still a work-in-progress.
+            Once I'm done filling it with what I currently have,
+            I probably won't post on here all too often.
+            Regardless, I'll try to keep it updated with whatever I'm working on at the time.
             If anything, it's a decent archive.
           </p>
           <p class="animate">
             I made this website using the
-            <Link href="https://astro.build/" aria-label="Astro on GitHub" external>
+            <Link
+              href="https://astro.build/"
+              title="Astro"
+              externalInNewTab={true}
+            >
               Astro
             </Link>
             framework, with some help from 
-            <Link href="https://astro.build/integrations/tailwind/" aria-label="Tailwind on GitHub" external>
+            <Link
+              href="https://astro.build/integrations/tailwind/"
+              title="TailwindCSS"
+              externalInNewTab={true}
+            >
               TailwindCSS
             </Link>
             and 
-            <Link href="https://daisyui.com/" aria-label="DaisyUI" external>
+            <Link 
+              href="https://daisyui.com/" 
+              title="DaisyUI"
+              externalInNewTab={true}
+            >
               DaisyUI
             </Link>
             for styling and UI.
@@ -63,7 +88,11 @@ const projects = (await getCollection('projects'))
           <h5 class="font-bold uppercase">
             Latest posts
           </h5>
-          <Link href="/blog">
+          <Link
+            href="/blog"
+            title="Blog"
+            externalInNewTab={false}
+          >
             See all posts
           </Link>
         </div>
@@ -81,7 +110,11 @@ const projects = (await getCollection('projects'))
           <h5 class="font-bold uppercase">
             Recent projects
           </h5>
-          <Link href="/projects">
+          <Link
+            href="/projects"
+            title="Projects"
+            externalInNewTab={false}
+          >
             See all projects
           </Link>
         </div>
@@ -107,14 +140,22 @@ const projects = (await getCollection('projects'))
         <ul class="flex flex-wrap gap-2">
           {LINKS_FOOTER.map(SOCIAL => (
             <li class="flex gap-x-2 text-nowrap">
-              <Link href={SOCIAL.HREF} external aria-label={`${SITE.NAME} on ${SOCIAL.ICON}`}>
+              <Link
+                href={SOCIAL.HREF}
+                title={`${SITE.NAME} on ${SOCIAL.ICON}`}
+                externalInNewTab={true}
+              >
                 {SOCIAL.ICON}
               </Link>
               {'/'}
             </li>
           ))}
           <li class="line-clamp-1">
-            <Link href={`mailto:${SITE.EMAIL}`} aria-label={`Email ${SITE.NAME}`}>
+            <Link
+              href={`mailto:${SITE.EMAIL}`}
+              title={`Email ${SITE.NAME}`}
+              externalInNewTab={false}
+            >
               {SITE.EMAIL}
             </Link>
           </li>

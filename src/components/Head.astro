@@ -116,17 +116,53 @@ config={[
       {
         style: 'normal',
         weight: 'normal',
-        path: './public/fonts/AlteHaasGroteskRegular.woff2'
+        path: './public/fonts/AlteHaasGroteskRegular.woff2',
       },
       {
-        style: 'bold',
+        style: 'normal',
+        weight: 'normal',
+        path: './public/fonts/AlteHaasGroteskRegular.woff',
+      },
+      {
+        style: 'normal',
         weight: 'bold',
-        path: './public/fonts/AlteHaasGroteskBold.woff2'
+        path: './public/fonts/AlteHaasGroteskBold.woff2',
+      },
+      {
+        style: 'normal',
+        weight: 'bold',
+        path: './public/fonts/AlteHaasGroteskBold.woff',
       },
     ],
     preload: false,
     display: 'swap',
     selector: 'body',
+    fallback: 'sans-serif',
+  },
+  {
+    name: 'gg-sans',
+    src: [
+      {
+        style: 'normal',
+        weight: 'normal',
+        path: './public/fonts/ggSansRegular.woff2',
+      },
+    ],
+    preload: false,
+    display: 'swap',
+    fallback: 'sans-serif',
+  },
+  {
+    name: 'gg-sans',
+    src: [
+      {
+        style: 'normal',
+        weight: 'bold',
+        path: './public/fonts/ggSansSemiBold.woff2',
+      },
+    ],
+    preload: false,
+    display: 'swap',
     fallback: 'sans-serif',
   },
   {

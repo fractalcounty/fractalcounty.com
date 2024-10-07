@@ -1,0 +1,79 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDateForOpenGraph } from '../lib/utils';
+import { getImagePath } from 'astro-opengraph-images';
+
+type Props = CollectionEntry<'blog'>['data'] | CollectionEntry<'projects'>['data'];
+const { title, description, date, tags, type } = Astro.props;
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site);
+const openGraphImageUrl = getImagePath({ url: Astro.url, site: Astro.site });
+
+const ogImage = {
+  '@type': 'ImageObject',
+  'url': openGraphImageUrl,
+  'width': 1200,
+  'height': 630,
+  'caption': `White text on a black background that says FRACTAL COUNTY followed by ${title}`,
+};
+
+const brand = {
+  '@type': 'Brand',
+  'logo': {
+    '@type': 'ImageObject',
+    'url': 'https://fractalcounty.com/logo.svg',
+    'contentUrl': 'https://fractalcounty.com/logo.webp',
+    'width': 1200,
+    'height': 630,
+  },
+  'slogan': "Don't drink the tap water.",
+  'alternateName': 'fractalcounty',
+  'description': 'Media Conglomeration',
+  'name': 'FRACTAL COUNTY',
+  'url': 'https://fractalcounty.com',
+};
+
+const person = {
+  '@type': 'Person',
+  'name': 'chip fractalcounty',
+  'url': 'https://fractalcounty.com',
+  'description': 'An artist, game developer, programmer, and musician from the midwest. Formerly known as chippledipple.',
+  'brand': brand,
+  'contactPoint': {
+    '@type': 'ContactPoint',
+    'email': 'chip@fractalcounty.com',
+    'url': 'https://fractalcounty.com',
+    'contactType': 'author',
+  },
+  'gender': 'male',
+  'knows': 'Turkey Tom',
+  'nationality': 'Midwesterner',
+};
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': type === 'project' ? 'Article' : 'BlogPosting',
+  'headline': title,
+  'url': pageUrl,
+  'description': description,
+  'about': 'art & technology',
+  'keywords': tags ? tags.join(', ') : undefined,
+  'author': person,
+  'copyrightNotice': 'UNLICENSE, no liability or warranty, public domain, see https://fractalcounty.com/UNLICENSE',
+  'creator': person,
+  'countryOfOrigin': 'USA',
+  'genre': 'art & technology',
+  'thumbnail': ogImage,
+  'name': `FRACTAL COUNTY - ${title}`,
+  'inLanguage': 'en-US',
+  'publisher': person,
+  'isAccessibleForFree': true,
+  'license': 'https://fractalcounty.com/UNLICENSE',
+  'datePublished': formatDateForOpenGraph(date),
+  'dateModified': formatDateForOpenGraph(date),
+  'dateCreated': formatDateForOpenGraph(date),
+  'image': ogImage,
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

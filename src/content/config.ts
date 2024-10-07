@@ -9,6 +9,7 @@ const blog = defineCollection({
     draft: z.boolean().optional(),
     type: z.literal('blog'),
     tags: z.array(z.string()).optional(),
+    thumbnail: z.string().optional(),
   }),
 });
 
@@ -34,6 +35,7 @@ const projects = defineCollection({
       blogTitle: z.string().optional(),
       type: z.literal('project'),
       tags: z.array(z.string()).optional(),
+      thumbnail: z.string().optional(),
     })
     .refine(
       (data) => {

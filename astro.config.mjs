@@ -9,6 +9,9 @@ import fs from 'fs';
 
 export default defineConfig({
   site: 'https://fractalcounty.com',
+  markdown: {
+    extendDefaultPlugins: true,
+  },
   integrations: [
     mdx(),
     sitemap(),
@@ -20,13 +23,13 @@ export default defineConfig({
         fonts: [
           {
             name: 'AlteHaasGroteskRegular',
-            weight: '400',
+            weight: 'normal',
             style: 'normal',
             data: fs.readFileSync('public/fonts/AlteHaasGroteskRegular.woff'),
           },
           {
             name: 'AlteHaasGroteskBold',
-            weight: '700',
+            weight: 'bold',
             style: 'normal',
             data: fs.readFileSync('public/fonts/AlteHaasGroteskBold.woff'),
           },

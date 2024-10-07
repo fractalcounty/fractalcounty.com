@@ -1,0 +1,32 @@
+---
+import { SITE } from '@consts';
+
+interface Props {
+  type: 'BlogPosting' | 'Article';
+  name: string;
+  description: string;
+}
+
+const { type, name, description } = Astro.props;
+const pageUrl = new URL(Astro.url.pathname, Astro.site);
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': pageUrl.toString(),
+  'name': name,
+  'description': description,
+  'url': pageUrl.toString(),
+  'isPartOf': {
+    '@type': 'WebSite',
+    '@id': Astro.site?.toString(),
+    'name': SITE.NAME,
+    'url': Astro.site?.toString(),
+  },
+  'about': {
+    '@type': type,
+  },
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />

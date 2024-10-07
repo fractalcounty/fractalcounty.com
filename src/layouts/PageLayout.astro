@@ -26,12 +26,13 @@ const publishedTimeString = publishedTime?.toISOString();
       publishedTime={publishedTimeString}
       tags={tags}
     />
+    <slot name="structured-data" />
   </head>
   <body>
-    <Header />
+    <Header role="banner"/>
     <main>
       <slot />
     </main>
-    <Footer />
+    <Footer role="contentinfo"/>
   </body>
 </html>

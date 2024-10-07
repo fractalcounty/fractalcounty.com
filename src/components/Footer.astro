@@ -2,6 +2,8 @@
 import Container from '@components/Container.astro';
 import { SITE } from '@consts';
 import BackToTop from '@components/BackToTop.astro';
+import { Icon } from 'astro-icon/components';
+import Link from '@components/Link.astro'; 
 ---
 
 <footer class="animate">
@@ -13,7 +15,15 @@ import BackToTop from '@components/BackToTop.astro';
     </div>
     <div class="flex justify-between items-center">
       <div>
-        &copy; 2024 {`|`} {SITE.NAME}
+        <Link 
+          href="/UNLICENSE" 
+          class="flex items-center gap-1"
+          underline={false}
+          externalInNewTab={false}
+        >
+          <Icon name="anticopyright" class="text-[11px]" />
+          2024 | {SITE.NAME}
+        </Link>
       </div>
       <div class="flex flex-wrap gap-1 items-center">
         <label class="swap swap-rotate" for="theme-button">

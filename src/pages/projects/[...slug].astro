@@ -6,6 +6,7 @@ import FormattedDate from '@components/FormattedDate.astro';
 import { readingTime } from '@lib/utils';
 import BackToPrev from '@components/BackToPrev.astro';
 import Link from '@components/Link.astro';
+import PostStructuredData from '@components/PostStructuredData.astro';
 
 export async function getStaticPaths() {
   const projects = (await getCollection('projects'))
@@ -31,6 +32,7 @@ const tags = project.data.tags || [];
   publishedTime={project.data.date}
   tags={tags}
 >
+  <PostStructuredData slot="structured-data" {...project.data} />
   <Container>
     <div class="animate">
       <BackToPrev href="/projects">
@@ -53,14 +55,22 @@ const tags = project.data.tags || [];
       {(project.data.demoURL || project.data.repoURL || project.data.projectURLs?.length) && (
         <nav class="animate flex flex-wrap gap-1">
           {project.data.demoURL && (
-            <Link href={project.data.demoURL} external>
+            <Link
+              href={project.data.demoURL}
+              title="Demo"
+              externalInNewTab={true}
+            >
               demo
             </Link>
           )}
           {project.data.repoURL && (
             <>
               {project.data.demoURL && <span>/</span>}
-              <Link href={project.data.repoURL} external>
+              <Link
+                href={project.data.repoURL}
+                title="Repo"
+                externalInNewTab={true}
+              >
                 repo
               </Link>
             </>
@@ -68,7 +78,11 @@ const tags = project.data.tags || [];
           {project.data.projectURLs && project.data.projectURLs.map((projectURL, index) => (
             <>
               {(project.data.demoURL || project.data.repoURL || index > 0) && <span>/</span>}
-              <Link href={projectURL.url} external>
+              <Link
+                href={projectURL.url}
+                title={projectURL.label}
+                externalInNewTab={true}
+              >
                 {projectURL.label}
               </Link>
             </>
@@ -77,7 +91,9 @@ const tags = project.data.tags || [];
       )}
     </div>
     <article class="animate">
-      <Content />
+      <Content components={{
+        a: Link,
+      }}/>
     </article>
   </Container>
 </PageLayout>

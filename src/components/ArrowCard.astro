@@ -1,5 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { Icon } from 'astro-icon/components';
+import Link from './Link.astro';
 
 type Props = {
   entry: CollectionEntry<'blog'> | CollectionEntry<'projects'>;
@@ -8,9 +10,16 @@ type Props = {
 
 const { entry, context } = Astro.props;
 const title = entry.data.type === 'project' && context === 'blog' ? entry.data.blogTitle : entry.data.title;
+const defaultIconName = context === 'blog' ? 'content-blog' : 'content-project';
+const iconName = entry.data.thumbnail || defaultIconName;
 ---
 
-<a href={`/${entry.collection}/${entry.slug}`} class="relative group flex flex-nowrap py-3 px-4 pr-10 rounded-lg border border-base-content/25 bg-transparent hover:bg-neutral text-base-content duration-200 ease-in-out">
+<Link 
+  href={`/${entry.collection}/${entry.slug}`} 
+  class="relative group flex items-center flex-nowrap py-3 px-4 pr-10 rounded-lg border border-base-content/25 bg-transparent hover:bg-neutral text-base-content duration-200 ease-in-out"
+  underline={false}
+>
+  <Icon name={iconName} class="size-6 mr-3 flex-shrink-0" />
   <div class="flex flex-col flex-1 truncate">
     <div class="font-semibold group-hover:text-primary">
       {title}
@@ -26,4 +35,4 @@ const title = entry.data.type === 'project' && context === 'blog' ? entry.data.b
     <line x1="5" y1="12" x2="19" y2="12" class="translate-x-3 group-hover:translate-x-0 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out" />
     <polyline points="12 5 19 12 12 19" class="-translate-x-1 group-hover:translate-x-0 transition-transform duration-300 ease-in-out" />
   </svg>
-</a>
+</Link>

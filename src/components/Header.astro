@@ -7,25 +7,46 @@ import { SITE } from '@consts';
 <header>
   <Container>
     <div class="flex flex-wrap gap-y-2 justify-between">
-      <Link href="/" underline={false}>
+       <Link
+          href="/"
+          title={SITE.NAME}
+          externalInNewTab={false}
+          underline={false}
+          class="font-bold"
+        >
         <div class="font-bold uppercase hover:scale-105 transition-transform ease-out duration-500">
           {SITE.NAME}
         </div>
       </Link>
       <nav class="flex gap-1">
-        <Link href="/blog">
+        <Link
+          href="/blog"
+          title="blog"
+          externalInNewTab={false}
+          underline={true}
+        >
           blog
         </Link>
         <span>
           {`/`}
         </span>
-        <Link href="/projects">
+        <Link
+          href="/projects"
+          title="projects"
+          externalInNewTab={false}
+          underline={true}
+        >
           projects
         </Link>
         <span>
           {`/`}
         </span>
-        <Link href="https://links.fractalcounty.com/">
+        <Link
+          href="https://links.fractalcounty.com/"
+          title="links"
+          externalInNewTab={true}
+          underline={true}
+        >
           links
         </Link>
       </nav>

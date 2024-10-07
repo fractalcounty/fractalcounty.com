@@ -5,6 +5,7 @@ import Container from '@components/Container.astro';
 import FormattedDate from '@components/FormattedDate.astro';
 import { readingTime } from '@lib/utils';
 import BackToPrev from '@components/BackToPrev.astro';
+import PostStructuredData from '@components/PostStructuredData.astro';
 
 export async function getStaticPaths() {
   const blogPosts = (await getCollection('blog'))
@@ -33,6 +34,7 @@ const tags = post.data.tags || [];
   publishedTime={post.data.date}
   tags={tags}
 >
+  <PostStructuredData slot="structured-data" {...post.data} />
   <Container>
     <div class="animate">
       <BackToPrev href="/blog">
