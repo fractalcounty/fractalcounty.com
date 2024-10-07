@@ -23,9 +23,16 @@ type Props = CollectionEntry<'blog'> | CollectionEntry<'projects'>;
 const post = Astro.props;
 const { Content } = await post.render();
 const title = (post.data.type === 'project' && post.data.showInBlog ? post.data.blogTitle : post.data.title) || 'Untitled Post';
+const tags = post.data.tags || [];
 ---
 
-<PageLayout title={title} description={post.data.description}>
+<PageLayout 
+  title={title} 
+  description={post.data.description} 
+  type="article" 
+  publishedTime={post.data.date}
+  tags={tags}
+>
   <Container>
     <div class="animate">
       <BackToPrev href="/blog">

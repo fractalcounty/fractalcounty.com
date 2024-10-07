@@ -21,9 +21,16 @@ type Props = CollectionEntry<'projects'>;
 const project = Astro.props;
 const { Content } = await project.render();
 const title = project.data.showInBlog && project.data.blogTitle ? project.data.blogTitle : project.data.title;
+const tags = project.data.tags || [];
 ---
 
-<PageLayout title={title} description={project.data.description}>
+<PageLayout 
+  title={title} 
+  description={project.data.description} 
+  type="article" 
+  publishedTime={project.data.date}
+  tags={tags}
+>
   <Container>
     <div class="animate">
       <BackToPrev href="/projects">

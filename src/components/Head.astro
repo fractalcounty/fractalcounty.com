@@ -5,35 +5,42 @@ import { AstroFont } from 'astro-font';
 import { SEO } from 'astro-seo';
 import { getImagePath } from 'astro-opengraph-images';
 import { SITE } from '@consts';
+import { formatDateForOpenGraph } from '@lib/utils';
+
 interface Props {
   title: string;
   description: string;
   image?: string;
+  type?: 'website' | 'article';
+  publishedTime?: string;
+  tags?: string[];
 }
 
-const { title, description, image } = Astro.props;
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const { title, description, image, type = 'website', publishedTime, tags = [] } = Astro.props;
 const openGraphImageUrl = image || getImagePath({ url: Astro.url, site: Astro.site });
+const defaultTags = ['chippledipple', 'fractal', 'county', 'art', 'gamedev'];
+const combinedTags = Array.from(new Set([...tags, ...defaultTags]));
+const tagsContent = combinedTags.join(', ');
 ---
 
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<link rel="icon" type="image/svg+xml" href="/favicon-dark.svg" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="/favicon-light.svg" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/x-icon" href="/favicon-light.svg">
-<meta name="generator" content={Astro.generator} />
-<link rel="canonical" href={canonicalURL} />
-
 <SEO
+  canonical={Astro.url.href}
   title={title}
-  titleTemplate={`%s | ${SITE.NAME}`}
+  titleTemplate={`${SITE.NAME} | %s`}
+  titleDefault={SITE.NAME}
   description={description}
+  charset='utf-8'
   openGraph={{
     basic: {
       title: title,
-      type: 'website',
+      type: type,
       image: openGraphImageUrl,
-      url: Astro.url,
+      url: Astro.url.href,
+    },
+    optional: {
+      description: description,
+      locale: 'en_US',
+      siteName: SITE.NAME,
     },
     image: {
       url: openGraphImageUrl,
@@ -41,30 +48,65 @@ const openGraphImageUrl = image || getImagePath({ url: Astro.url, site: Astro.si
       type: 'image/png',
       width: 1200,
       height: 630,
+      alt: `White text on a black background that says ${SITE.NAME} followed by ${title}`,
     },
+    ...(type === 'article' && publishedTime && {
+      article: {
+        publishedTime: formatDateForOpenGraph(publishedTime),
+        authors: [SITE.AUTHOR],
+        tags: combinedTags
+      }
+    })
+  }}
+  twitter={{
+    card: 'summary_large_image',
+    site: '@fractalcounty',
+    creator: '@fractalcounty',
+    title: title,
+    image: openGraphImageUrl,
+    imageAlt: `White text on a black background that says ${SITE.NAME} followed by ${title}`,
+    description: description,
+  }}
+  extend={{
+    link: [
+      {
+        rel: 'icon',
+        type: 'image/svg+xml',
+        href: '/favicon-dark.svg',
+        media: '(prefers-color-scheme: dark)'
+      },
+      {
+        rel: 'icon',
+        type: 'image/svg+xml',
+        href: '/favicon-light.svg',
+        media: '(prefers-color-scheme: light)'
+      },
+      {
+        rel: 'icon',
+        type: 'image/x-icon',
+        href: '/favicon-light.svg'
+      }
+    ],
+    meta: [
+      {
+        name: 'viewport',
+        content: 'width=device-width,initial-scale=1'
+      },
+      {
+        name: 'generator',
+        content: Astro.generator
+      },
+      {
+        name: 'keywords',
+        content: tagsContent
+      },
+      {
+        name: 'author',
+        content: SITE.AUTHOR
+      }
+    ]
   }}
 />
-
-<!-- Primary Meta Tags -->
-<title>{title}</title>
-<meta name="title" content={title} />
-<meta name="description" content={description} />
-
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
-<meta property="og:url" content={Astro.url} />
-<meta property="og:title" content={title} />
-<meta property="og:description" content={description} />
-
-<!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={Astro.url} />
-<meta property="twitter:title" content={title} />
-<meta property="twitter:description" content={description} />
-
-<!-- Open Graph Image -->
-
-<!-- Fonts -->
 
 <AstroFont
 config={[

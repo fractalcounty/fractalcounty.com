@@ -2,6 +2,7 @@ import type { Site, Metadata, Socials } from '@types';
 
 export const SITE: Site = {
   NAME: 'FRACTAL COUNTY',
+  AUTHOR: 'chip fractalcounty',
   EMAIL: 'chip@fractalcounty.com',
   NUM_POSTS_ON_HOMEPAGE: 3,
   NUM_WORKS_ON_HOMEPAGE: 2,

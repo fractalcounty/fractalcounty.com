@@ -8,6 +8,7 @@ const blog = defineCollection({
     date: z.coerce.date(),
     draft: z.boolean().optional(),
     type: z.literal('blog'),
+    tags: z.array(z.string()).optional(),
   }),
 });
 
@@ -32,6 +33,7 @@ const projects = defineCollection({
       showInBlog: z.boolean().optional(),
       blogTitle: z.string().optional(),
       type: z.literal('project'),
+      tags: z.array(z.string()).optional(),
     })
     .refine(
       (data) => {
