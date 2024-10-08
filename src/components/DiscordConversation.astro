@@ -1,44 +1,67 @@
 ---
 import { Icon } from 'astro-icon/components';
+import Link from '@components/Link.astro';
 
 interface Props {
   archive?: string;
+  title?: string;
 }
 
-const { archive = '/images/smpearth-chip-wilbur-msg.png' } = Astro.props;
+const { 
+  archive = '/images/smpearth-chip-wilbur-msg.png',
+  title = 'Discord Conversation'
+} = Astro.props;
 ---
 
-<div class="discord-conversation relative">
-    <a href={archive} class="btn btn-square btn-sm btn-ghost absolute top-4 right-4 text-stone-600 hover:text-stone-400 bg hover:bg-[#2e3035] tooltip" data-tip="View original source">
-        <Icon name="solar:link-bold" class="size-5"/>
-    </a>
-    <slot />
-</div>
+<section 
+  class="discord-conversation bg-neutral outline outline-neutral-content/75 relative"
+  aria-label={`Discord conversation: ${title}`}
+>
+    <h2 id="conversation-title" class="sr-only">{title}</h2>
+    <Link
+      href={archive}
+      class="menu hover:text-accent text-accent-content/75 tooltip tooltip-primary tooltip-bottom absolute bottom-4 right-4"
+      data-tip="View original source"
+      underline={false}
+      externalInNewTab={true}
+      aria-label="View original source"
+    >
+      <Icon name="solar:link-bold" class="size-4" aria-hidden="true" />
+      <span class="sr-only">View original source</span>
+    </Link>
+    <div role="list" class="discord-messages">
+      <slot />
+    </div>
+</section>
+
+<style>
+  .tooltip {
+      font-family: 'AlteHaasGrotesk';
+      font-weight: normal;
+  }
+  .discord-conversation {
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    font-family: 'gg-sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    @apply prose text-base-content 
+  }
   
-  <style>
-    .tooltip {
-        font-family: 'AlteHaasGrotesk';
-        font-weight: normal;
-    }
-    .discord-conversation {
-      background-color: #313338;
-      border-radius: 16px;
-      padding: 1.5rem;
-      margin-bottom: 1rem;
-      font-family: 'gg-sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    }
+  .discord-conversation :global(.discord-message) {
+    margin: -0.5rem -0.5rem 0.5rem -0.5rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+  }
   
-    .discord-conversation :global(.discord-message) {
-      margin: -0.5rem -0.5rem 0.5rem -0.5rem;
-      padding: 0.5rem;
-      border-radius: 8px;
-    }
+  .discord-conversation :global(.discord-message:hover) {
+    background-color: oklch(var(--nc)/0.3);
+  }
   
-    .discord-conversation :global(.discord-message:hover) {
-      background-color: #2e3035;
-    }
-  
-    .discord-conversation :global(.discord-message:last-child) {
-      margin-bottom: -0.5rem;
-    }
-  </style>
+  .discord-conversation :global(.discord-message:last-child) {
+    margin-bottom: -0.5rem;
+  }
+
+  .menu:hover {
+  color: oklch(var(--p));
+}
+</style>

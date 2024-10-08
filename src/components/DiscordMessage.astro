@@ -10,10 +10,22 @@ interface Props {
 }
 
 const { author, content, avatar = '/default-avatar.png', date } = Astro.props;
+
+function formatDate(dateString: string) {
+  try {
+    const dateObject = new Date(dateString);
+    if (isNaN(dateObject.getTime())) {
+      return dateString; // Return the original string if it's not a valid date
+    }
+    return dateObject.toISOString();
+  } catch {
+    return dateString; // Return the original string if there's any error
+  }
+}
 ---
 
-<div class="discord-message group">
-  <div class="avatar-wrapper">
+<div class="discord-message group" role="listitem" aria-label={`Discord message from ${author}`}>
+  <div class="avatar-wrapper" role="img" aria-label={`${author}'s avatar`}>
     <ImageCard
       imagePath={avatar}
       altText={`${author}'s avatar`}
@@ -26,8 +38,8 @@ const { author, content, avatar = '/default-avatar.png', date } = Astro.props;
   </div>
   <div class="message-content">
     <div class="message-header">
-      <span class="author">{author}</span>
-      {date && <span class="date">{date}</span>}
+      <strong class="author">{author}</strong>
+      {date && <time class="date" datetime={formatDate(date)}>{date}</time>}
     </div>
     {content.map((item, index) => (
       <div class={`content ${index > 0 ? 'follow-up' : ''}`}>
@@ -42,7 +54,6 @@ const { author, content, avatar = '/default-avatar.png', date } = Astro.props;
     font-family: 'gg-sans', sans-serif;
     display: flex;
     align-items: flex-start;
-    color: #dcddde;
     transition: background-color 0.2s ease;
   }
   .avatar-wrapper {
@@ -79,29 +90,20 @@ const { author, content, avatar = '/default-avatar.png', date } = Astro.props;
   }
   .author {
     font-weight: bold;
-    color: #ffffff;
     font-size: 1rem;
     line-height: 1.375rem;
     margin-right: 0.25rem;
   }
   .date {
-    color: #949BA4;
     font-size: 0.75rem;
     font-weight: 500;
   }
   .content {
-    color: #dcddde;
     font-size: 1rem;
     line-height: 1.375rem;
     margin-bottom: 0.25rem;
   }
   .content.follow-up {
     margin-top: 0.25rem;
-  }
-  .content :global(.redacted) {
-    display: inline-block;
-    background-color: #202225;
-    border-radius: 3px;
-    padding: 0 2px;
   }
 </style>

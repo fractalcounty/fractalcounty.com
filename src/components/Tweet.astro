@@ -1,81 +1,209 @@
 ---
 import { Icon } from 'astro-icon/components';
+import Link from '@components/Link.astro';
 import ImageCard from '@components/ImageCard.astro';
+
+interface QuotedTweet {
+  name: string;
+  handle: string;
+  text?: string;
+  pfp: string;
+  imageUrl?: string;
+}
 
 interface Props {
   name?: string;
   handle?: string;
   pfp?: string;
   text?: string;
+  imageUrl?: string;
   hashtags?: string;
   retweets?: string;
   replies?: string;
   likes?: string;
   source?: string;
+  quotedTweet?: QuotedTweet;
 }
 
 const {
   name = 'chip',
   handle = 'chippledipple',
   pfp = '/src/content/projects/smpearth/chip-pfp.webp',
-  text = "God I'm awesome.",
+  text,
+  imageUrl,
   retweets = '100k',
   replies = '50k',
   likes = '300k',
-  source = 'https://twitter.com'
+  source = 'https://twitter.com',
+  quotedTweet
 } = Astro.props;
+
+const hasContent = text || imageUrl;
 ---
 
-<div class="twitter-mockup bg-accent-content outline outline-slate-700 shadow-lg text-base-content rounded-lg p-6 mx-16 my-auto">
-  <div class="header flex justify-between items-center mb-3 gap-1">
-    <div class="profile flex items-center">
-      <div class="avatar size-12 rounded-full mr-[16px] overflow-hidden">
-        <ImageCard
-          imagePath={pfp}
-          altText={`${name}'s profile picture`}
-          showShadow={false}
-          rounded={false}
-          showCaption={false}
-          class="w-full h-full"
-          imageClass="w-full h-full object-cover"
-        />
-      </div>
-      <div class="user-info flex flex-col justify-center">
-        <div class="flex items-center">
-          <span class="username font-bold mr-[4px]">{name}</span>
-          <span class="handle text-secondary-content">@{handle}</span>
+<div class="tweet bg-neutral outline outline-neutral-content/75 shadow-lg text-base-content rounded-lg p-6 mx-auto my-auto prose prose-sm" role="article" aria-label={`Tweet by ${name}`}>
+  <div class="header flex items-start pr-2">
+    <div class="avatar size-12 rounded-full mr-[16px] overflow-hidden flex-shrink-0">
+      <ImageCard
+        imagePath={pfp}
+        altText={`${name}'s profile picture`}
+        showShadow={false}
+        rounded={false}
+        showCaption={false}
+        class="w-full h-full"
+        imageClass="w-full h-full object-cover"
+      />
+    </div>
+    
+    <div class="flex-grow">
+      <div class="flex justify-between items-center">
+        <div class="info">
+          <span class="username">{name}</span>
+          <span class="handle" aria-label={`${handle} username`}>@{handle}</span>
         </div>
       </div>
+
+      {text && <p class="body text-base-content">{text}</p>}
+
+      {imageUrl && (
+        <div class={`tweet-image ${text ? '-mt-3' : ''} -my-4`}>
+          <ImageCard
+            imagePath={imageUrl}
+            altText="Tweet image"
+            showShadow={false}
+            rounded={true}
+            showCaption={false}
+            class="w-full"
+            imageClass="w-full h-auto object-cover rounded-lg"
+          />
+        </div>
+      )}
+
+      {quotedTweet && (
+        <div class="quoted-tweet border border-neutral-content bg-neutral rounded-lg mb-3 mt-3 pt-2 pb-3 pl-3 pr-3" role="article" aria-label={`Quoted tweet by ${quotedTweet.name}`}>
+          <div class="flex items-center gap-2">
+            <span class="quoted-pfp size-6 rounded-full overflow-hidden flex-shrink-0">
+              <ImageCard
+                imagePath={quotedTweet.pfp}
+                altText={`${quotedTweet.name}'s profile picture`}
+                showShadow={false}
+                rounded={false}
+                showCaption={false}
+                class="w-full h-full"
+                imageClass="w-full h-full object-cover"
+              />
+            </span>
+
+            <div class="info">
+              <span class="username">{quotedTweet.name}</span>
+              <span class="handle">@{quotedTweet.handle}</span>
+            </div>
+          </div>
+
+          {quotedTweet.text && <p class="body">{quotedTweet.text}</p>}
+          {quotedTweet.imageUrl && (
+            <div class={`tweet-image ${quotedTweet.text ? 'mt-2' : ''} mb-2`}>
+              <ImageCard
+                imagePath={quotedTweet.imageUrl}
+                altText="Quoted tweet image"
+                showShadow={false}
+                rounded={true}
+                showCaption={false}
+                class="w-full"
+                imageClass="w-full h-auto object-cover rounded-lg"
+              />
+            </div>
+          )}
+        </div>
+      )}
+      
+      {hasContent && (
+        <div class="actions text-accent-content bg-inherit flex justify-between items-center mt-2" role="group" aria-label="Tweet actions">
+          <button class="action" aria-label={`Reply, ${replies} replies`}>
+            <Icon name="solar:chat-square-linear" />
+            <span>{replies}</span>
+          </button>
+          <button class="action" aria-label={`Retweet, ${retweets} retweets`}>
+            <Icon name="solar:repeat-bold" />
+            <span>{retweets}</span>
+          </button>
+          <button class="action" aria-label={`Like, ${likes} likes`}>
+            <Icon name="solar:heart-linear" />
+            <span>{likes}</span>
+          </button>
+          <Link
+            href={source}
+            class="menu text-accent-content tooltip tooltip-primary tooltip-bottom flex items-center justify-center"
+            data-tip="View original source"
+            underline={false}
+            externalInNewTab={true}
+            aria-label="View original tweet">
+            <Icon name="solar:link-bold" class="size-4"/>
+          </Link>
+        </div>
+      )}
     </div>
-    <a href={ source } class="menu btn btn-square btn-sm btn-ghost tooltip flex items-center justify-center" data-tip="View original source">
-      <Icon name="solar:link-bold" class="size-4"/>
-    </a>
-  </div>
-  <p class="tweet-text text-[1.1em]">{text}</p>
-  <div class="stats text-secondary-content flex justify-between items-center mt-4">
-    <button class="stat-item">
-      <Icon name="solar:chat-square-linear" />
-      <span class="text-sm">{replies}</span>
-    </button>
-    <button class="stat-item">
-      <Icon name="solar:repeat-bold" />
-      <span class="text-sm">{retweets}</span>
-    </button>
-    <button class="stat-item">
-      <Icon name="solar:heart-linear" />
-      <span class="text-sm">{likes}</span>
-    </button>
-    <button class="stat-item">
-      <Icon name="solar:chart-2-bold" />
-    </button>
   </div>
 </div>
 
 <style>
+  .tweet {
+    font-family: 'Chirp', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    @apply prose-base p-4;
+  }
+
+  .tweet * {
+    font-family: inherit !important;
+  }
+
+  .tweet > * {
+    @apply !m-0;
+  }
+
+  .tweet :global(p) {
+    @apply !m-0;
+  }
+
+  .info {
+    @apply space-x-1 flex flex-row items-center justify-center;
+  }
+
+  .username {
+    @apply font-semibold;
+  }
+
+  .handle {
+    @apply font-normal text-accent-content;
+  }
+
+  .body {
+    font-weight: 400;
+    @apply leading-5 !m-0;
+  }
+
+  .quoted-pfp {
+    position: relative;
+    padding: 0 !important;
+  }
+
+  .quoted-pfp :global(*) {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .quoted-pfp :global(img) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
   .avatar {
     position: relative;
-    width: 3rem;  /* size-12 equivalent */
-    height: 3rem; /* size-12 equivalent */
   }
 
   .avatar :global(img) {
@@ -87,35 +215,44 @@ const {
     object-fit: cover;
   }
 
-  .twitter-mockup {
-    font-family: Inter, Helvetica, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-  }
-
-
-  .stats {
-    background-color: oklch(var(--ac));
-  }
-
-  .stat-item {
+  .action {
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
     background: none;
     border: none;
     cursor: pointer;
-    color: inherit;
-    font: inherit;
     padding: 0;
     transition: color 0.2s ease;
+    @apply text-sm;
   }
 
-  .stat-item:hover {
+  .action:hover {
     color: oklch(var(--p));
   }
 
-  .stat-item :global(svg) {
+  .action :global(svg) {
     width: 1.25rem;
     height: 1.25rem;
     display: block;
+  }
+
+  .header {
+    align-items: flex-start;
+  }
+
+  .tweet :global(p) {
+    @apply m-0;
+  }
+
+  .tweet-image {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .tweet-image :global(img) {
+    max-height: 300px;
+    width: 100%;
+    object-fit: cover;
   }
 </style>
