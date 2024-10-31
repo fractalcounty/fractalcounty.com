@@ -1,34 +1,34 @@
 ---
-import { type CollectionEntry, getCollection } from 'astro:content';
-import PageLayout from '@layouts/PageLayout.astro';
-import Container from '@components/Container.astro';
-import FormattedDate from '@components/FormattedDate.astro';
-import { readingTime } from '@lib/utils';
-import BackToPrev from '@components/BackToPrev.astro';
-import Link from '@components/Link.astro';
-import PostStructuredData from '@components/PostStructuredData.astro';
+import BackToPrev from '@components/BackToPrev.astro'
+import Container from '@components/Container.astro'
+import FormattedDate from '@components/FormattedDate.astro'
+import Link from '@components/Link.astro'
+import PostStructuredData from '@components/PostStructuredData.astro'
+import PageLayout from '@layouts/PageLayout.astro'
+import { readingTime } from '@lib/utils'
+import { type CollectionEntry, getCollection } from 'astro:content'
 
 export async function getStaticPaths() {
   const projects = (await getCollection('projects'))
     .filter(post => !post.data.draft)
-    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-  return projects.map((project) => ({
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  return projects.map(project => ({
     params: { slug: project.slug },
     props: project,
-  }));
+  }))
 }
-type Props = CollectionEntry<'projects'>;
+type Props = CollectionEntry<'projects'>
 
-const project = Astro.props;
-const { Content } = await project.render();
-const title = project.data.showInBlog && project.data.blogTitle ? project.data.blogTitle : project.data.title;
+const project = Astro.props
+const { Content } = await project.render()
+const title = project.data.showInBlog && project.data.blogTitle ? project.data.blogTitle : project.data.title
 const tags = project.data.tags || [];
 ---
 
-<PageLayout 
-  title={title} 
-  description={project.data.description} 
-  type="article" 
+<PageLayout
+  title={title}
+  description={project.data.description}
+  type="article"
   publishedTime={project.data.date}
   tags={tags}
 >
@@ -93,7 +93,8 @@ const tags = project.data.tags || [];
     <article class="animate">
       <Content components={{
         a: Link,
-      }}/>
+      }}
+      />
     </article>
   </Container>
 </PageLayout>

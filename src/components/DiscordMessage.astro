@@ -1,25 +1,26 @@
 ---
-import type { JSX } from 'astro/jsx-runtime';
-import ImageCard from './ImageCard.astro';
+import type { JSX } from 'astro/jsx-runtime'
+import ImageCard from './ImageCard.astro'
 
 interface Props {
-  author: string;
-  content: (string | JSX.Element)[];
-  avatar?: string;
-  date?: string;
+  author: string
+  content: (string | JSX.Element)[]
+  avatar?: string
+  date?: string
 }
 
-const { author, content, avatar = '/default-avatar.png', date } = Astro.props;
+const { author, content, avatar = '/default-avatar.png', date } = Astro.props
 
 function formatDate(dateString: string) {
   try {
-    const dateObject = new Date(dateString);
-    if (isNaN(dateObject.getTime())) {
-      return dateString; // Return the original string if it's not a valid date
+    const dateObject = new Date(dateString)
+    if (Number.isNaN(dateObject.getTime())) {
+      return dateString // Return the original string if it's not a valid date
     }
-    return dateObject.toISOString();
-  } catch {
-    return dateString; // Return the original string if there's any error
+    return dateObject.toISOString()
+  }
+ catch {
+    return dateString // Return the original string if there's any error
   }
 }
 ---

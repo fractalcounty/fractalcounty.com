@@ -1,6 +1,6 @@
 ---
-import Container from '@components/Container.astro';
-import Link from '@components/Link.astro';
+import Container from '@components/Container.astro'
+import Link from '@components/Link.astro'
 import { SITE } from '@consts';
 ---
 
@@ -8,12 +8,12 @@ import { SITE } from '@consts';
   <Container>
     <div class="flex flex-wrap gap-y-2 justify-between">
        <Link
-          href="/"
-          title={SITE.NAME}
-          externalInNewTab={false}
-          underline={false}
-          class="font-bold"
-        >
+         href="/"
+         title={SITE.NAME}
+         externalInNewTab={false}
+         underline={false}
+         class="font-bold"
+       >
         <div class="font-bold uppercase hover:scale-105 transition-transform ease-out duration-500">
           {SITE.NAME}
         </div>
@@ -28,7 +28,7 @@ import { SITE } from '@consts';
           blog
         </Link>
         <span>
-          {`/`}
+          /
         </span>
         <Link
           href="/projects"
@@ -39,7 +39,7 @@ import { SITE } from '@consts';
           projects
         </Link>
         <span>
-          {`/`}
+          /
         </span>
         <Link
           href="https://links.fractalcounty.com/"

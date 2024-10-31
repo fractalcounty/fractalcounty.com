@@ -1,28 +1,28 @@
 ---
-import { Icon } from 'astro-icon/components';
-import Link from '@components/Link.astro';
-import ImageCard from '@components/ImageCard.astro';
+import ImageCard from '@components/ImageCard.astro'
+import Link from '@components/Link.astro'
+import { Icon } from 'astro-icon/components'
 
 interface QuotedTweet {
-  name: string;
-  handle: string;
-  text?: string;
-  pfp: string;
-  imageUrl?: string;
+  name: string
+  handle: string
+  text?: string
+  pfp: string
+  imageUrl?: string
 }
 
 interface Props {
-  name?: string;
-  handle?: string;
-  pfp?: string;
-  text?: string;
-  imageUrl?: string;
-  hashtags?: string;
-  retweets?: string;
-  replies?: string;
-  likes?: string;
-  source?: string;
-  quotedTweet?: QuotedTweet;
+  name?: string
+  handle?: string
+  pfp?: string
+  text?: string
+  imageUrl?: string
+  hashtags?: string
+  retweets?: string
+  replies?: string
+  likes?: string
+  source?: string
+  quotedTweet?: QuotedTweet
 }
 
 const {
@@ -35,8 +35,8 @@ const {
   replies = '50k',
   likes = '300k',
   source = 'https://twitter.com',
-  quotedTweet
-} = Astro.props;
+  quotedTweet,
+} = Astro.props
 
 const hasContent = text || imageUrl;
 ---
@@ -54,7 +54,7 @@ const hasContent = text || imageUrl;
         imageClass="w-full h-full object-cover"
       />
     </div>
-    
+
     <div class="flex-grow">
       <div class="flex justify-between items-center">
         <div class="info">
@@ -116,7 +116,7 @@ const hasContent = text || imageUrl;
           )}
         </div>
       )}
-      
+
       {hasContent && (
         <div class="actions text-accent-content bg-inherit flex justify-between items-center mt-2" role="group" aria-label="Tweet actions">
           <button class="action" aria-label={`Reply, ${replies} replies`}>
@@ -137,8 +137,9 @@ const hasContent = text || imageUrl;
             data-tip="View original source"
             underline={false}
             externalInNewTab={true}
-            aria-label="View original tweet">
-            <Icon name="solar:link-bold" class="size-4"/>
+            aria-label="View original tweet"
+          >
+            <Icon name="solar:link-bold" class="size-4" />
           </Link>
         </div>
       )}

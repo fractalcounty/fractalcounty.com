@@ -1,25 +1,26 @@
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { type ClassValue, clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs))
 }
 
 export function formatDateForOpenGraph(date: string | Date): string {
-  let parsedDate: Date;
+  let parsedDate: Date
 
   if (typeof date === 'string') {
-    parsedDate = new Date(date);
-  } else {
-    parsedDate = date;
+    parsedDate = new Date(date)
+  }
+  else {
+    parsedDate = date
   }
 
-  if (isNaN(parsedDate.getTime())) {
+  if (Number.isNaN(parsedDate.getTime())) {
     // If the date is invalid, return the original string
-    return typeof date === 'string' ? date : '';
+    return typeof date === 'string' ? date : ''
   }
   // Format the date as ISO 8601
-  return parsedDate.toISOString().substring(0, 10);
+  return parsedDate.toISOString().substring(0, 10)
 }
 
 export function formatDate(date: Date) {
@@ -27,31 +28,32 @@ export function formatDate(date: Date) {
     month: 'short',
     day: '2-digit',
     year: 'numeric',
-  }).format(date);
+  }).format(date)
 }
 
 export function readingTime(html: string) {
-  const textOnly = html.replace(/<[^>]+>/g, '');
-  const wordCount = textOnly.split(/\s+/).length;
-  const readingTimeMinutes = (wordCount / 200 + 1).toFixed();
-  return `${readingTimeMinutes} min read`;
+  const textOnly = html.replace(/<[^>]+>/g, '')
+  const wordCount = textOnly.split(/\s+/).length
+  const readingTimeMinutes = (wordCount / 200 + 1).toFixed()
+  return `${readingTimeMinutes} min read`
 }
 
 export function dateRange(startDate: Date, endDate?: Date | string): string {
-  const startMonth = startDate.toLocaleString('default', { month: 'short' });
-  const startYear = startDate.getFullYear().toString();
-  let endMonth;
-  let endYear;
+  const startMonth = startDate.toLocaleString('default', { month: 'short' })
+  const startYear = startDate.getFullYear().toString()
+  let endMonth = ''
+  let endYear = ''
 
-  if (endDate) {
+  if (endDate !== undefined) {
     if (typeof endDate === 'string') {
-      endMonth = '';
-      endYear = endDate;
-    } else {
-      endMonth = endDate.toLocaleString('default', { month: 'short' });
-      endYear = endDate.getFullYear().toString();
+      endMonth = ''
+      endYear = endDate
+    }
+    else {
+      endMonth = endDate.toLocaleString('default', { month: 'short' })
+      endYear = endDate.getFullYear().toString()
     }
   }
 
-  return `${startMonth}${startYear} - ${endMonth}${endYear}`;
+  return `${startMonth}${startYear} - ${endMonth}${endYear}`
 }

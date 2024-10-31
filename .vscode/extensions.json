@@ -1,4 +1,15 @@
 {
-  "recommendations": ["astro-build.astro-vscode", "unifiedjs.vscode-mdx"],
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "aaron-bond.better-comments",
+    "naumovs.color-highlight",
+    "mikestead.dotenv",
+    "dbaeumer.vscode-eslint",
+    "christian-kohler.path-intellisense",
+    "bradlc.vscode-tailwindcss",
+    "redhat.vscode-yaml",
+    "astro-build.astro-vscode",
+    "unifiedjs.vscode-mdx"
+  ],
   "unwantedRecommendations": []
 }

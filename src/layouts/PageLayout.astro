@@ -1,17 +1,17 @@
 ---
-import Head from '@components/Head.astro';
-import Header from '@components/Header.astro';
-import Footer from '@components/Footer.astro';
+import Footer from '@components/Footer.astro'
+import Head from '@components/Head.astro'
+import Header from '@components/Header.astro'
 
 type Props = {
-  title: string;
-  description: string;
-  type?: 'website' | 'article';
-  publishedTime?: Date;
-  tags?: string[];
-};
+  title: string
+  description: string
+  type?: 'website' | 'article'
+  publishedTime?: Date
+  tags?: string[]
+}
 
-const { title, description, type = 'website', publishedTime, tags = [] } = Astro.props;
+const { title, description, type = 'website', publishedTime, tags = [] } = Astro.props
 
 const publishedTimeString = publishedTime?.toISOString();
 ---
@@ -19,7 +19,7 @@ const publishedTimeString = publishedTime?.toISOString();
 <!doctype html>
 <html lang="en">
   <head>
-    <Head 
+    <Head
       title={title}
       description={description}
       type={type}
@@ -29,10 +29,10 @@ const publishedTimeString = publishedTime?.toISOString();
     <slot name="structured-data" />
   </head>
   <body>
-    <Header role="banner"/>
+    <Header role="banner" />
     <main>
       <slot />
     </main>
-    <Footer role="contentinfo"/>
+    <Footer role="contentinfo" />
   </body>
 </html>

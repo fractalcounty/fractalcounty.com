@@ -1,13 +1,13 @@
 ---
-import { SITE } from '@consts';
+import { SITE } from '@consts'
 
-const pageUrl = new URL(Astro.url.pathname, Astro.site);
+const pageUrl = new URL(Astro.url.pathname, Astro.site)
 
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
-  name: SITE.NAME,
-  url: pageUrl,
+  'name': SITE.NAME,
+  'url': pageUrl,
 };
 ---
 

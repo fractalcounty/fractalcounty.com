@@ -1,36 +1,40 @@
 ---
-import { type CollectionEntry, getCollection } from 'astro:content';
-import PageLayout from '@layouts/PageLayout.astro';
-import Container from '@components/Container.astro';
-import FormattedDate from '@components/FormattedDate.astro';
-import { readingTime } from '@lib/utils';
-import BackToPrev from '@components/BackToPrev.astro';
-import PostStructuredData from '@components/PostStructuredData.astro';
+import BackToPrev from '@components/BackToPrev.astro'
+import Container from '@components/Container.astro'
+import FormattedDate from '@components/FormattedDate.astro'
+import PostStructuredData from '@components/PostStructuredData.astro'
+import PageLayout from '@layouts/PageLayout.astro'
+import { readingTime } from '@lib/utils'
+import { type CollectionEntry, getCollection } from 'astro:content'
 
 export async function getStaticPaths() {
-  const blogPosts = (await getCollection('blog'))
-    .filter(post => !post.data.draft);
-  const projectsInBlog = (await getCollection('projects'))
-    .filter(project => !project.data.draft && project.data.showInBlog);
-  const allPosts = [...blogPosts, ...projectsInBlog]
-    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-  return allPosts.map((post) => ({
+  const blogPosts = await getCollection('blog')
+  const projectsInBlog = await getCollection('projects')
+
+  const filteredBlogPosts = blogPosts.filter(post => !post.data.draft)
+  const filteredProjects = projectsInBlog.filter(project => !project.data.draft && project.data.showInBlog)
+
+  const allPosts = [...filteredBlogPosts, ...filteredProjects]
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+
+  return allPosts.map(post => ({
     params: { slug: post.slug },
     props: post,
-  }));
+  }))
 }
-type Props = CollectionEntry<'blog'> | CollectionEntry<'projects'>;
 
-const post = Astro.props;
-const { Content } = await post.render();
-const title = (post.data.type === 'project' && post.data.showInBlog ? post.data.blogTitle : post.data.title) || 'Untitled Post';
-const tags = post.data.tags || [];
+type Props = CollectionEntry<'blog'> | CollectionEntry<'projects'>
+
+const post = Astro.props
+const { Content } = await post.render()
+const title = (post.data.type === 'project' && post.data.showInBlog ? post.data.blogTitle : post.data.title) || 'Untitled Post'
+const tags = post.data.tags || []
 ---
 
-<PageLayout 
-  title={title} 
-  description={post.data.description} 
-  type="article" 
+<PageLayout
+  title={title}
+  description={post.data.description}
+  type="article"
   publishedTime={post.data.date}
   tags={tags}
 >

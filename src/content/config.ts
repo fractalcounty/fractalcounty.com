@@ -1,4 +1,4 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection, z } from 'astro:content'
 
 const blog = defineCollection({
   type: 'content',
@@ -11,7 +11,7 @@ const blog = defineCollection({
     tags: z.array(z.string()).optional(),
     thumbnail: z.string().optional(),
   }),
-});
+})
 
 const projects = defineCollection({
   type: 'content',
@@ -28,7 +28,7 @@ const projects = defineCollection({
           z.object({
             label: z.string(),
             url: z.string(),
-          })
+          }),
         )
         .optional(),
       showInBlog: z.boolean().optional(),
@@ -39,16 +39,16 @@ const projects = defineCollection({
     })
     .refine(
       (data) => {
-        if (data.showInBlog) {
-          return !!data.blogTitle;
+        if (data.showInBlog === true) {
+          return typeof data.blogTitle === 'string' && data.blogTitle.length > 0
         }
-        return true;
+        return true
       },
       {
         message: 'blogTitle is required when showInBlog is true',
         path: ['blogTitle'],
-      }
+      },
     ),
-});
+})
 
-export const collections = { blog, projects };
+export const collections = { blog, projects }

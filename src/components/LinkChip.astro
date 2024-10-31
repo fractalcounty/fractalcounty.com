@@ -1,12 +1,12 @@
 ---
-import { Icon } from 'astro-icon/components';
-import { Link as AstroLink } from 'astro-link';
-import { cn } from '@lib/utils';
+import { cn } from '@lib/utils'
+import { Icon } from 'astro-icon/components'
+import { Link as AstroLink } from 'astro-link'
 
 export interface Props {
-  icon: string;
-  url: string;
-  class?: string;
+  icon: string
+  url: string
+  class?: string
 }
 
 const { icon, url, class: className } = Astro.props;
@@ -17,7 +17,7 @@ const { icon, url, class: className } = Astro.props;
   externalInNewTab={true}
   class={cn(
     'inline-flex items-center justify-center bg-transparent text-white hover:opacity-80 transition-opacity',
-    className
+    className,
   )}
   aria-label={`Visit ${icon} profile`}
 >

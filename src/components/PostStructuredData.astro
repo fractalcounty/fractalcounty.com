@@ -1,13 +1,13 @@
 ---
-import type { CollectionEntry } from 'astro:content';
-import { formatDateForOpenGraph } from '../lib/utils';
-import { getImagePath } from 'astro-opengraph-images';
+import type { CollectionEntry } from 'astro:content'
+import { getImagePath } from 'astro-opengraph-images'
+import { formatDateForOpenGraph } from '../lib/utils'
 
-type Props = CollectionEntry<'blog'>['data'] | CollectionEntry<'projects'>['data'];
-const { title, description, date, tags, type } = Astro.props;
+type Props = CollectionEntry<'blog'>['data'] | CollectionEntry<'projects'>['data']
+const { title, description, date, tags, type } = Astro.props
 
-const pageUrl = new URL(Astro.url.pathname, Astro.site);
-const openGraphImageUrl = getImagePath({ url: Astro.url, site: Astro.site });
+const pageUrl = new URL(Astro.url.pathname, Astro.site)
+const openGraphImageUrl = getImagePath({ url: Astro.url, site: Astro.site })
 
 const ogImage = {
   '@type': 'ImageObject',
@@ -15,7 +15,7 @@ const ogImage = {
   'width': 1200,
   'height': 630,
   'caption': `White text on a black background that says FRACTAL COUNTY followed by ${title}`,
-};
+}
 
 const brand = {
   '@type': 'Brand',
@@ -26,12 +26,12 @@ const brand = {
     'width': 1200,
     'height': 630,
   },
-  'slogan': "Don't drink the tap water.",
+  'slogan': 'Don\'t drink the tap water.',
   'alternateName': 'fractalcounty',
   'description': 'Media Conglomeration',
   'name': 'FRACTAL COUNTY',
   'url': 'https://fractalcounty.com',
-};
+}
 
 const person = {
   '@type': 'Person',
@@ -48,7 +48,7 @@ const person = {
   'gender': 'male',
   'knows': 'Turkey Tom',
   'nationality': 'Midwesterner',
-};
+}
 
 const schema = {
   '@context': 'https://schema.org',

@@ -1,19 +1,19 @@
 ---
-import { Icon } from 'astro-icon/components';
-import Link from '@components/Link.astro';
+import Link from '@components/Link.astro'
+import { Icon } from 'astro-icon/components'
 
 interface Props {
-  archive?: string;
-  title?: string;
+  archive?: string
+  title?: string
 }
 
-const { 
+const {
   archive = '/images/smpearth-chip-wilbur-msg.png',
-  title = 'Discord Conversation'
+  title = 'Discord Conversation',
 } = Astro.props;
 ---
 
-<section 
+<section
   class="discord-conversation bg-neutral outline outline-neutral-content/75 relative"
   aria-label={`Discord conversation: ${title}`}
 >
@@ -44,19 +44,19 @@ const {
     padding: 1.5rem;
     margin-bottom: 1rem;
     font-family: 'gg-sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    @apply prose text-base-content 
+    @apply prose text-base-content
   }
-  
+
   .discord-conversation :global(.discord-message) {
     margin: -0.5rem -0.5rem 0.5rem -0.5rem;
     padding: 0.5rem;
     border-radius: 8px;
   }
-  
+
   .discord-conversation :global(.discord-message:hover) {
     background-color: oklch(var(--nc)/0.3);
   }
-  
+
   .discord-conversation :global(.discord-message:last-child) {
     margin-bottom: -0.5rem;
   }

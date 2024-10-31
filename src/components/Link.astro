@@ -1,13 +1,13 @@
 ---
-import { cn } from '@lib/utils';
-import { Link as AstroLink } from 'astro-link';
+import { cn } from '@lib/utils'
+import { Link as AstroLink } from 'astro-link'
 
 type Props = {
-  href: string;
-  title?: string;
-  externalInNewTab?: boolean;
-  underline?: boolean;
-  class?: string;
+  href: string
+  title?: string
+  externalInNewTab?: boolean
+  underline?: boolean
+  class?: string
 }
 
 const { href, title, externalInNewTab, underline = true, class: className, ...rest } = Astro.props;
@@ -23,9 +23,9 @@ const { href, title, externalInNewTab, underline = true, class: className, ...re
       ? 'underline decoration-primary/65 underline-offset-2 hover:decoration-primary'
       : 'no-underline',
     'hover:text-primary',
-    className
+    className,
   )}
   {...rest}
 >
-  <slot/>
+  <slot />
 </AstroLink>

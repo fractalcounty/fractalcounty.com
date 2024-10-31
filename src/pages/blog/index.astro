@@ -1,38 +1,38 @@
 ---
-import { type CollectionEntry, getCollection } from 'astro:content';
-import PageLayout from '@layouts/PageLayout.astro';
-import Container from '@components/Container.astro';
-import ArrowCard from '@components/ArrowCard.astro';
-import CollectionPageStructuredData from '@components/CollectionPageStructuredData.astro';
-import { BLOG } from '@consts';
+import ArrowCard from '@components/ArrowCard.astro'
+import CollectionPageStructuredData from '@components/CollectionPageStructuredData.astro'
+import Container from '@components/Container.astro'
+import { BLOG } from '@consts'
+import PageLayout from '@layouts/PageLayout.astro'
+import { type CollectionEntry, getCollection } from 'astro:content'
 
 const blogPosts = (await getCollection('blog'))
-  .filter(post => !post.data.draft);
+  .filter(post => !post.data.draft)
 
 const projectsInBlog = (await getCollection('projects'))
-  .filter(project => !project.data.draft && project.data.showInBlog);
+  .filter(project => !project.data.draft && project.data.showInBlog)
 
 const allPosts = [...blogPosts, ...projectsInBlog]
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 
 type Acc = {
-  [year: string]: (CollectionEntry<'blog'> | CollectionEntry<'projects'>)[];
+  [year: string]: (CollectionEntry<'blog'> | CollectionEntry<'projects'>)[]
 }
 
 const posts = allPosts.reduce((acc: Acc, post) => {
-    const year = post.data.date.getFullYear().toString();
+    const year = post.data.date.getFullYear().toString()
     if (!acc[year]) {
-      acc[year] = [];
+      acc[year] = []
     }
-    acc[year].push(post);
-    return acc;
-  }, {});
+    acc[year].push(post)
+    return acc
+  }, {})
 
-const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a)); 
+const years = Object.keys(posts).sort((a, b) => Number.parseInt(b) - Number.parseInt(a));
 ---
 
 <PageLayout title={BLOG.TITLE} description={BLOG.DESCRIPTION}>
-  <CollectionPageStructuredData 
+  <CollectionPageStructuredData
     slot="structured-data"
     type="BlogPosting"
     name={BLOG.TITLE}
@@ -52,7 +52,7 @@ const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a));
             <div>
               <ul class="flex flex-col gap-4">
                 {
-                  posts[year].map((post) => (
+                  posts[year].map(post => (
                     <li>
                       <ArrowCard entry={post} context="blog" />
                     </li>

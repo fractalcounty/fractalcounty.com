@@ -1,22 +1,22 @@
 ---
-import { getCollection } from 'astro:content';
-import WebsiteStructuredData from '@components/WebsiteStructuredData.astro';
-import Container from '@components/Container.astro';
-import PageLayout from '@layouts/PageLayout.astro';
-import ArrowCard from '@components/ArrowCard.astro';
-import Link from '@components/Link.astro';
+import ArrowCard from '@components/ArrowCard.astro'
+import Container from '@components/Container.astro'
+import Link from '@components/Link.astro'
+import WebsiteStructuredData from '@components/WebsiteStructuredData.astro'
+import PageLayout from '@layouts/PageLayout.astro'
+import { getCollection } from 'astro:content'
 // import { dateRange } from '@lib/utils';
-import { SITE, HOME, LINKS_FOOTER } from '@consts';
+import { HOME, LINKS_FOOTER, SITE } from '@consts'
 
 const blogPosts = (await getCollection('blog'))
-  .filter(post => !post.data.draft);
+  .filter(post => !post.data.draft)
 
 const projectsInBlog = (await getCollection('projects'))
-  .filter(project => !project.data.draft && project.data.showInBlog);
+  .filter(project => !project.data.draft && project.data.showInBlog)
 
 const allBlogPosts = [...blogPosts, ...projectsInBlog]
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE);
+  .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE)
 
 const projects = (await getCollection('projects'))
   .filter(project => !project.data.draft)
@@ -62,7 +62,7 @@ const projects = (await getCollection('projects'))
             >
               Astro
             </Link>
-            framework, with some help from 
+            framework, with some help from
             <Link
               href="https://astro.build/integrations/tailwind/"
               title="TailwindCSS"
@@ -70,9 +70,9 @@ const projects = (await getCollection('projects'))
             >
               TailwindCSS
             </Link>
-            and 
-            <Link 
-              href="https://daisyui.com/" 
+            and
+            <Link
+              href="https://daisyui.com/"
               title="DaisyUI"
               externalInNewTab={true}
             >
@@ -147,7 +147,7 @@ const projects = (await getCollection('projects'))
               >
                 {SOCIAL.ICON}
               </Link>
-              {'/'}
+              /
             </li>
           ))}
           <li class="line-clamp-1">

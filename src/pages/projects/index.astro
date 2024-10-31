@@ -1,10 +1,10 @@
 ---
-import { getCollection } from 'astro:content';
-import PageLayout from '@layouts/PageLayout.astro';
-import Container from '@components/Container.astro';
-import ArrowCard from '@components/ArrowCard.astro';
-import CollectionPageStructuredData from '@components/CollectionPageStructuredData.astro';
-import { PROJECTS } from '@consts';
+import ArrowCard from '@components/ArrowCard.astro'
+import CollectionPageStructuredData from '@components/CollectionPageStructuredData.astro'
+import Container from '@components/Container.astro'
+import { PROJECTS } from '@consts'
+import PageLayout from '@layouts/PageLayout.astro'
+import { getCollection } from 'astro:content'
 
 const projects = (await getCollection('projects'))
   .filter(project => !project.data.draft)
@@ -12,7 +12,7 @@ const projects = (await getCollection('projects'))
 ---
 
 <PageLayout title={PROJECTS.TITLE} description={PROJECTS.DESCRIPTION}>
-  <CollectionPageStructuredData 
+  <CollectionPageStructuredData
     slot="structured-data"
     type="Article"
     name={PROJECTS.TITLE}
@@ -25,7 +25,7 @@ const projects = (await getCollection('projects'))
       </div>
       <ul class="animate flex flex-col gap-4">
         {
-          projects.map((project) => (
+          projects.map(project => (
             <li>
               <ArrowCard entry={project} context="projects" />
             </li>
