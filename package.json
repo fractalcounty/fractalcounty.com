@@ -21,6 +21,7 @@
     "astro-opengraph-images": "^1.11.3",
     "astro-seo": "^0.8.4",
     "clsx": "^2.1.1",
+    "prettier-plugin-astro": "^0.14.1",
     "tailwind-merge": "^2.5.3"
   },
   "devDependencies": {
