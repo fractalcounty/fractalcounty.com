@@ -1,6 +1,6 @@
 ---
+import CollectionPageStructuredData from '@/components/meta/CollectionPageStructuredData.astro'
 import ArrowCard from '@components/ArrowCard.astro'
-import CollectionPageStructuredData from '@components/CollectionPageStructuredData.astro'
 import Container from '@components/Container.astro'
 import { PROJECTS } from '@consts'
 import PageLayout from '@layouts/PageLayout.astro'
@@ -20,8 +20,9 @@ const projects = (await getCollection('projects'))
   />
   <Container>
     <div class="space-y-10">
-      <div class="animate font-semibold uppercase">
-        Projects
+      <div class="animate">
+        <h1 class="font-semibold uppercase text-base-content">Projects</h1>
+        <p class="text-sm text-base-content/70 mt-1">Projects and experiments</p>
       </div>
       <ul class="animate flex flex-col gap-4">
         {

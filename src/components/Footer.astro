@@ -1,5 +1,5 @@
 ---
-import BackToTop from '@components/BackToTop.astro'
+import Button from '@components/Button.astro'
 import Container from '@components/Container.astro'
 import Link from '@components/Link.astro'
 import { SITE } from '@consts'
@@ -10,7 +10,9 @@ import { Icon } from 'astro-icon/components';
   <Container>
     <div class="relative">
       <div class="absolute right-0 -top-20">
-        <BackToTop />
+        <Button id="back-to-top" arrow="up">
+          Back to top
+        </Button>
       </div>
     </div>
     <div class="flex justify-between items-center">

@@ -51,4 +51,23 @@ const projects = defineCollection({
     ),
 })
 
-export const collections = { blog, projects }
+export const artworkTypes = ['art', 'webcomic', 'video'] as const
+export type ArtworkType = typeof artworkTypes[number]
+
+const artwork = defineCollection({
+  type: 'content',
+  schema: ({ image }) => z.object({
+    title: z.string(),
+    description: z.string(),
+    date: z.coerce.date(),
+    draft: z.boolean().optional(),
+    type: z.enum(artworkTypes),
+    images: z.union([
+      image(),
+      z.array(image()),
+    ]),
+    order: z.number().optional(), // For ordering webcomic pages if needed
+  }),
+})
+
+export const collections = { blog, projects, artwork }

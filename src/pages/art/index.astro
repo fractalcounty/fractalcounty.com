@@ -1,0 +1,191 @@
+---
+import GalleryCollectionStructuredData from '@/components/meta/GalleryCollectionStructuredData.astro'
+import Button from '@components/Button.astro'
+import Container from '@components/Container.astro'
+import GalleryGrid from '@components/GalleryGrid.astro'
+import { ARTWORK } from '@consts'
+import { artworkTypes } from '@content/config'
+import PageLayout from '@layouts/PageLayout.astro'
+import { getCollection } from 'astro:content'
+
+// Optimize artwork data processing
+const artworks = (await getCollection('artwork'))
+  .filter(artwork => !artwork.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+
+// Create an optimized data structure for faster lookups
+const artworkData = {
+  years: new Set<number>(),
+  byCategory: new Map<string, Map<number, typeof artworks>>(),
+  all: new Map<number, typeof artworks>(),
+}
+
+// Single pass through the data
+artworks.forEach((artwork) => {
+  const year = artwork.data.date.getFullYear()
+  const category = artwork.data.type
+
+  // Track years
+  artworkData.years.add(year)
+
+  // Add to "all" category
+  if (!artworkData.all.has(year)) {
+    artworkData.all.set(year, [])
+  }
+  artworkData.all.get(year)!.push(artwork)
+
+  // Add to specific category
+  if (!artworkData.byCategory.has(category)) {
+    artworkData.byCategory.set(category, new Map())
+  }
+  const categoryMap = artworkData.byCategory.get(category)!
+  if (!categoryMap.has(year)) {
+    categoryMap.set(year, [])
+  }
+  categoryMap.get(year)!.push(artwork)
+})
+
+const allYears = [...artworkData.years].sort((a, b) => b - a)
+const categories = ['all', ...artworkTypes] as const
+---
+
+<PageLayout title={ARTWORK.TITLE} description={ARTWORK.DESCRIPTION}>
+  <GalleryCollectionStructuredData slot="structured-data" />
+  <Container>
+    <div class="space-y-12 animate">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+        <div>
+          <h1 class="font-semibold uppercase text-base-content">Art</h1>
+          <p class="text-sm text-base-content/70 mt-1">my archived artwork</p>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
+          {categories.map(category => (
+            <Button
+              data-category={category}
+              data-active={category === 'all' ? 'true' : 'false'}
+              class="min-w-10 justify-center"
+            >
+              {category}
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      <div class="gallery-container">
+        {allYears.map(year => (
+          <div class="year-section" data-year={year}>
+            <div class="divider divider-start text-base-content/50 font-medium my-8 animate">{year}</div>
+
+            <div class="artwork-categories">
+              {categories.map((category) => {
+                const yearArtworks = category === 'all'
+                  ? artworkData.all.get(year) || []
+                  : artworkData.byCategory.get(category)?.get(year) || []
+
+                return yearArtworks.length > 0 && (
+                  <div
+                    class="artwork-category"
+                    data-category={category}
+                    data-visible={category === 'all' ? 'true' : 'false'}
+                  >
+                    <GalleryGrid artworks={yearArtworks} />
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </Container>
+</PageLayout>
+<style>
+.artwork-categories {
+  position: relative;
+}
+
+.artwork-category {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.artwork-category[data-visible="true"] {
+  opacity: 1;
+  pointer-events: auto;
+  position: relative;
+}
+
+.year-section:empty {
+  display: none;
+}
+
+button[data-active="true"] {
+  @apply bg-neutral text-primary;
+}
+</style>
+
+<script>
+// Cache DOM queries
+const galleryState = {
+  tabs: null as NodeListOf<HTMLButtonElement> | null,
+  categories: null as NodeListOf<HTMLDivElement> | null,
+  yearSections: null as NodeListOf<HTMLDivElement> | null,
+  currentCategory: 'all',
+}
+
+function updateVisibility(selectedCategory: string) {
+  if (!galleryState.tabs || !galleryState.categories || !galleryState.yearSections)
+    return
+
+  // Update only if category changed
+  if (galleryState.currentCategory === selectedCategory)
+    return
+  galleryState.currentCategory = selectedCategory
+
+  // Update tabs
+  galleryState.tabs.forEach((tab) => {
+    tab.dataset.active = (tab.dataset.category === selectedCategory).toString()
+  })
+
+  // Update categories with minimal DOM touches
+  galleryState.categories.forEach((category) => {
+    const isVisible = category.dataset.category === selectedCategory
+    if (isVisible !== (category.dataset.visible === 'true')) {
+      category.dataset.visible = isVisible.toString()
+    }
+  })
+
+  // Update year sections visibility
+  galleryState.yearSections.forEach((section) => {
+    const hasVisibleContent = section.querySelector('.artwork-category[data-visible="true"]') !== null
+    section.style.display = hasVisibleContent ? 'block' : 'none'
+  })
+}
+
+function initGallery() {
+  // Cache DOM queries
+  galleryState.tabs = document.querySelectorAll<HTMLButtonElement>('button[data-category]')
+  galleryState.categories = document.querySelectorAll<HTMLDivElement>('.artwork-category')
+  galleryState.yearSections = document.querySelectorAll<HTMLDivElement>('.year-section')
+
+  // Use event delegation for better performance
+  document.addEventListener('click', (e) => {
+    const button = (e.target as Element).closest<HTMLButtonElement>('button[data-category]')
+    if (button) {
+      const category = button.dataset.category || 'all'
+      updateVisibility(category)
+    }
+  })
+
+  // Initial state
+  updateVisibility('all')
+}
+
+// Initialize gallery
+document.addEventListener('astro:page-load', initGallery, { once: true })
+</script>
+

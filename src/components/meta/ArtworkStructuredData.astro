@@ -1,0 +1,84 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { formatDateForOpenGraph } from '@/lib/utils'
+import { SITE } from '@consts'
+import { getImagePath } from 'astro-opengraph-images'
+
+interface Props {
+  artwork: CollectionEntry<'artwork'>
+}
+
+const { artwork } = Astro.props
+const { title, description, date, type, images } = artwork.data
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site)
+const openGraphImageUrl = getImagePath({ url: Astro.url, site: Astro.site })
+
+const mainImage = Array.isArray(images) ? images[0] : images
+
+const ogImage = {
+  '@type': 'ImageObject',
+  'url': openGraphImageUrl,
+  'width': 1200,
+  'height': 630,
+  'caption': `White text on a black background that says FRACTAL COUNTY followed by ${title}`,
+}
+
+const artworkImages = Array.isArray(images)
+  ? images.map(img => ({
+      '@type': 'ImageObject',
+      'url': img.src,
+      'width': img.width,
+      'height': img.height,
+      'contentUrl': img.src,
+    }))
+  : [{
+      '@type': 'ImageObject',
+      'url': images.src,
+      'width': images.width,
+      'height': images.height,
+      'contentUrl': images.src,
+    }]
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': type === 'video' ? 'VideoObject' : 'VisualArtwork',
+  'headline': title,
+  'name': title,
+  'description': description,
+  'url': pageUrl.toString(),
+  'image': [...artworkImages, ogImage],
+  'thumbnailUrl': mainImage.src,
+  'dateCreated': formatDateForOpenGraph(date),
+  'datePublished': formatDateForOpenGraph(date),
+  'author': {
+    '@type': 'Person',
+    'name': SITE.AUTHOR,
+    'email': SITE.EMAIL,
+    'url': Astro.site?.toString(),
+  },
+  'creator': {
+    '@type': 'Person',
+    'name': SITE.AUTHOR,
+    'email': SITE.EMAIL,
+    'url': Astro.site?.toString(),
+  },
+  'copyrightHolder': {
+    '@type': 'Person',
+    'name': SITE.AUTHOR,
+    'email': SITE.EMAIL,
+    'url': Astro.site?.toString(),
+  },
+  'inLanguage': 'en-US',
+  'isAccessibleForFree': true,
+  'license': 'https://fractalcounty.com/UNLICENSE',
+  'isPartOf': {
+    '@type': 'MediaGallery',
+    '@id': new URL('/art', Astro.site).toString(),
+    'name': 'Artwork Gallery',
+    'url': new URL('/art', Astro.site).toString(),
+  },
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />

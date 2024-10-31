@@ -1,5 +1,10 @@
 import type { Metadata, Site, Socials } from '@types'
 
+export const ARTWORK: Metadata = {
+  TITLE: 'Artwork',
+  DESCRIPTION: 'A collection of my artwork, including illustrations and webcomics.',
+}
+
 export const SITE: Site = {
   NAME: 'FRACTAL COUNTY',
   AUTHOR: 'chip fractalcounty',
@@ -7,6 +12,7 @@ export const SITE: Site = {
   NUM_POSTS_ON_HOMEPAGE: 3,
   NUM_WORKS_ON_HOMEPAGE: 2,
   NUM_PROJECTS_ON_HOMEPAGE: 3,
+  NUM_ARTWORK_ON_HOMEPAGE: 3,
 }
 
 export const HOME: Metadata = {

@@ -1,8 +1,9 @@
 ---
+import WebsiteStructuredData from '@/components/meta/WebsiteStructuredData.astro'
 import ArrowCard from '@components/ArrowCard.astro'
 import Container from '@components/Container.astro'
+import GalleryGrid from '@components/GalleryGrid.astro'
 import Link from '@components/Link.astro'
-import WebsiteStructuredData from '@components/WebsiteStructuredData.astro'
 import PageLayout from '@layouts/PageLayout.astro'
 import { getCollection } from 'astro:content'
 // import { dateRange } from '@lib/utils';
@@ -21,7 +22,12 @@ const allBlogPosts = [...blogPosts, ...projectsInBlog]
 const projects = (await getCollection('projects'))
   .filter(project => !project.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, SITE.NUM_PROJECTS_ON_HOMEPAGE);
+  .slice(0, SITE.NUM_PROJECTS_ON_HOMEPAGE)
+
+const recentArtwork = (await getCollection('artwork'))
+  .filter(artwork => !artwork.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3); // Show 6 most recent artworks
 ---
 
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
@@ -45,40 +51,6 @@ const projects = (await getCollection('projects'))
               Twitter
             </Link>,
             as well as various projects I'm working on and other miscellaneous things that don't fit elsewhere.
-          </p>
-          <p class="animate">
-            This website is still a work-in-progress.
-            Once I'm done filling it with what I currently have,
-            I probably won't post on here all too often.
-            Regardless, I'll try to keep it updated with whatever I'm working on at the time.
-            If anything, it's a decent archive.
-          </p>
-          <p class="animate">
-            I made this website using the
-            <Link
-              href="https://astro.build/"
-              title="Astro"
-              externalInNewTab={true}
-            >
-              Astro
-            </Link>
-            framework, with some help from
-            <Link
-              href="https://astro.build/integrations/tailwind/"
-              title="TailwindCSS"
-              externalInNewTab={true}
-            >
-              TailwindCSS
-            </Link>
-            and
-            <Link
-              href="https://daisyui.com/"
-              title="DaisyUI"
-              externalInNewTab={true}
-            >
-              DaisyUI
-            </Link>
-            for styling and UI.
           </p>
         </article>
       </section>
@@ -125,6 +97,26 @@ const projects = (await getCollection('projects'))
             </li>
           ))}
         </ul>
+      </section>
+
+      <section class="animate space-y-6">
+        <div class="flex flex-wrap gap-y-2 items-center justify-between">
+          <h5 class="font-bold uppercase">
+            Archived artwork
+          </h5>
+          <Link
+            href="/art"
+            title="Art"
+            externalInNewTab={false}
+          >
+            See all artwork
+          </Link>
+        </div>
+        <GalleryGrid
+          artworks={recentArtwork}
+          priority={true}
+          isHomepage={true}
+        />
       </section>
 
       <section class="animate space-y-4">

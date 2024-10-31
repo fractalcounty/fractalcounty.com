@@ -1,0 +1,131 @@
+---
+import type { ImageMetadata } from 'astro'
+import { Image } from 'astro:assets'
+
+interface Props {
+  images: ImageMetadata[]
+  title: string
+  description: string
+}
+
+const { images, title } = Astro.props
+---
+
+<div class="relative group">
+  <div
+    id="webcomic-container"
+    class="relative overflow-hidden rounded-lg bg-neutral"
+  >
+    <div
+      id="webcomic-slider"
+      class="flex transition-transform duration-300 ease-in-out"
+    >
+      {images.map((image, index) => (
+        <div
+          class="w-full flex-shrink-0 transition-opacity duration-300"
+          data-page={index + 1}
+        >
+          <Image
+            src={image}
+            alt={`${title} - Page ${index + 1}`}
+            class="w-full h-auto"
+          />
+        </div>
+      ))}
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="absolute inset-0 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+      <button
+        type="button"
+        id="prev-page"
+        class="m-4 bg-neutral/80 hover:bg-neutral hover:text-primary rounded-xl border border-base-content/50 backdrop-blur-sm transition-colors duration-200 ease-in-out w-12 h-12 flex items-center justify-center text-xl"
+        disabled={true}
+        aria-label="Previous page"
+      >
+        ←
+      </button>
+
+      <button
+        type="button"
+        id="next-page"
+        class="m-4 bg-neutral/80 hover:bg-neutral hover:text-primary rounded-xl border border-base-content/50 backdrop-blur-sm transition-colors duration-200 ease-in-out w-12 h-12 flex items-center justify-center text-xl"
+        disabled={images.length <= 1}
+        aria-label="Next page"
+      >
+        →
+      </button>
+    </div>
+  </div>
+
+  <div class="mt-4 text-center text-sm">
+    Page <span id="current-page">1</span> of {images.length}
+  </div>
+</div>
+
+<script>
+function initWebcomicViewer() {
+  const container = document.getElementById('webcomic-container')
+  const slider = document.getElementById('webcomic-slider')
+  const prevBtn = document.getElementById('prev-page') as HTMLButtonElement | null
+  const nextBtn = document.getElementById('next-page') as HTMLButtonElement | null
+  const currentPageEl = document.getElementById('current-page')
+  const pages = slider?.querySelectorAll('[data-page]')
+
+  if (!container || !slider || !prevBtn || !nextBtn || !currentPageEl || !pages)
+    return
+
+  let currentPage = 1
+  const totalPages = pages.length
+
+  function updatePage(newPage: number) {
+    // Update current page
+    currentPage = newPage
+    if (currentPageEl)
+      currentPageEl.textContent = currentPage.toString()
+
+    // Update button states
+    if (prevBtn)
+      prevBtn.disabled = currentPage === 1
+    if (nextBtn)
+      nextBtn.disabled = currentPage === totalPages
+
+    // Slide to new page with transition
+    if (slider)
+      slider.style.transform = `translateX(${(currentPage - 1) * -100}%)`
+
+    // Update visibility of pages for better performance
+    if (pages) {
+      pages.forEach((page, index) => {
+        const isVisible = Math.abs(index + 1 - currentPage) <= 1
+        ;(page as HTMLElement).style.opacity = isVisible ? '1' : '0'
+      })
+    }
+  }
+
+  // Event listeners
+  prevBtn.addEventListener('click', () => {
+    if (currentPage > 1)
+      updatePage(currentPage - 1)
+  })
+
+  nextBtn.addEventListener('click', () => {
+    if (currentPage < totalPages)
+      updatePage(currentPage + 1)
+  })
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft' && currentPage > 1)
+      updatePage(currentPage - 1)
+    else if (e.key === 'ArrowRight' && currentPage < totalPages)
+      updatePage(currentPage + 1)
+  })
+
+  // Initialize first page
+  updatePage(1)
+}
+
+// Initialize on page load and navigation
+document.addEventListener('astro:page-load', initWebcomicViewer)
+</script>

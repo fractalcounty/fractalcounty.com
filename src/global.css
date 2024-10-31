@@ -81,3 +81,11 @@ html #back-to-top {
 html.scrolled #back-to-top {
   @apply opacity-100 pointer-events-auto;
 }
+
+button[data-category] {
+  transition: opacity 0.2s ease-out;
+}
+
+button[data-category]:active {
+  opacity: 0.7;
+}

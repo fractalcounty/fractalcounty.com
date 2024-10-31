@@ -2,15 +2,23 @@
 import { cn } from '@lib/utils'
 import { Link as AstroLink } from 'astro-link'
 
-type Props = {
+export interface Props {
   href: string
   title?: string
-  externalInNewTab?: boolean
-  underline?: boolean
   class?: string
+  style?: string
+  underline?: boolean
+  externalInNewTab?: boolean
 }
 
-const { href, title, externalInNewTab, underline = true, class: className, ...rest } = Astro.props;
+const {
+  href,
+  title,
+  externalInNewTab,
+  underline = true,
+  class: className,
+  ...rest
+} = Astro.props;
 ---
 
 <AstroLink

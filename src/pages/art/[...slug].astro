@@ -1,0 +1,99 @@
+---
+import ArtworkStructuredData from '@/components/meta/ArtworkStructuredData.astro'
+import WebcomicViewer from '@/components/WebcomicViewer.astro'
+import BackToPrev from '@components/BackToPrev.astro'
+import Container from '@components/Container.astro'
+import FormattedDate from '@components/FormattedDate.astro'
+import PageLayout from '@layouts/PageLayout.astro'
+import { Image } from 'astro:assets'
+import { type CollectionEntry, getCollection } from 'astro:content'
+
+export async function getStaticPaths() {
+  const artworks = (await getCollection('artwork'))
+    .filter(artwork => !artwork.data.draft)
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  return artworks.map(artwork => ({
+    params: { slug: artwork.slug },
+    props: artwork,
+  }))
+}
+type Props = CollectionEntry<'artwork'>
+
+const artwork = Astro.props
+const { Content } = await artwork.render()
+
+// Preload the first image
+const firstImage = Array.isArray(artwork.data.images)
+  ? artwork.data.images[0]
+  : artwork.data.images
+---
+
+<PageLayout
+  title={artwork.data.title}
+  description={artwork.data.description}
+  type="article"
+  publishedTime={artwork.data.date}
+>
+  <!-- Preload first image -->
+  <link
+    rel="preload"
+    as="image"
+    href={firstImage.src}
+    slot="head"
+  />
+
+  <ArtworkStructuredData slot="structured-data" artwork={artwork} />
+  <Container>
+    <div class="animate">
+      <BackToPrev href="/art">
+        Back to art
+      </BackToPrev>
+    </div>
+    <div class="space-y-1 my-10">
+      <div class="animate flex items-center gap-1.5">
+        <div class="font-base text-sm">
+          <FormattedDate date={artwork.data.date} />
+        </div>
+      </div>
+      <div class="animate text-2xl font-semibold">
+        {artwork.data.title}
+      </div>
+    </div>
+    <article class="animate">
+      <Content />
+      <div class="mt-8">
+        {artwork.data.type === 'webcomic' && Array.isArray(artwork.data.images)
+          ? (
+            <WebcomicViewer
+              images={artwork.data.images}
+              title={artwork.data.title}
+              description={artwork.data.description}
+            />
+          )
+          : Array.isArray(artwork.data.images)
+            ? (
+              <div class="space-y-4">
+                {artwork.data.images.map((image, index) => (
+                  <Image
+                    src={image}
+                    alt={`${artwork.data.title} - Image ${index + 1}`}
+                    class="w-full rounded-lg"
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
+                  />
+                ))}
+              </div>
+            )
+            : (
+              <Image
+                src={artwork.data.images}
+                alt={artwork.data.title}
+                class="w-full rounded-lg"
+                loading="eager"
+                decoding="async"
+              />
+            )}
+      </div>
+    </article>
+  </Container>
+</PageLayout>
