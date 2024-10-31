@@ -22,7 +22,6 @@ pnpm-debug.log*
 .DS_Store
 
 # user-specific files
-.archive/
 .cursorignore
 .cursorrules
 .dev/
