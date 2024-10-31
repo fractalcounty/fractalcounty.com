@@ -24,3 +24,5 @@ pnpm-debug.log*
 # user-specific files
 .archive/
 .cursorignore
+.cursorrules
+.dev/
