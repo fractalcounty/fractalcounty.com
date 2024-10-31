@@ -21,7 +21,6 @@
     "astro-opengraph-images": "^1.11.3",
     "astro-seo": "^0.8.4",
     "clsx": "^2.1.1",
-    "prettier-plugin-astro": "^0.14.1",
     "tailwind-merge": "^2.5.3"
   },
   "devDependencies": {
@@ -48,6 +47,7 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "globals": "^15.10.0",
     "lint-staged": "^15.2.10",
+    "prettier-plugin-astro": "^0.14.1",
     "react": "^18.3.1",
     "sharp": "^0.33.5",
     "simple-git-hooks": "^2.11.1",
