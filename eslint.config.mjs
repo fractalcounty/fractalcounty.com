@@ -23,6 +23,8 @@ export default antfu(
     ignores: [
       'node_modules/**',
       '.dev/**',
+      '.astro/**',
+      'package.json',
     ],
   },
   {
