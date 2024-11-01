@@ -1,13 +1,12 @@
 ---
+import GalleryGrid from '@/components/GalleryGrid.astro'
+import Container from '@/components/layout/Container.astro'
+import Link from '@/components/Link.astro'
 import WebsiteStructuredData from '@/components/meta/WebsiteStructuredData.astro'
-import ArrowCard from '@components/ArrowCard.astro'
-import Container from '@components/Container.astro'
-import GalleryGrid from '@components/GalleryGrid.astro'
-import Link from '@components/Link.astro'
-import PageLayout from '@layouts/PageLayout.astro'
+import ArrowCard from '@/components/ui/ArrowCard.astro'
+import { HOME, LINKS_FOOTER, SITE } from '@/consts'
+import PageLayout from '@/layouts/PageLayout.astro'
 import { getCollection } from 'astro:content'
-// import { dateRange } from '@lib/utils';
-import { HOME, LINKS_FOOTER, SITE } from '@consts'
 
 const blogPosts = (await getCollection('blog'))
   .filter(post => !post.data.draft)
