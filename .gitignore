@@ -1,27 +1,22 @@
-# build output
+# generated
 dist/
+dist-dev/
 bun.lockb
-
-# generated types
-.astro/
-
-# dependencies
 node_modules/
-
-# logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+.astro/
+.output/
 
 # environment variables
-.env
-.env.production
+**/*.env*
 
-# macOS-specific files
-.DS_Store
+# OS-specific files
+**/*.DS_Store
+.AppleDouble
+.LSOverride
+.temp
+.tmp
 
 # user-specific files
-.cursorignore
-.cursorrules
-.dev/
+**/.cursorignore
+**/.cursorrules
+**/.dev/
