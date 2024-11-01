@@ -1,0 +1,40 @@
+# generated
+dist/
+bun.lockb
+node_modules/
+.astro/
+
+# environment variables
+**/*.env*
+
+# OS-specific files
+**/*.DS_Store
+
+# user-specific files
+**/.cursorignore
+**/.cursorrules
+**/.dev/
+
+# assets
+**/*.webp
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.gif
+**/*.mp4
+**/*.webm
+**/*.svg
+**/*.woff
+**/*.woff2
+**/*.ttf
+**/*.eot
+**/*.otf
+**/*.ico
+
+# content
+**/*.mdx
+**/*.md
+
+# misc
+UNLICENSE
+LICENSE
