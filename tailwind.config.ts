@@ -1,8 +1,8 @@
+import type { Config } from 'tailwindcss'
 import typography from '@tailwindcss/typography'
 import daisyui from 'daisyui'
 import defaultTheme from 'tailwindcss/defaultTheme'
 
-/** @type {import('tailwindcss').Config} */
 export default {
   plugins: [typography, daisyui],
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
@@ -58,4 +58,4 @@ export default {
     ],
   },
   darkMode: ['class', '[data-theme="laramie"]'],
-}
+} satisfies Config

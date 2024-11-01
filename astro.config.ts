@@ -1,3 +1,4 @@
+import type { AstroUserConfig } from 'astro/config'
 import fs from 'node:fs'
 import mdx from '@astrojs/mdx'
 import sitemap from '@astrojs/sitemap'
@@ -9,9 +10,7 @@ import { customOgMediaLayout } from './src/ogRenderer'
 
 export default defineConfig({
   site: 'https://fractalcounty.com',
-  markdown: {
-    extendDefaultPlugins: true,
-  },
+  markdown: {},
   integrations: [
     mdx(),
     sitemap(),
@@ -23,13 +22,13 @@ export default defineConfig({
         fonts: [
           {
             name: 'AlteHaasGroteskRegular',
-            weight: 'normal',
+            weight: 400,
             style: 'normal',
             data: fs.readFileSync('public/fonts/AlteHaasGroteskRegular.woff'),
           },
           {
             name: 'AlteHaasGroteskBold',
-            weight: 'bold',
+            weight: 700,
             style: 'normal',
             data: fs.readFileSync('public/fonts/AlteHaasGroteskBold.woff'),
           },
@@ -40,4 +39,4 @@ export default defineConfig({
   experimental: {
     contentIntellisense: true,
   },
-})
+}) satisfies AstroUserConfig
