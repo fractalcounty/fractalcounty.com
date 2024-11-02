@@ -1,11 +1,12 @@
 ---
+import type { CollectionEntry } from 'astro:content'
 import Container from '@/components/layout/Container.astro'
 import Subheader from '@/components/layout/Subheader.astro'
 import Link from '@/components/Link.astro'
 import PostStructuredData from '@/components/meta/PostStructuredData.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
 import { readingTime } from '@/lib/utils'
-import { type CollectionEntry, getCollection } from 'astro:content'
+import { getCollection } from 'astro:content'
 
 export async function getStaticPaths() {
   const projects = (await getCollection('projects'))
@@ -20,7 +21,9 @@ type Props = CollectionEntry<'projects'>
 
 const project = Astro.props
 const { Content } = await project.render()
-const title = project.data.showInBlog && project.data.blogTitle ? project.data.blogTitle : project.data.title
+const title = project.data.showInBlog && project.data.blogTitle
+  ? project.data.blogTitle
+  : project.data.title
 const tags = project.data.tags || []
 const links = project.data.links || []
 ---
@@ -31,26 +34,26 @@ const links = project.data.links || []
   type="article"
   publishedTime={project.data.date}
   tags={tags}
-  isContentPage={true}
 >
-  <PostStructuredData slot="structured-data" entry={project} />
+  <PostStructuredData
+    slot="structured-data"
+    entry={project}
+    type="projects"
+  />
   <Container>
     <div class="my-10">
       <Subheader
         title={title}
         date={project.data.date}
         readingTime={readingTime(project.body)}
-        isPost={true}
+        isPost
         links={links}
         backUrl="/projects"
         backLabel="Back"
       />
     </div>
     <article class="animate">
-      <Content components={{
-        a: Link,
-      }}
-      />
+      <Content components={{ a: Link }} />
     </article>
   </Container>
 </PageLayout>
