@@ -6,6 +6,7 @@ import tailwind from '@astrojs/tailwind'
 import { defineConfig } from 'astro/config'
 import compressor from 'astro-compressor'
 import icon from 'astro-icon'
+
 import opengraphImages from 'astro-opengraph-images'
 
 import { customOgMediaLayout } from './src/ogRenderer'
@@ -48,6 +49,8 @@ export default defineConfig({
         },
       ],
     },
+  }), (await import('@playform/inline')).default({
+    Path: './dist',
   }), compressor()],
   experimental: {
     contentIntellisense: true,

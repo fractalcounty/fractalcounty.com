@@ -1,15 +1,14 @@
 ---
-import { Icon } from 'astro-icon/components'
+// import { Icon } from 'astro-icon/components'
 
-// define the possible theme states
-const themes = [
-  { name: 'light', icon: 'solar:sun-outline', theme: 'casper' },
-  { name: 'dark', icon: 'solar:moon-outline', theme: 'laramie' },
-  { name: 'system', icon: 'solar:monitor-outline', theme: 'system' },
-] as const
+// const themes = [
+//   { name: 'light', icon: 'solar:sun-outline', theme: 'casper' },
+//   { name: 'dark', icon: 'solar:moon-outline', theme: 'laramie' },
+//   { name: 'system', icon: 'solar:monitor-outline', theme: 'system' },
+// ] as const
 ---
 
-<div class="dropdown dropdown-end">
+<!-- <div class="dropdown dropdown-end">
   <button
     id="theme-toggle"
     class="relative h-[2.1rem] w-[2.1rem] rounded-lg border border-base-content/25 bg-transparent hover:bg-neutral hover:text-primary p-1 transition-colors duration-200 flex items-center justify-center"
@@ -24,71 +23,90 @@ const themes = [
       />
     ))}
   </button>
-</div>
+</div> -->
 
-<script>
+<!-- <script is:inline data-astro-rerun>
+// immediate theme initialization
+(function () {
+  const preference = localStorage.getItem('theme-preference') || 'system'
+  const isDark = preference === 'dark'
+    || (preference === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+
+  document.documentElement.classList.toggle('dark', isDark)
+  document.documentElement.setAttribute('data-theme', isDark ? 'laramie' : 'casper')
+
+  // Set initial icon states
+  document.querySelectorAll('[data-theme-icon]').forEach((icon) => {
+    icon.classList.toggle('opacity-0', icon.getAttribute('data-theme-icon') !== preference)
+  })
+})()
+
 // theme management utilities
 const themeUtils = {
   getSystemTheme() {
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   },
 
-  getThemePreference() {
-    return localStorage.getItem('theme-preference') || 'system'
+  getCurrentTheme() {
+    const preference = localStorage.getItem('theme-preference') || 'system'
+    return preference === 'system' ? this.getSystemTheme() : preference
   },
 
-  setTheme(preference: 'light' | 'dark' | 'system') {
-    const theme = preference === 'system' ? this.getSystemTheme() : preference
-    const themeValue = theme === 'dark' ? 'laramie' : 'casper'
+  applyTheme(preference) {
+    const isDark = preference === 'dark'
+      || (preference === 'system' && this.getSystemTheme() === 'dark')
 
-    // update DOM
-    document.documentElement.classList.toggle('dark', theme === 'dark')
-    document.documentElement.setAttribute('data-theme', themeValue)
+    document.documentElement.classList.toggle('dark', isDark)
+    document.documentElement.setAttribute('data-theme', isDark ? 'laramie' : 'casper')
 
-    // update icons
     document.querySelectorAll('[data-theme-icon]').forEach((icon) => {
       icon.classList.toggle('opacity-0', icon.getAttribute('data-theme-icon') !== preference)
     })
 
-    // save preference
     localStorage.setItem('theme-preference', preference)
   },
 
   initialize() {
-    // set up system theme change listener
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    mediaQuery.addEventListener('change', (_e) => {
-      if (this.getThemePreference() === 'system') {
-        this.setTheme('system')
+    const preference = localStorage.getItem('theme-preference') || 'system'
+    this.applyTheme(preference)
+
+    const themeToggle = document.getElementById('theme-toggle')
+    if (themeToggle && !themeToggle.hasAttribute('data-theme-initialized')) {
+      themeToggle.setAttribute('data-theme-initialized', 'true')
+      themeToggle.addEventListener('click', () => {
+        const currentPreference = localStorage.getItem('theme-preference') || 'system'
+        const nextTheme = {
+          light: 'dark',
+          dark: 'system',
+          system: 'light',
+        }[currentPreference]
+        this.applyTheme(nextTheme)
+      })
+    }
+
+    // Set up system theme change listener
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      if (localStorage.getItem('theme-preference') === 'system') {
+        this.applyTheme('system')
       }
     })
-
-    // initial theme setup
-    this.setTheme(this.getThemePreference() as 'light' | 'dark' | 'system')
   },
 }
 
-// initialize on page load
-themeUtils.initialize()
-
-// handle theme toggle clicks
-document.getElementById('theme-toggle')?.addEventListener('click', () => {
-  const currentPreference = themeUtils.getThemePreference()
-  const nextTheme = {
-    light: 'dark',
-    dark: 'system',
-    system: 'light',
-  }[currentPreference] as 'light' | 'dark' | 'system'
-
-  themeUtils.setTheme(nextTheme)
+// Handle view transitions
+document.addEventListener('astro:before-preparation', () => {
+  const preference = localStorage.getItem('theme-preference') || 'system'
+  themeUtils.applyTheme(preference)
 })
 
-// handle astro page transitions
 document.addEventListener('astro:after-swap', () => {
-  themeUtils.setTheme(themeUtils.getThemePreference() as 'light' | 'dark' | 'system')
+  themeUtils.initialize()
 })
+
+// Initialize on page load
+themeUtils.initialize()
 </script>
 
 <style>
 /* Remove previous styles that were hiding icons */
-</style>
+</style> -->

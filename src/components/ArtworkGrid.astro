@@ -9,7 +9,7 @@ interface Props {
   isHomepage?: boolean
 }
 
-const { artworks, priority = false, isHomepage = false } = Astro.props
+const { artworks, isHomepage = false } = Astro.props
 
 // Optimize display artwork calculation
 const displayArtworks = isHomepage ? artworks.slice(0, 3) : artworks
@@ -36,7 +36,6 @@ const displayArtworks = isHomepage ? artworks.slice(0, 3) : artworks
         <ArtworkThumbnail
           artwork={artwork}
           size="GALLERY"
-          priority={priority}
           index={index}
         />
         <div class="absolute inset-0 bg-gradient-to-t from-base-100/80 via-base-100/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">

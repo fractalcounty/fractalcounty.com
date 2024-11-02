@@ -27,7 +27,12 @@ const publishedTimeString = publishedTime?.toISOString();
 ---
 
 <!doctype html>
-<html lang="en" class:list={[isWebcomic && 'is-webcomic-page']}>
+<html
+  lang="en"
+  class:list={[isWebcomic && 'is-webcomic-page']}
+  data-theme="laramie"
+  transition:persist="theme"
+>
   <head>
     <Head
       title={title}

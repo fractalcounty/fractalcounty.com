@@ -135,13 +135,13 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
       },
       {
         name: 'theme-color',
-        content: '#ffffff',
-        media: '(prefers-color-scheme: light)',
+        content: '#1A1B26',
+        media: '(prefers-color-scheme: dark)',
       },
       {
         name: 'theme-color',
-        content: '#000000',
-        media: '(prefers-color-scheme: dark)',
+        content: '#e6e7ed',
+        media: '(prefers-color-scheme: light)',
       },
       {
         property: 'og:url',
@@ -215,16 +215,6 @@ document.addEventListener('astro:before-swap', e =>
       'link[as="font"]',
     ),
   ].forEach(link => link.remove()))
-</script>
-
-<script is:inline>
-  // Prevent flash of incorrect theme
-  const themePreference = localStorage.getItem('theme-preference') || 'system'
-  const isDark = themePreference === 'dark'
-    || (themePreference === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
-
-  document.documentElement.classList.toggle('dark', isDark)
-  document.documentElement.setAttribute('data-theme', isDark ? 'laramie' : 'casper')
 </script>
 
 <script is:inline>
@@ -305,6 +295,18 @@ document.addEventListener('astro:before-preparation', () => {
   // save current scroll position before navigation
   sessionStorage.setItem('scrollPosition', window.scrollY.toString())
 })
+
+// enforce laramie theme during transitions
+document.addEventListener('astro:before-swap', () => {
+  document.documentElement.setAttribute('data-theme', 'laramie')
+})
+
+document.addEventListener('astro:after-swap', () => {
+  document.documentElement.setAttribute('data-theme', 'laramie')
+})
+
+// ensure theme on initial load
+document.documentElement.setAttribute('data-theme', 'laramie')
 </script>
 
 <script>
