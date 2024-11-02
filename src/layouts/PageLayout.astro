@@ -21,7 +21,6 @@ const {
   publishedTime,
   tags = [],
   isWebcomic = false,
-  isContentPage = false,
 } = Astro.props
 
 const publishedTimeString = publishedTime?.toISOString();
@@ -56,13 +55,7 @@ const publishedTimeString = publishedTime?.toISOString();
   </head>
   <body class="flex flex-col min-h-screen">
     <Header role="banner" />
-    <main
-      class="flex-1"
-      class:list={[
-        isContentPage ? 'py-20' : 'py-32',
-        isWebcomic && 'pt-16',
-      ]}
-    >
+    <main id="main" class="mt-24">
       <slot />
     </main>
     <Footer role="contentinfo" />

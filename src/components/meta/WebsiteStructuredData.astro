@@ -1,10 +1,15 @@
 ---
-import { organizationSchema, personSchema, websiteSchema } from '@/lib/schema'
+import { generateBreadcrumbSchema, organizationSchema, personSchema, websiteSchema } from '@/lib/schema'
+
+const breadcrumbItems = [
+  { name: 'Home', item: 'https://fractalcounty.com/' },
+]
 
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
     websiteSchema,
+    generateBreadcrumbSchema(breadcrumbItems),
     organizationSchema,
     personSchema,
   ],

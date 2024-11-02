@@ -1,36 +1,41 @@
 ---
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
 import Button from '@/components/Button.astro'
 import ColorModeButton from '@/components/ColorModeButton.astro'
 import Container from '@/components/layout/Container.astro'
 import Link from '@/components/Link.astro'
 import { SITE } from '@/consts'
-import { Icon } from 'astro-icon/components';
+import { Icon } from 'astro-icon/components'
 ---
 
 <footer
   class="animate mt-auto py-6"
-  transition:persist
 >
   <Container>
-    <div class="flex justify-between items-center min-h-[2.5rem]">
-      <div>
-        <Link
-          href="/UNLICENSE"
-          class="flex items-center gap-1"
-          underline={false}
-          externalInNewTab={false}
-        >
-          <Icon name="anticopyright" class="text-[11px]" />
-          2024 | {SITE.NAME}
-        </Link>
-      </div>
-      <div class="button-group flex items-center gap-2">
-        <ColorModeButton />
-        <div
-          id="back-to-top-wrapper"
-          transition:persist
-        >
-          <Button id="back-to-top" arrow="up">Back to top</Button>
+    <div class="flex flex-col">
+      <nav aria-label="Breadcrumb" class="h-6">
+        <Breadcrumbs />
+      </nav>
+      <div class="flex justify-between items-center h-10 pt-2">
+        <div>
+          <Link
+            href="/UNLICENSE"
+            class="flex items-center gap-1"
+            underline={false}
+            externalInNewTab={false}
+          >
+            <Icon name="anticopyright" class="text-[11px]" />
+            2024 | {SITE.NAME}
+          </Link>
+        </div>
+        <div class="button-group flex items-center gap-2 min-w-[4.4rem]">
+          <ColorModeButton />
+          <div
+            id="back-to-top-wrapper"
+            transition:persist
+          >
+            <Button id="back-to-top" arrow="up">Back to top</Button>
+          </div>
         </div>
       </div>
     </div>

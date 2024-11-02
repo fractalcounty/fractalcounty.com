@@ -186,11 +186,16 @@ export function generateCollectionSchema(
 export function generateBreadcrumbSchema(items: Array<{ name: string, item: string }>) {
   return {
     '@type': 'BreadcrumbList',
+    '@id': 'https://fractalcounty.com/#breadcrumb',
     'itemListElement': items.map((item, index) => ({
       '@type': 'ListItem',
       'position': index + 1,
-      'name': item.name,
-      'item': item.item,
+      'item': {
+        '@type': 'WebPage',
+        '@id': item.item,
+        'url': item.item,
+        'name': item.name,
+      },
     })),
   }
 }

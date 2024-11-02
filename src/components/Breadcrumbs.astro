@@ -1,0 +1,91 @@
+---
+import { Breadcrumbs as AstroBreadcrumbs } from 'astro-breadcrumbs'
+import { Icon } from 'astro-icon/components'
+import 'astro-breadcrumbs/breadcrumbs.css'
+
+interface Props {
+  indexText?: string
+  mainBemClass?: string
+  customBaseUrl?: string
+  ariaLabel?: string
+  truncated?: boolean
+}
+
+const {
+  indexText = 'Home',
+  mainBemClass = 'c-breadcrumbs',
+  customBaseUrl,
+  ariaLabel = 'Breadcrumb navigation',
+  truncated = true,
+} = Astro.props
+
+// get current path to determine if we're on homepage
+const isHomePage = Astro.url.pathname === '/'
+---
+
+<div class:list={[isHomePage && 'sr-only']}>
+  <AstroBreadcrumbs
+    indexText={indexText}
+    mainBemClass={mainBemClass}
+    customBaseUrl={customBaseUrl}
+    truncated={truncated}
+    ariaLabel={ariaLabel}
+    schemaJsonScript={true}
+  >
+    <Icon
+      slot="separator"
+      name="solar:forward-linear"
+      class="w-3 h-3 text-base-content/50"
+      aria-hidden="true"
+    />
+    <Icon
+      slot="index"
+      name="solar:home-2-linear"
+      class="w-3 h-3"
+      aria-label="Home"
+    />
+  </AstroBreadcrumbs>
+</div>
+
+<script>
+// force breadcrumbs to update on page transitions
+function updateBreadcrumbs() {
+  const breadcrumbsContainer = document.querySelector('.c-breadcrumbs')
+  if (breadcrumbsContainer) {
+    // get current path and force component to update
+    const pathname = window.location.pathname
+    breadcrumbsContainer.setAttribute('data-path', pathname)
+
+    // trigger a reflow by accessing offsetHeight and store the value
+    const height = (breadcrumbsContainer as HTMLElement).offsetHeight
+    return height // return the value to satisfy the linter
+  }
+}
+
+// update on page load and after transitions
+document.addEventListener('astro:page-load', updateBreadcrumbs)
+document.addEventListener('astro:after-swap', updateBreadcrumbs)
+</script>
+
+<style>
+  /* minimal breadcrumb styles for footer */
+  :global(.c-breadcrumbs) {
+    @apply text-xs text-base-content/75;
+  }
+
+  :global(.c-breadcrumbs__link) {
+    @apply text-primary/75 transition-colors duration-200;
+  }
+
+  :global(.c-breadcrumbs__link:hover) {
+    @apply text-primary;
+  }
+
+  :global(.c-breadcrumbs__crumb:last-child) {
+    @apply text-base-content/50;
+  }
+
+  :global(.c-breadcrumbs__truncated-button) {
+    @apply hover:text-primary transition-colors duration-200;
+  }
+</style>

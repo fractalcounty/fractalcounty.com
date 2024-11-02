@@ -13,7 +13,10 @@ const ogImageUrl = getImagePath({ url: Astro.url, site: Astro.site })
 
 const breadcrumbItems = [
   { name: 'Home', item: 'https://fractalcounty.com/' },
-  { name: entry.data.type === 'project' ? 'Projects' : 'Blog', item: `https://fractalcounty.com/${entry.data.type === 'project' ? 'projects' : 'blog'}/` },
+  {
+    name: entry.data.type === 'project' ? 'Projects' : 'Blog',
+    item: `https://fractalcounty.com/${entry.data.type === 'project' ? 'projects' : 'blog'}/`,
+  },
   { name: entry.data.title, item: pageUrl.toString() },
 ]
 

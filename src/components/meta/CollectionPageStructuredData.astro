@@ -1,5 +1,5 @@
 ---
-import { generateCollectionSchema, organizationSchema, personSchema, websiteSchema } from '@/lib/schema'
+import { generateBreadcrumbSchema, generateCollectionSchema, organizationSchema, personSchema, websiteSchema } from '@/lib/schema'
 
 interface Props {
   type: 'blog' | 'projects' | 'artwork'
@@ -10,10 +10,16 @@ interface Props {
 const { type, name, description } = Astro.props
 const pageUrl = new URL(Astro.url.pathname, Astro.site)
 
+const breadcrumbItems = [
+  { name: 'Home', item: 'https://fractalcounty.com/' },
+  { name, item: pageUrl.toString() },
+]
+
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
     generateCollectionSchema(type, pageUrl, name, description),
+    generateBreadcrumbSchema(breadcrumbItems),
     websiteSchema,
     organizationSchema,
     personSchema,
