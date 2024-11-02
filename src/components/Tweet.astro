@@ -2,6 +2,7 @@
 import ImageCard from '@components/ImageCard.astro'
 import Link from '@components/Link.astro'
 import { Icon } from 'astro-icon/components'
+import TwitterFonts from './fonts/TwitterFonts.astro'
 
 interface QuotedTweet {
   name: string
@@ -40,6 +41,8 @@ const {
 
 const hasContent = text || imageUrl;
 ---
+
+<TwitterFonts />
 
 <div class="tweet bg-neutral outline outline-neutral-content/75 shadow-lg text-base-content rounded-lg p-6 mx-auto my-auto prose prose-sm" role="article" aria-label={`Tweet by ${name}`}>
   <div class="header flex items-start pr-2">

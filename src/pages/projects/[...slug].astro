@@ -33,7 +33,7 @@ const links = project.data.links || []
   tags={tags}
   isContentPage={true}
 >
-  <PostStructuredData slot="structured-data" {...project.data} />
+  <PostStructuredData slot="structured-data" entry={project} />
   <Container>
     <div class="my-10">
       <Subheader

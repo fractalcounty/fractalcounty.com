@@ -14,9 +14,23 @@ interface Props {
   type?: 'website' | 'article'
   publishedTime?: string
   tags?: string[]
+  noindex?: boolean
+  nofollow?: boolean
+  languageAlternates?: Array<{ href: string, hrefLang: string }>
 }
 
-const { title, description, image, type = 'website', publishedTime, tags = [] } = Astro.props
+const {
+  title,
+  description,
+  image,
+  type = 'website',
+  publishedTime,
+  tags = [],
+  noindex = false,
+  nofollow = false,
+  languageAlternates = [],
+} = Astro.props
+
 const openGraphImageUrl = image || getImagePath({ url: Astro.url, site: Astro.site })
 const defaultTags = ['chippledipple', 'fractal', 'county', 'art', 'gamedev']
 const combinedTags = Array.from(new Set([...tags, ...defaultTags]))
@@ -30,9 +44,12 @@ const tagsContent = combinedTags.join(', ');
   titleDefault={SITE.NAME}
   description={description}
   charset="utf-8"
+  noindex={noindex}
+  nofollow={nofollow}
+  languageAlternates={languageAlternates}
   openGraph={{
     basic: {
-      title,
+      title: `${SITE.NAME} - ${title}`,
       type,
       image: openGraphImageUrl,
       url: Astro.url.href,
@@ -41,6 +58,7 @@ const tagsContent = combinedTags.join(', ');
       description,
       locale: 'en_US',
       siteName: SITE.NAME,
+      localeAlternate: languageAlternates.map(alt => alt.hrefLang),
     },
     image: {
       url: openGraphImageUrl,
@@ -86,6 +104,12 @@ const tagsContent = combinedTags.join(', ');
         type: 'image/x-icon',
         href: '/favicon-light.svg',
       },
+      {
+        rel: 'alternate',
+        type: 'application/rss+xml',
+        title: `${SITE.NAME} RSS Feed`,
+        href: '/rss.xml',
+      },
     ],
     meta: [
       {
@@ -104,110 +128,60 @@ const tagsContent = combinedTags.join(', ');
         name: 'author',
         content: SITE.AUTHOR,
       },
+      {
+        name: 'format-detection',
+        content: 'telephone=no',
+      },
+      {
+        name: 'theme-color',
+        content: '#ffffff',
+        media: '(prefers-color-scheme: light)',
+      },
+      {
+        name: 'theme-color',
+        content: '#000000',
+        media: '(prefers-color-scheme: dark)',
+      },
     ],
   }}
 />
 
 <AstroFont
   config={[
-  {
-    name: 'AlteHaasGrotesk',
-    src: [
-      {
-        style: 'normal',
-        weight: 'normal',
-        path: './public/fonts/AlteHaasGroteskRegular.woff2',
-      },
-      {
-        style: 'normal',
-        weight: 'normal',
-        path: './public/fonts/AlteHaasGroteskRegular.woff',
-      },
-      {
-        style: 'normal',
-        weight: 'bold',
-        path: './public/fonts/AlteHaasGroteskBold.woff2',
-      },
-      {
-        style: 'normal',
-        weight: 'bold',
-        path: './public/fonts/AlteHaasGroteskBold.woff',
-      },
-    ],
-    preload: false,
-    display: 'swap',
-    selector: 'body',
-    fallback: 'sans-serif',
-  },
-  {
-    name: 'Chirp',
-    src: [
-      {
-        style: 'normal',
-        weight: '400',
-        path: './public/fonts/ChirpRegular.woff2',
-      },
-      {
-        style: 'normal',
-        weight: '500',
-        path: './public/fonts/ChirpMedium.woff2',
-      },
-      {
-        style: 'normal',
-        weight: '600',
-        path: './public/fonts/ChirpBold.woff2',
-      },
-      {
-        style: 'normal',
-        weight: '700',
-        path: './public/fonts/ChirpHeavy.woff2',
-      },
-    ],
-    preload: false,
-    display: 'swap',
-    fallback: 'sans-serif',
-  },
-  {
-    name: 'gg-sans',
-    src: [
-      {
-        style: 'normal',
-        weight: 'normal',
-        path: './public/fonts/ggSansRegular.woff2',
-      },
-    ],
-    preload: false,
-    display: 'swap',
-    fallback: 'sans-serif',
-  },
-  {
-    name: 'gg-sans',
-    src: [
-      {
-        style: 'normal',
-        weight: 'bold',
-        path: './public/fonts/ggSansSemiBold.woff2',
-      },
-    ],
-    preload: false,
-    display: 'swap',
-    fallback: 'sans-serif',
-  },
-  {
-    name: 'CommitMono',
-    src: [
-      {
-        style: 'normal',
-        weight: '400',
-        path: './public/fonts/CommitMono.woff2',
-      },
-    ],
-    preload: false,
-    display: 'swap',
-    selector: 'code',
-    fallback: 'monospace',
-  },
-]}
+    {
+      name: 'AlteHaasGrotesk',
+      src: [
+        {
+          style: 'normal',
+          weight: 'normal',
+          path: './public/fonts/AlteHaasGroteskRegular.woff2',
+        },
+        {
+          style: 'normal',
+          weight: 'bold',
+          path: './public/fonts/AlteHaasGroteskBold.woff2',
+        },
+      ],
+      preload: true,
+      display: 'swap',
+      selector: 'body',
+      fallback: 'sans-serif',
+    },
+    {
+      name: 'CommitMono',
+      src: [
+        {
+          style: 'normal',
+          weight: '400',
+          path: './public/fonts/CommitMono.woff2',
+        },
+      ],
+      preload: false,
+      display: 'swap',
+      selector: 'code',
+      fallback: 'monospace',
+    },
+  ]}
 />
 
 <ViewTransitions />
@@ -223,31 +197,16 @@ document.addEventListener('astro:before-swap', e =>
 </script>
 
 <script is:inline>
-function getTheme() {
-  if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-    return localStorage.getItem('theme')
-  }
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-}
+  // Prevent flash of incorrect theme
+  const themePreference = localStorage.getItem('theme-preference') || 'system'
+  const isDark = themePreference === 'dark'
+    || (themePreference === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
 
-function setTheme(theme) {
-  document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'laramie' : 'casper')
-  localStorage.setItem('theme', theme)
-}
+  document.documentElement.classList.toggle('dark', isDark)
+  document.documentElement.setAttribute('data-theme', isDark ? 'laramie' : 'casper')
+</script>
 
-function updateTheme() {
-  const theme = getTheme()
-  setTheme(theme)
-}
-
-updateTheme()
-
-window.addEventListener('storage', (event) => {
-  if (event.key === 'theme') {
-    updateTheme()
-  }
-})
-
+<script is:inline>
 function init() {
   onScroll()
   animate()

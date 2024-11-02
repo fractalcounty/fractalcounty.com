@@ -237,12 +237,14 @@ function initWebcomicViewer() {
   }
 
   // Event listeners
-  prevBtn.addEventListener('click', () => {
+  prevBtn.addEventListener('click', (e) => {
+    e.stopPropagation()
     if (currentPage > 1)
       updatePage(currentPage - 1)
   })
 
-  nextBtn.addEventListener('click', () => {
+  nextBtn.addEventListener('click', (e) => {
+    e.stopPropagation()
     if (currentPage < totalPages)
       updatePage(currentPage + 1)
   })

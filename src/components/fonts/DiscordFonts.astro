@@ -1,0 +1,27 @@
+---
+import { AstroFont } from 'astro-font'
+---
+
+<AstroFont
+  config={[
+    {
+      name: 'gg-sans',
+      src: [
+        {
+          style: 'normal',
+          weight: 'normal',
+          path: './public/fonts/ggSansRegular.woff2',
+        },
+        {
+          style: 'normal',
+          weight: 'bold',
+          path: './public/fonts/ggSansSemiBold.woff2',
+        },
+      ],
+      preload: false,
+      display: 'swap',
+      selector: '.discord-conversation',
+      fallback: 'sans-serif',
+    },
+  ]}
+/>

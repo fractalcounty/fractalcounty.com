@@ -1,8 +1,8 @@
 ---
-import { SITE } from '@consts'
+import { generateCollectionSchema, organizationSchema, personSchema, websiteSchema } from '@/lib/schema'
 
 interface Props {
-  type: 'BlogPosting' | 'Article'
+  type: 'blog' | 'projects' | 'artwork'
   name: string
   description: string
 }
@@ -10,23 +10,15 @@ interface Props {
 const { type, name, description } = Astro.props
 const pageUrl = new URL(Astro.url.pathname, Astro.site)
 
-const structuredData = {
+const schema = {
   '@context': 'https://schema.org',
-  '@type': 'CollectionPage',
-  '@id': pageUrl.toString(),
-  'name': name,
-  'description': description,
-  'url': pageUrl.toString(),
-  'isPartOf': {
-    '@type': 'WebSite',
-    '@id': Astro.site?.toString(),
-    'name': SITE.NAME,
-    'url': Astro.site?.toString(),
-  },
-  'about': {
-    '@type': type,
-  },
-};
+  '@graph': [
+    generateCollectionSchema(type, pageUrl, name, description),
+    websiteSchema,
+    organizationSchema,
+    personSchema,
+  ],
+}
 ---
 
-<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

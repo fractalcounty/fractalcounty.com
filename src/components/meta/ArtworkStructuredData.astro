@@ -1,26 +1,25 @@
 ---
 import type { CollectionEntry } from 'astro:content'
-import { generateArticleSchema, generateBreadcrumbSchema, organizationSchema, personSchema, websiteSchema } from '@/lib/schema'
-import { getImagePath } from 'astro-opengraph-images'
+import { generateArtworkSchema, generateBreadcrumbSchema, organizationSchema, personSchema, websiteSchema } from '@/lib/schema'
 
 interface Props {
-  entry: CollectionEntry<'blog' | 'projects'>
+  artwork: CollectionEntry<'artwork'>
+  imageUrl: string
 }
 
-const { entry } = Astro.props
+const { artwork, imageUrl } = Astro.props
 const pageUrl = new URL(Astro.url.pathname, Astro.site)
-const ogImageUrl = getImagePath({ url: Astro.url, site: Astro.site })
 
 const breadcrumbItems = [
   { name: 'Home', item: 'https://fractalcounty.com/' },
-  { name: entry.data.type === 'project' ? 'Projects' : 'Blog', item: `https://fractalcounty.com/${entry.data.type === 'project' ? 'projects' : 'blog'}/` },
-  { name: entry.data.title, item: pageUrl.toString() },
+  { name: 'Art', item: 'https://fractalcounty.com/art/' },
+  { name: artwork.data.title, item: pageUrl.toString() },
 ]
 
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
-    generateArticleSchema(entry, pageUrl),
+    generateArtworkSchema(artwork, pageUrl, imageUrl),
     generateBreadcrumbSchema(breadcrumbItems),
     websiteSchema,
     organizationSchema,
@@ -28,7 +27,7 @@ const schema = {
     {
       '@type': 'ImageObject',
       '@id': `${pageUrl.toString()}#primaryimage`,
-      'url': ogImageUrl,
+      'url': imageUrl,
       'width': 1200,
       'height': 630,
     },

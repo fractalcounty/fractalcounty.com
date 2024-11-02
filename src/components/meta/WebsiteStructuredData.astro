@@ -1,14 +1,14 @@
 ---
-import { SITE } from '@consts'
+import { organizationSchema, personSchema, websiteSchema } from '@/lib/schema'
 
-const pageUrl = new URL(Astro.url.pathname, Astro.site)
-
-const structuredData = {
+const schema = {
   '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  'name': SITE.NAME,
-  'url': pageUrl,
-};
+  '@graph': [
+    websiteSchema,
+    organizationSchema,
+    personSchema,
+  ],
+}
 ---
 
-<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

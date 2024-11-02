@@ -1,6 +1,7 @@
 ---
 import Link from '@components/Link.astro'
 import { Icon } from 'astro-icon/components'
+import DiscordFonts from './fonts/DiscordFonts.astro'
 
 interface Props {
   archive?: string
@@ -12,6 +13,8 @@ const {
   title = 'Discord Conversation',
 } = Astro.props;
 ---
+
+<DiscordFonts />
 
 <section
   class="discord-conversation bg-neutral outline outline-neutral-content/75 relative"

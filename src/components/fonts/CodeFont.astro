@@ -1,0 +1,22 @@
+---
+import { AstroFont } from 'astro-font'
+---
+
+<AstroFont
+  config={[
+    {
+      name: 'CommitMono',
+      src: [
+        {
+          style: 'normal',
+          weight: '400',
+          path: './public/fonts/CommitMono.woff2',
+        },
+      ],
+      preload: false,
+      display: 'swap',
+      selector: 'code, pre', // only apply to code elements
+      fallback: 'monospace',
+    },
+  ]}
+/>

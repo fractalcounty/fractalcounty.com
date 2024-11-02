@@ -1,0 +1,37 @@
+---
+import { AstroFont } from 'astro-font'
+---
+
+<AstroFont
+  config={[
+    {
+      name: 'Chirp',
+      src: [
+        {
+          style: 'normal',
+          weight: '400',
+          path: './public/fonts/ChirpRegular.woff2',
+        },
+        {
+          style: 'normal',
+          weight: '500',
+          path: './public/fonts/ChirpMedium.woff2',
+        },
+        {
+          style: 'normal',
+          weight: '600',
+          path: './public/fonts/ChirpBold.woff2',
+        },
+        {
+          style: 'normal',
+          weight: '700',
+          path: './public/fonts/ChirpHeavy.woff2',
+        },
+      ],
+      preload: false,
+      display: 'swap',
+      selector: '.tweet',
+      fallback: 'sans-serif',
+    },
+  ]}
+/>

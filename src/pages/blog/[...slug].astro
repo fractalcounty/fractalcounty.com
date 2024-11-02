@@ -38,7 +38,7 @@ const tags = post.data.tags || []
   tags={tags}
   isContentPage={true}
 >
-  <PostStructuredData slot="structured-data" {...post.data} />
+  <PostStructuredData slot="structured-data" entry={post} />
   <Container>
     <Subheader
       title={title}
