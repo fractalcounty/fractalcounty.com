@@ -1,25 +1,36 @@
 import type { CollectionEntry } from 'astro:content'
 import { SITE } from '@consts'
 
-// Base person schema for the author
+// Base person schema with expanded details
 export const personSchema = {
   '@type': 'Person',
   '@id': 'https://fractalcounty.com/#person',
-  'name': SITE.AUTHOR,
+  'name': 'Chip',
+  'alternateName': 'fractalcounty',
   'url': 'https://fractalcounty.com',
   'email': SITE.EMAIL,
-  'image': 'https://fractalcounty.com/avatar.jpg',
+  'image': {
+    '@type': 'ImageObject',
+    'url': 'https://fractalcounty.com/avatar.jpg',
+    'width': 400,
+    'height': 400,
+  },
   'sameAs': [
     'https://twitter.com/fractalcounty',
     'https://github.com/fractalcounty',
+    'https://www.instagram.com/fractalcounty/',
   ],
+  'jobTitle': 'Digital Artist & Developer',
+  'worksFor': {
+    '@id': 'https://fractalcounty.com/#organization',
+  },
 }
 
-// Base organization schema
+// Enhanced organization schema
 export const organizationSchema = {
   '@type': 'Organization',
   '@id': 'https://fractalcounty.com/#organization',
-  'name': SITE.NAME,
+  'name': 'FRACTAL COUNTY',
   'url': 'https://fractalcounty.com',
   'logo': {
     '@type': 'ImageObject',
@@ -27,7 +38,7 @@ export const organizationSchema = {
     'url': 'https://fractalcounty.com/logo.svg',
     'width': 1200,
     'height': 630,
-    'caption': SITE.NAME,
+    'caption': 'FRACTAL COUNTY',
   },
   'image': {
     '@id': 'https://fractalcounty.com/#logo',
@@ -40,14 +51,19 @@ export const organizationSchema = {
   'founder': {
     '@id': 'https://fractalcounty.com/#person',
   },
+  'member': [
+    {
+      '@id': 'https://fractalcounty.com/#person',
+    },
+  ],
 }
 
-// Base website schema
+// Enhanced website schema
 export const websiteSchema = {
   '@type': 'WebSite',
   '@id': 'https://fractalcounty.com/#website',
   'url': 'https://fractalcounty.com',
-  'name': SITE.NAME,
+  'name': 'FRACTAL COUNTY',
   'description': 'Personal blog and portfolio website for chip fractalcounty',
   'publisher': {
     '@id': 'https://fractalcounty.com/#organization',
@@ -55,31 +71,142 @@ export const websiteSchema = {
   'author': {
     '@id': 'https://fractalcounty.com/#person',
   },
-  'potentialAction': {
-    '@type': 'SearchAction',
-    'target': {
-      '@type': 'EntryPoint',
-      'urlTemplate': 'https://fractalcounty.com/search?q={search_term_string}',
+  'potentialAction': [
+    {
+      '@type': 'SearchAction',
+      'target': {
+        '@type': 'EntryPoint',
+        'urlTemplate': 'https://fractalcounty.com/search?q={search_term_string}',
+      },
+      'query-input': 'required name=search_term_string',
     },
-    'query-input': 'required name=search_term_string',
-  },
+  ],
+  'inLanguage': 'en-US',
+  'copyrightYear': new Date().getFullYear(),
+  'license': 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
 }
 
-// Generate article schema
+// Enhanced artwork schema generation
+export function generateArtworkSchema(
+  entry: CollectionEntry<'artwork'>,
+  url: URL,
+  imageUrl: string,
+) {
+  const { title, description, date, type, images } = entry.data
+  const baseSchema = {
+    author: {
+      '@id': 'https://fractalcounty.com/#person',
+    },
+    creator: {
+      '@id': 'https://fractalcounty.com/#person',
+    },
+    publisher: {
+      '@id': 'https://fractalcounty.com/#organization',
+    },
+    dateCreated: date.toISOString(),
+    datePublished: date.toISOString(),
+    dateModified: date.toISOString(),
+    name: title,
+    headline: title,
+    description,
+    url: url.toString(),
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': url.toString(),
+    },
+    isPartOf: {
+      '@id': 'https://fractalcounty.com/#website',
+    },
+  }
+
+  if (type === 'webcomic') {
+    return {
+      '@type': 'ComicStory',
+      '@id': url.toString(),
+      ...baseSchema,
+      'image': Array.isArray(images)
+        ? images.map(img => ({
+          '@type': 'ImageObject',
+          'url': img.src,
+          'width': img.width,
+          'height': img.height,
+          'caption': title,
+        }))
+        : imageUrl,
+      'numberOfPages': Array.isArray(images) ? images.length : 1,
+      'genre': 'webcomic',
+      'inLanguage': 'en-US',
+      'copyrightHolder': {
+        '@id': 'https://fractalcounty.com/#person',
+      },
+      'license': 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
+    }
+  }
+
+  return {
+    '@type': 'VisualArtwork',
+    '@id': url.toString(),
+    ...baseSchema,
+    'image': Array.isArray(images)
+      ? images.map(img => ({
+        '@type': 'ImageObject',
+        'url': img.src,
+        'width': img.width,
+        'height': img.height,
+        'caption': title,
+      }))
+      : imageUrl,
+    'artform': type === 'video' ? 'Digital Video' : 'Digital Art',
+    'artMedium': 'Digital',
+    'artworkSurface': 'Digital Canvas',
+    'genre': type === 'video' ? 'Animation' : 'Digital Art',
+    'copyrightHolder': {
+      '@id': 'https://fractalcounty.com/#person',
+    },
+    'license': 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
+    'conditionsOfAccess': 'Free to view online',
+    'usageInfo': 'https://fractalcounty.com/license',
+    'thumbnailUrl': imageUrl,
+  }
+}
+
+// Enhanced article schema for blog/projects
 export function generateArticleSchema(
   entry: CollectionEntry<'blog' | 'projects'>,
   url: URL,
+  imageUrl?: string,
 ) {
-  const { title, description, date, tags } = entry.data
+  const { title, description, date, tags, type } = entry.data
 
-  return {
+  // handle image schema with explicit nullish check
+  const imageSchema = (() => {
+    if (imageUrl === undefined || imageUrl === null) {
+      return null
+    }
+    if (imageUrl.trim().length === 0) {
+      return null
+    }
+    return {
+      '@type': 'ImageObject',
+      'url': imageUrl,
+      'width': 1200,
+      'height': 630,
+      'caption': title,
+    }
+  })()
+
+  const baseSchema = {
     '@type': 'Article',
     '@id': url.toString(),
     'headline': title,
     'description': description,
     'datePublished': date.toISOString(),
     'dateModified': date.toISOString(),
+    'dateCreated': date.toISOString(),
     'author': {
+      '@id': 'https://fractalcounty.com/#person',
+    },
+    'creator': {
       '@id': 'https://fractalcounty.com/#person',
     },
     'publisher': {
@@ -93,70 +220,21 @@ export function generateArticleSchema(
     'mainEntityOfPage': {
       '@type': 'WebPage',
       '@id': url.toString(),
-      'breadcrumb': {
-        '@id': `${url.toString()}#breadcrumb`,
-      },
     },
-  }
-}
-
-// Generate artwork schema
-export function generateArtworkSchema(
-  entry: CollectionEntry<'artwork'>,
-  url: URL,
-  imageUrl: string,
-) {
-  const { title, description, date, type } = entry.data
-
-  if (type === 'webcomic') {
-    return {
-      '@type': 'ComicStory',
-      '@id': url.toString(),
-      'name': title,
-      'description': description,
-      'datePublished': date.toISOString(),
-      'author': {
-        '@id': 'https://fractalcounty.com/#person',
-      },
-      'publisher': {
-        '@id': 'https://fractalcounty.com/#organization',
-      },
-      'url': url.toString(),
-      'image': imageUrl,
-      'isPartOf': {
-        '@id': 'https://fractalcounty.com/#website',
-      },
-      'mainEntityOfPage': {
-        '@type': 'WebPage',
-        '@id': url.toString(),
-      },
-    }
-  }
-
-  return {
-    '@type': 'VisualArtwork',
-    '@id': url.toString(),
-    'name': title,
-    'description': description,
-    'dateCreated': date.toISOString(),
-    'creator': {
+    'articleSection': type === 'project' ? 'Projects' : 'Blog',
+    'inLanguage': 'en-US',
+    'copyrightHolder': {
       '@id': 'https://fractalcounty.com/#person',
     },
-    'url': url.toString(),
-    'image': imageUrl,
-    'artform': 'Digital Art',
-    'artMedium': 'Digital',
-    'isPartOf': {
-      '@id': 'https://fractalcounty.com/#website',
-    },
-    'mainEntityOfPage': {
-      '@type': 'WebPage',
-      '@id': url.toString(),
-    },
+    'license': 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
   }
+
+  return imageSchema === null
+    ? baseSchema
+    : { ...baseSchema, image: imageSchema }
 }
 
-// Generate collection page schema
+// Enhanced collection page schema
 export function generateCollectionSchema(
   type: 'blog' | 'projects' | 'artwork',
   url: URL,
@@ -174,18 +252,24 @@ export function generateCollectionSchema(
     },
     'about': {
       '@type': 'Thing',
-      'name': type === 'blog'
-        ? 'Blog Posts'
-        : type === 'projects' ? 'Projects' : 'Artwork',
+      'name': type === 'blog' ? 'Blog Posts' : type === 'projects' ? 'Projects' : 'Artwork',
     },
-    'mainEntity': {
-      '@type': 'ItemList',
-      'itemListElement': [], // Can be populated with actual items if needed
+    'author': {
+      '@id': 'https://fractalcounty.com/#person',
+    },
+    'publisher': {
+      '@id': 'https://fractalcounty.com/#organization',
+    },
+    'inLanguage': 'en-US',
+    'datePublished': '2023-01-01T00:00:00Z', // Add actual date when site launched
+    'dateModified': new Date().toISOString(),
+    'breadcrumb': {
+      '@id': `${url.toString()}#breadcrumb`,
     },
   }
 }
 
-// Generate breadcrumb schema
+// Breadcrumb schema remains the same but with enhanced typing
 interface BreadcrumbItem {
   name: string
   item: string
@@ -199,12 +283,7 @@ export function generateBreadcrumbSchema(items: BreadcrumbItem[]) {
       '@type': 'ListItem',
       'position': index + 1,
       'name': item.name,
-      'item': {
-        '@type': 'WebPage',
-        '@id': item.item,
-        'name': item.name,
-        'url': item.item,
-      },
+      'item': item.item,
     })),
   }
 }

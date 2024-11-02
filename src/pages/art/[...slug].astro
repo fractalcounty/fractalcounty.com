@@ -39,12 +39,12 @@ const artwork = Astro.props
 const { Content } = await artwork.render()
 const links = artwork.data.links || []
 
-// Preload the first image
+// Get the full URL for the image
 const firstImage = (Array.isArray(artwork.data.images)
   ? artwork.data.images[0]
   : artwork.data.images) as ImageMetadata
 
-const firstImageUrl = firstImage.src
+const firstImageUrl = new URL(firstImage.src, Astro.site).toString()
 ---
 
 <PageLayout

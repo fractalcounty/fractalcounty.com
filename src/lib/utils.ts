@@ -62,3 +62,7 @@ export function getCanonicalUrl(path: string): string {
   // ensure consistent url format for schema
   return `https://fractalcounty.com${path.startsWith('/') ? path : `/${path}`}`
 }
+
+export function getAbsoluteUrl(path: string, site: URL | string): string {
+  return new URL(path, site).toString()
+}
