@@ -48,7 +48,7 @@ export default {
           'error': '#F7768E',
 
           'base-100': '#1A1B26',
-          'neutral': '#3E4052',
+          'neutral': '#24283b',
           'neutral-content': '#414868',
           'accent': '#565f89',
           'accent-content': '#9aa5ce',
