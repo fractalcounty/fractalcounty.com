@@ -93,6 +93,9 @@ export function generateArticleSchema(
     'mainEntityOfPage': {
       '@type': 'WebPage',
       '@id': url.toString(),
+      'breadcrumb': {
+        '@id': `${url.toString()}#breadcrumb`,
+      },
     },
   }
 }
@@ -183,18 +186,24 @@ export function generateCollectionSchema(
 }
 
 // Generate breadcrumb schema
-export function generateBreadcrumbSchema(items: Array<{ name: string, item: string }>) {
+interface BreadcrumbItem {
+  name: string
+  item: string
+}
+
+export function generateBreadcrumbSchema(items: BreadcrumbItem[]) {
   return {
     '@type': 'BreadcrumbList',
-    '@id': 'https://fractalcounty.com/#breadcrumb',
+    '@id': `${items[items.length - 1].item}#breadcrumb`,
     'itemListElement': items.map((item, index) => ({
       '@type': 'ListItem',
       'position': index + 1,
+      'name': item.name,
       'item': {
         '@type': 'WebPage',
         '@id': item.item,
-        'url': item.item,
         'name': item.name,
+        'url': item.item,
       },
     })),
   }

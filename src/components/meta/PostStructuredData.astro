@@ -11,13 +11,17 @@ const { entry } = Astro.props
 const pageUrl = new URL(Astro.url.pathname, Astro.site)
 const ogImageUrl = getImagePath({ url: Astro.url, site: Astro.site })
 
+// ensure breadcrumbs match the actual site structure
 const breadcrumbItems = [
   { name: 'Home', item: 'https://fractalcounty.com/' },
   {
     name: entry.data.type === 'project' ? 'Projects' : 'Blog',
     item: `https://fractalcounty.com/${entry.data.type === 'project' ? 'projects' : 'blog'}/`,
   },
-  { name: entry.data.title, item: pageUrl.toString() },
+  {
+    name: entry.data.title,
+    item: pageUrl.toString(),
+  },
 ]
 
 const schema = {
@@ -25,16 +29,17 @@ const schema = {
   '@graph': [
     generateArticleSchema(entry, pageUrl),
     generateBreadcrumbSchema(breadcrumbItems),
-    websiteSchema,
-    organizationSchema,
-    personSchema,
     {
       '@type': 'ImageObject',
       '@id': `${pageUrl.toString()}#primaryimage`,
       'url': ogImageUrl,
       'width': 1200,
       'height': 630,
+      'contentUrl': ogImageUrl,
     },
+    websiteSchema,
+    organizationSchema,
+    personSchema,
   ],
 }
 ---

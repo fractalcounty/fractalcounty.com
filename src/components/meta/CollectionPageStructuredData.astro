@@ -10,6 +10,7 @@ interface Props {
 const { type, name, description } = Astro.props
 const pageUrl = new URL(Astro.url.pathname, Astro.site)
 
+// Collection pages have 2 levels
 const breadcrumbItems = [
   { name: 'Home', item: 'https://fractalcounty.com/' },
   { name, item: pageUrl.toString() },

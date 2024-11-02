@@ -10,6 +10,7 @@ interface Props {
 const { artwork, imageUrl } = Astro.props
 const pageUrl = new URL(Astro.url.pathname, Astro.site)
 
+// Artwork pages have 3 levels
 const breadcrumbItems = [
   { name: 'Home', item: 'https://fractalcounty.com/' },
   { name: 'Art', item: 'https://fractalcounty.com/art/' },

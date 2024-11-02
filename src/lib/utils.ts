@@ -57,3 +57,8 @@ export function dateRange(startDate: Date, endDate?: Date | string): string {
 
   return `${startMonth}${startYear} - ${endMonth}${endYear}`
 }
+
+export function getCanonicalUrl(path: string): string {
+  // ensure consistent url format for schema
+  return `https://fractalcounty.com${path.startsWith('/') ? path : `/${path}`}`
+}
