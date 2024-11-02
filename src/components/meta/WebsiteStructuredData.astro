@@ -12,6 +12,7 @@ const breadcrumbItems = [
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
+    // webpage schema first
     {
       '@type': 'WebPage',
       '@id': pageUrl.toString(),
@@ -22,9 +23,15 @@ const schema = {
         '@id': 'https://fractalcounty.com/#website',
       },
       'inLanguage': 'en-US',
+      'breadcrumb': {
+        '@id': `${pageUrl.toString()}#breadcrumb`,
+      },
     },
-    websiteSchema,
+    // separate breadcrumb schema
     generateBreadcrumbSchema(breadcrumbItems),
+    // core website schema
+    websiteSchema,
+    // organization and person schemas
     organizationSchema,
     personSchema,
   ],
