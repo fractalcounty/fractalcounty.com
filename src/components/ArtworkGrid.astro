@@ -18,7 +18,7 @@ const displayArtworks = isHomepage ? artworks.slice(0, 3) : artworks
 <div
   class:list={[
     'grid gap-6 animate',
-    isHomepage ? 'homepage-grid' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
+    isHomepage ? 'homepage-grid' : 'grid-cols-2 md:grid-cols-2 lg:grid-cols-3',
   ]}
 >
   {displayArtworks.map((artwork, index) => {
@@ -38,8 +38,10 @@ const displayArtworks = isHomepage ? artworks.slice(0, 3) : artworks
           size="GALLERY"
           index={index}
         />
-        <div class="absolute inset-0 bg-gradient-to-t from-base-100/80 via-base-100/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div class="absolute inset-0 flex flex-col justify-end p-4 bg-gradient-to-t from-base-100/70 via-base-100/50 to-transparent">
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-base-100/70 via-base-100/30 to-transparent sm:opacity-0 opacity-100 sm:group-hover:opacity-100 transition-opacity duration-300"
+        >
+          <div class="absolute inset-0 flex flex-col justify-end p-4 bg-gradient-to-t from-base-100/60 via-base-100/30 to-transparent">
             <div class="space-y-0">
               {isMultiImage && (
                 <span class="inline-flex items-center text-xs text-primary font-bold gap-x-1">
