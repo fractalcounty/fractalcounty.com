@@ -65,12 +65,16 @@ footer {
   @apply opacity-100 translate-y-0;
 }
 
-html #back-to-top {
+html #back-to-top-wrapper {
   @apply opacity-0 pointer-events-none;
+  width: 0;
+  margin-left: 0;
 }
 
-html.scrolled #back-to-top {
+html.scrolled #back-to-top-wrapper {
   @apply opacity-100 pointer-events-auto;
+  width: auto;
+  margin-left: 0.25rem;
 }
 
 button[data-category] {

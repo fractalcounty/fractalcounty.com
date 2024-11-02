@@ -1,5 +1,6 @@
 ---
-import GalleryGrid from '@/components/GalleryGrid.astro'
+import type { CollectionEntry } from 'astro:content'
+import ArtworkCarousel from '@/components/ArtworkCarousel.astro'
 import Container from '@/components/layout/Container.astro'
 import Subheader from '@/components/layout/Subheader.astro'
 import Link from '@/components/Link.astro'
@@ -10,24 +11,32 @@ import PageLayout from '@/layouts/PageLayout.astro'
 import { getCollection } from 'astro:content'
 
 const blogPosts = (await getCollection('blog'))
-  .filter(post => !post.data.draft)
+  .filter((post: CollectionEntry<'blog'>) => !post.data.draft)
 
 const projectsInBlog = (await getCollection('projects'))
-  .filter(project => !project.data.draft && project.data.showInBlog)
+  .filter((project: CollectionEntry<'projects'>) =>
+    !project.data.draft && project.data.showInBlog,
+  )
 
 const allBlogPosts = [...blogPosts, ...projectsInBlog]
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .sort((a: CollectionEntry<'blog' | 'projects'>, b: CollectionEntry<'blog' | 'projects'>) =>
+    b.data.date.valueOf() - a.data.date.valueOf(),
+  )
   .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE)
 
 const projects = (await getCollection('projects'))
-  .filter(project => !project.data.draft)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .filter((project: CollectionEntry<'projects'>) => !project.data.draft)
+  .sort((a: CollectionEntry<'projects'>, b: CollectionEntry<'projects'>) =>
+    b.data.date.valueOf() - a.data.date.valueOf(),
+  )
   .slice(0, SITE.NUM_PROJECTS_ON_HOMEPAGE)
 
 const recentArtwork = (await getCollection('artwork'))
-  .filter(artwork => !artwork.data.draft)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 3); // Show 6 most recent artworks
+  .filter((artwork: CollectionEntry<'artwork'>) => !artwork.data.draft)
+  .sort((a: CollectionEntry<'artwork'>, b: CollectionEntry<'artwork'>) =>
+    b.data.date.valueOf() - a.data.date.valueOf(),
+  )
+  .slice(0, SITE.NUM_ARTWORK_ON_HOMEPAGE)
 ---
 
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
@@ -89,7 +98,7 @@ const recentArtwork = (await getCollection('artwork'))
           </Link>
         </div>
         <ul class="flex flex-col gap-4">
-          {projects.map(project => (
+          {projects.map((project: CollectionEntry<'projects'>) => (
             <li>
               <ArrowCard entry={project} context="projects" />
             </li>
@@ -110,10 +119,9 @@ const recentArtwork = (await getCollection('artwork'))
             See all artwork
           </Link>
         </div>
-        <GalleryGrid
+        <ArtworkCarousel
           artworks={recentArtwork}
           priority={true}
-          isHomepage={true}
         />
       </section>
 

@@ -25,7 +25,7 @@
     "@antfu/eslint-config": "^3.8.0",
     "@astrojs/check": "^0.9.4",
     "@eslint/js": "^9.14.0",
-    "@iconify-json/solar": "^1.2.0",
+    "@iconify-json/solar": "^1.2.1",
     "@prettier/plugin-xml": "^3.4.1",
     "@tailwindcss/typography": "^0.5.15",
     "@types/eslint__js": "^8.42.3",

@@ -1,0 +1,20 @@
+---
+import type { ImageMetadata } from 'astro'
+import { Image } from 'astro:assets'
+
+interface Props {
+  image: ImageMetadata
+  title: string
+  index: number
+}
+
+const { image, title, index } = Astro.props
+---
+
+<Image
+  src={image}
+  alt={`${title} - Image ${index + 1}`}
+  class="w-full rounded-lg"
+  loading={index === 0 ? 'eager' : 'lazy'}
+  decoding="async"
+/>

@@ -6,7 +6,6 @@ export interface Props {
   'style'?: string
   'id'?: string
   'data-category'?: string
-  'data-active'?: string
   'arrow'?: 'left' | 'right' | 'up' | 'none'
   'arrowClass'?: string
 }
@@ -17,6 +16,7 @@ const {
   class: className,
   arrow = 'none',
   arrowClass,
+  'data-category': dataCategory,
   ...props
 } = Astro.props
 
@@ -37,6 +37,7 @@ const rotationClass = {
 <Component
   href={href}
   class:list={[baseStyles, paddingClass, className]}
+  data-category={dataCategory}
   {...props}
 >
   {arrow !== 'none' && (
@@ -44,7 +45,7 @@ const rotationClass = {
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       class:list={[
-        'absolute top-1/2 left-2 -translate-y-1/2 size-4 stroke-2 fill-none stroke-current group-hover:stroke-primary data-[active=true]:stroke-primary transition-colors duration-300 ease-in-out',
+        'absolute top-1/2 left-2 -translate-y-1/2 size-4 stroke-2 fill-none stroke-current group-hover:stroke-primary transition-colors duration-300 ease-in-out',
         rotationClass,
         arrowClass,
       ]}
@@ -62,7 +63,7 @@ const rotationClass = {
       />
     </svg>
   )}
-  <div class="text-sm group-hover:text-primary data-[active=true]:text-primary transition-colors duration-300 ease-in-out">
+  <div class="text-sm group-hover:text-primary transition-colors duration-300 ease-in-out">
     <slot />
   </div>
 </Component>

@@ -1,4 +1,4 @@
-import { defineCollection, z } from 'astro:content'
+import { defineCollection, type ImageFunction, z } from 'astro:content'
 
 const blog = defineCollection({
   type: 'content',
@@ -51,20 +51,22 @@ const projects = defineCollection({
 
 const artwork = defineCollection({
   type: 'content',
-  schema: ({ image }) => z.object({
+  schema: ({ image }: { image: ImageFunction }) => z.object({
     title: z.string(),
     description: z.string(),
     date: z.coerce.date(),
     draft: z.boolean().optional(),
     type: z.enum(['art', 'webcomic', 'video']),
-    links: z
-      .array(
-        z.object({
-          label: z.string(),
-          url: z.string(),
-        }),
-      )
-      .optional(),
+    links: z.array(
+      z.object({
+        label: z.string(),
+        url: z.string(),
+      }),
+    ).optional(),
+    thumbnail: z.union([
+      image(),
+      z.string(),
+    ]).optional(),
     images: z.union([
       image(),
       z.array(image()),
@@ -76,6 +78,7 @@ export const collections = {
   blog,
   projects,
   artwork,
-}
+} as const
 
+export type ArtworkType = typeof artworkTypes[number]
 export const artworkTypes = ['art', 'webcomic', 'video'] as const

@@ -11,6 +11,14 @@ import { customOgMediaLayout } from './src/ogRenderer'
 export default defineConfig({
   site: 'https://fractalcounty.com',
   markdown: {},
+  image: {
+    service: {
+      entrypoint: 'astro/assets/services/sharp',
+      config: {
+        limitInputPixels: false,
+      },
+    },
+  },
   integrations: [
     mdx(),
     sitemap(),

@@ -1,0 +1,59 @@
+---
+import { Icon } from 'astro-icon/components'
+
+const baseStyles = 'relative group h-[2.1rem] w-[2.1rem] aspect-square flex items-center justify-center p-1 rounded-lg border border-base-content/25 bg-transparent hover:bg-neutral text-base-content duration-200 ease-in-out'
+---
+
+<button class={baseStyles}>
+  <span class="sr-only">Switch color mode</span>
+  <label class="swap swap-rotate w-full h-full cursor-pointer">
+    <input type="checkbox" class="theme-controller" value="laramie" />
+    <Icon
+      name="solar:sun-outline"
+      class="swap-off group-hover:text-primary transition-all duration-300 ease-in-out"
+      size={16}
+    />
+    <Icon
+      name="solar:moon-outline"
+      class="swap-on group-hover:text-primary transition-all duration-300 ease-in-out"
+      size={16}
+    />
+  </label>
+</button>
+
+<script>
+  function updateColorMode() {
+    const colorModeButton = document.querySelector('.theme-controller') as HTMLInputElement
+    const currentTheme = localStorage.getItem('theme') || 'light'
+    colorModeButton.checked = currentTheme === 'dark'
+  }
+
+  function handleColorMode() {
+    const button = document.querySelector('button') as HTMLButtonElement
+    const checkbox = document.querySelector('.theme-controller') as HTMLInputElement
+
+    button.addEventListener('click', (e) => {
+      // prevent double triggering when clicking the label
+      if ((e.target as HTMLElement).closest('label')) {
+        return
+      }
+
+      checkbox.checked = !checkbox.checked
+      const newTheme = checkbox.checked ? 'dark' : 'light'
+      localStorage.setItem('theme', newTheme)
+      document.documentElement.setAttribute('data-theme', newTheme === 'dark' ? 'laramie' : 'casper')
+    })
+
+    // also handle the original checkbox change event
+    checkbox.addEventListener('change', () => {
+      const newTheme = checkbox.checked ? 'dark' : 'light'
+      localStorage.setItem('theme', newTheme)
+      document.documentElement.setAttribute('data-theme', newTheme === 'dark' ? 'laramie' : 'casper')
+    })
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    updateColorMode()
+    handleColorMode()
+  })
+</script>

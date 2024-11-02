@@ -1,5 +1,6 @@
 ---
-import GalleryGrid from '@/components/GalleryGrid.astro'
+import type { CollectionEntry } from 'astro:content'
+import ArtworkGrid from '@/components/ArtworkGrid.astro'
 import Container from '@/components/layout/Container.astro'
 import Subheader from '@/components/layout/Subheader.astro'
 import { ARTWORK } from '@/consts'
@@ -9,17 +10,19 @@ import { getCollection } from 'astro:content'
 
 // optimize artwork data processing
 const artworks = (await getCollection('artwork'))
-  .filter(artwork => !artwork.data.draft)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .filter((artwork: CollectionEntry<'artwork'>) => !artwork.data.draft)
+  .sort((a: CollectionEntry<'artwork'>, b: CollectionEntry<'artwork'>) =>
+    b.data.date.valueOf() - a.data.date.valueOf(),
+  )
 
 // create an optimized data structure for year-based organization
 const artworkData = {
   years: new Set<number>(),
-  byYear: new Map<number, typeof artworks>(),
+  byYear: new Map<number, CollectionEntry<'artwork'>[]>(),
 }
 
 // single pass through the data
-artworks.forEach((artwork) => {
+artworks.forEach((artwork: CollectionEntry<'artwork'>) => {
   const year = artwork.data.date.getFullYear()
 
   // track years
@@ -48,7 +51,7 @@ const categories = ['all', ...artworkTypes] as const
         {allYears.map(year => (
           <div class="year-section" data-year={year}>
             <div class="divider divider-start text-base-content/50 font-medium my-8 animate">{year}</div>
-            <GalleryGrid artworks={artworkData.byYear.get(year) || []} />
+            <ArtworkGrid artworks={artworkData.byYear.get(year) || []} />
           </div>
         ))}
       </div>
