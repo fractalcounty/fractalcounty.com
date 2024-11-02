@@ -11,14 +11,20 @@ export const personSchema = {
   'email': SITE.EMAIL,
   'image': {
     '@type': 'ImageObject',
-    'url': 'https://fractalcounty.com/avatar.jpg',
+    'url': 'https://fractalcounty.com/avatar.jpeg',
     'width': 400,
     'height': 400,
+    'encodingFormat': 'image/jpeg',
   },
   'sameAs': [
     'https://twitter.com/fractalcounty',
+    'https://x.com/fractalcounty',
     'https://github.com/fractalcounty',
     'https://www.instagram.com/fractalcounty/',
+    'https://www.youtube.com/@fractalcounty',
+    'https://fractalcounty.bandcamp.com',
+    'https://fractalcounty.newgrounds.com/',
+    'https://bsky.app/profile/fractalcounty.com',
   ],
   'jobTitle': 'Digital Artist & Developer',
   'worksFor': {
@@ -37,7 +43,7 @@ export const organizationSchema = {
     '@id': 'https://fractalcounty.com/#logo',
     'url': 'https://fractalcounty.com/logo.svg',
     'width': 1200,
-    'height': 630,
+    'height': 442,
     'caption': 'FRACTAL COUNTY',
   },
   'image': {
@@ -47,6 +53,11 @@ export const organizationSchema = {
     'https://twitter.com/fractalcounty',
     'https://github.com/fractalcounty',
     'https://www.instagram.com/fractalcounty/',
+    'https://www.youtube.com/@fractalcounty',
+    'https://fractalcounty.bandcamp.com',
+    'https://fractalcounty.newgrounds.com/',
+    'https://bsky.app/profile/fractalcounty.com',
+    'https://x.com/fractalcounty',
   ],
   'founder': {
     '@id': 'https://fractalcounty.com/#person',
@@ -83,7 +94,7 @@ export const websiteSchema = {
   ],
   'inLanguage': 'en-US',
   'copyrightYear': new Date().getFullYear(),
-  'license': 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
+  'license': 'https://fractalcounty.com/UNLICENSE',
 }
 
 // Enhanced artwork schema generation
@@ -139,7 +150,7 @@ export function generateArtworkSchema(
       'copyrightHolder': {
         '@id': 'https://fractalcounty.com/#person',
       },
-      'license': 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
+      'license': 'https://fractalcounty.com/UNLICENSE',
     }
   }
 
@@ -163,9 +174,9 @@ export function generateArtworkSchema(
     'copyrightHolder': {
       '@id': 'https://fractalcounty.com/#person',
     },
-    'license': 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
+    'license': 'https://fractalcounty.com/UNLICENSE',
     'conditionsOfAccess': 'Free to view online',
-    'usageInfo': 'https://fractalcounty.com/license',
+    'usageInfo': 'https://fractalcounty.com/UNLICENSE',
     'thumbnailUrl': imageUrl,
   }
 }
@@ -226,7 +237,7 @@ export function generateArticleSchema(
     'copyrightHolder': {
       '@id': 'https://fractalcounty.com/#person',
     },
-    'license': 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
+    'license': 'https://fractalcounty.com/UNLICENSE',
   }
 
   return imageSchema === null
