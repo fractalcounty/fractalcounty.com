@@ -1,21 +1,16 @@
 ---
-import { SITE } from '@/consts'
 import { personSchema, SCHEMA_IDS } from '@/lib/schema'
 
 const pageUrl = new URL(Astro.url.pathname, Astro.site)
 
+// simplified profile page schema following google's guidelines
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'ProfilePage',
   '@id': pageUrl.toString(),
-  'dateCreated': '2024-08-04T00:00:00Z', // adjust this to your actual site launch date
+  'dateCreated': '2024-01-01T00:00:00Z', // adjust to actual site launch date
   'dateModified': new Date().toISOString(),
-  'mainEntity': {
-    '@id': SCHEMA_IDS.PERSON,
-    '@type': 'Person',
-    'name': SITE.AUTHOR,
-    'alternateName': 'chip',
-  },
+  'mainEntity': personSchema, // directly reference the person schema
   'hasPart': [
     {
       '@type': 'Article',
@@ -32,11 +27,5 @@ const schema = {
 
 <script
   type="application/ld+json"
-  set:html={JSON.stringify({
-  '@context': 'https://schema.org',
-  '@graph': [
-    schema,
-    personSchema,
-  ],
-})}
+  set:html={JSON.stringify(schema)}
 />
