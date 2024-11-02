@@ -86,13 +86,14 @@ const displayArtworks = isHomepage ? artworks.slice(0, 3) : artworks
 </style>
 
 <script>
-// Handle grid item animations
+// handle grid item animations
 document.addEventListener('astro:page-load', () => {
   const grid = document.querySelector('.grid')
   if (!grid)
     return
 
-  const items = grid.querySelectorAll('[data-index]')
+  // type assertion for HTMLElement which has style property
+  const items = grid.querySelectorAll<HTMLElement>('[data-index]')
   items.forEach((item, index) => {
     const delay = Math.min(index * 50, 300) // cap at 300ms
     item.style.opacity = '0'
