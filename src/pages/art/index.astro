@@ -49,7 +49,7 @@ const categories = ['all', ...artworkTypes] as const
       <div class="gallery-container">
         {allYears.map(year => (
           <div class="year-section" data-year={year}>
-            <div class="divider divider-start text-base-content font-medium my-8 animate">
+            <div class="divider divider-start text-base-content/75 divider-neutral font-medium my-8 animate">
               {year}
             </div>
             <ArtworkGrid artworks={artworkData.byYear.get(year) || []} />
