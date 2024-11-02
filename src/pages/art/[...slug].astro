@@ -5,6 +5,7 @@ import ArtworkImage from '@/components/ArtworkImage.astro'
 import Container from '@/components/layout/Container.astro'
 import Subheader from '@/components/layout/Subheader.astro'
 import ArtworkStructuredData from '@/components/meta/ArtworkStructuredData.astro'
+import ProfilePageStructuredData from '@/components/meta/ProfilePageStructuredData.astro'
 import WebcomicViewer from '@/components/WebcomicViewer.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
 import { Image } from 'astro:assets'
@@ -59,6 +60,7 @@ const imageData = {
   isWebcomic={artwork.data.type === 'webcomic'}
   isContentPage={true}
 >
+  <ProfilePageStructuredData slot="structured-data" />
   <ArtworkStructuredData
     slot="structured-data"
     artwork={artwork}
@@ -66,7 +68,6 @@ const imageData = {
     imageWidth={imageData.width}
     imageHeight={imageData.height}
   />
-
   <!-- Preload first image -->
   <link
     rel="preload"

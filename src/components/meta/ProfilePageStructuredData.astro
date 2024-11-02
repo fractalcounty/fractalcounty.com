@@ -1,0 +1,42 @@
+---
+import { SITE } from '@/consts'
+import { personSchema, SCHEMA_IDS } from '@/lib/schema'
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site)
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  '@id': pageUrl.toString(),
+  'dateCreated': '2024-08-04T00:00:00Z', // adjust this to your actual site launch date
+  'dateModified': new Date().toISOString(),
+  'mainEntity': {
+    '@id': SCHEMA_IDS.PERSON,
+    '@type': 'Person',
+    'name': SITE.AUTHOR,
+    'alternateName': 'chip',
+  },
+  'hasPart': [
+    {
+      '@type': 'Article',
+      'headline': 'SMPEarth',
+      'url': new URL('/projects/smpearth', Astro.site).toString(),
+      'datePublished': '2019-11-22T18:34:00Z',
+      'author': {
+        '@id': SCHEMA_IDS.PERSON,
+      },
+    },
+  ],
+}
+---
+
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    schema,
+    personSchema,
+  ],
+})}
+/>

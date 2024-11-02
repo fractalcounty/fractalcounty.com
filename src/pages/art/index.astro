@@ -4,10 +4,12 @@ import ArtworkGrid from '@/components/ArtworkGrid.astro'
 import Container from '@/components/layout/Container.astro'
 import Subheader from '@/components/layout/Subheader.astro'
 import CollectionPageStructuredData from '@/components/meta/CollectionPageStructuredData.astro'
+import ProfilePageStructuredData from '@/components/meta/ProfilePageStructuredData.astro'
 import { ARTWORK } from '@/consts'
 import PageLayout from '@/layouts/PageLayout.astro'
 import { artworkTypes } from '@content/config'
 import { getCollection } from 'astro:content'
+
 
 // optimize artwork data processing
 const artworks = (await getCollection('artwork'))
@@ -43,6 +45,7 @@ const categories = ['all', ...artworkTypes] as const
     name={ARTWORK.TITLE}
     description={ARTWORK.DESCRIPTION}
   />
+  <ProfilePageStructuredData slot="structured-data" />
   <Container>
     <div class="space-y-12 animate">
       <Subheader title="Art" subtitle="my archived artwork" categories={categories} />

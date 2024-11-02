@@ -4,6 +4,7 @@ import ArtworkCarousel from '@/components/ArtworkCarousel.astro'
 import Container from '@/components/layout/Container.astro'
 import Subheader from '@/components/layout/Subheader.astro'
 import Link from '@/components/Link.astro'
+import ProfilePageStructuredData from '@/components/meta/ProfilePageStructuredData.astro'
 import WebsiteStructuredData from '@/components/meta/WebsiteStructuredData.astro'
 import ArrowCard from '@/components/ui/ArrowCard.astro'
 import { HOME, LINKS_FOOTER, SITE } from '@/consts'
@@ -41,6 +42,7 @@ const recentArtwork = (await getCollection('artwork'))
 
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
   <WebsiteStructuredData slot="structured-data" />
+  <ProfilePageStructuredData slot="structured-data" />
   <Container>
     <Subheader title="Hello, I'm Chip" />
     <div class="space-y-16">

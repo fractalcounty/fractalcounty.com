@@ -2,6 +2,7 @@
 import Container from '@/components/layout/Container.astro'
 import Subheader from '@/components/layout/Subheader.astro'
 import CollectionPageStructuredData from '@/components/meta/CollectionPageStructuredData.astro'
+import ProfilePageStructuredData from '@/components/meta/ProfilePageStructuredData.astro'
 import ArrowCard from '@/components/ui/ArrowCard.astro'
 import { BLOG } from '@/consts'
 import PageLayout from '@/layouts/PageLayout.astro'
@@ -39,6 +40,7 @@ const years = Object.keys(posts).sort((a, b) => Number.parseInt(b) - Number.pars
     name={BLOG.TITLE}
     description={BLOG.DESCRIPTION}
   />
+  <ProfilePageStructuredData slot="structured-data" />
   <Container>
     <div class="space-y-10">
       <Subheader title="Blog" subtitle="thoughts and ideas" />
