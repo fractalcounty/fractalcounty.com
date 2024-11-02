@@ -9,15 +9,25 @@ type Props = {
   type?: 'website' | 'article'
   publishedTime?: Date
   tags?: string[]
+  isWebcomic?: boolean
+  isContentPage?: boolean
 }
 
-const { title, description, type = 'website', publishedTime, tags = [] } = Astro.props
+const {
+  title,
+  description,
+  type = 'website',
+  publishedTime,
+  tags = [],
+  isWebcomic = false,
+  isContentPage = false,
+} = Astro.props
 
 const publishedTimeString = publishedTime?.toISOString();
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class:list={[isWebcomic && 'is-webcomic-page']}>
   <head>
     <Head
       title={title}
@@ -27,10 +37,28 @@ const publishedTimeString = publishedTime?.toISOString();
       tags={tags}
     />
     <slot name="structured-data" />
+    <style is:global>
+      /* webcomic page header styles */
+      html.is-webcomic-page header {
+        position: absolute;
+      }
+
+      /* base background color for webcomic pages */
+      html.is-webcomic-page body {
+        background-color: hsl(var(--b2));
+      }
+    </style>
   </head>
   <body>
     <Header role="banner" />
-    <main>
+
+    <main
+      class="flex-1"
+      class:list={[
+        isContentPage ? 'py-16' : 'py-32',
+        isWebcomic && 'pt-16',
+      ]}
+    >
       <slot />
     </main>
     <Footer role="contentinfo" />

@@ -52,15 +52,6 @@ body {
   @apply flex flex-col;
 }
 
-header {
-  @apply fixed top-0 left-0 right-0 z-50 py-5;
-  @apply backdrop-blur-sm;
-}
-
-main {
-  @apply flex-1 py-32;
-}
-
 footer {
   @apply py-5 text-sm;
 }

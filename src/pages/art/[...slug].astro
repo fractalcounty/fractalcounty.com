@@ -1,7 +1,6 @@
 ---
-import BackToPrev from '@/components/BackToPrev.astro'
-import FormattedDate from '@/components/FormattedDate.astro'
 import Container from '@/components/layout/Container.astro'
+import Subheader from '@/components/layout/Subheader.astro'
 import WebcomicViewer from '@/components/WebcomicViewer.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
 import { Image } from 'astro:assets'
@@ -20,6 +19,7 @@ type Props = CollectionEntry<'artwork'>
 
 const artwork = Astro.props
 const { Content } = await artwork.render()
+const links = artwork.data.links || []
 
 // Preload the first image
 const firstImage = Array.isArray(artwork.data.images)
@@ -32,6 +32,8 @@ const firstImage = Array.isArray(artwork.data.images)
   description={artwork.data.description}
   type="article"
   publishedTime={artwork.data.date}
+  isWebcomic={artwork.data.type === 'webcomic'}
+  isContentPage={true}
 >
   <!-- Preload first image -->
   <link
@@ -41,23 +43,39 @@ const firstImage = Array.isArray(artwork.data.images)
     slot="head"
   />
 
-  <Container>
-    <div class="animate">
-      <BackToPrev href="/art">
-        Back to art
-      </BackToPrev>
+  <Container class:list={[
+    artwork.data.type === 'webcomic' && 'max-w-5xl px-2 md:px-4',
+  ]}
+  >
+    <div class:list={[
+      'animate',
+      artwork.data.type === 'webcomic' && 'md:fixed md:top-4 md:left-4 md:z-30',
+    ]}
+    >
     </div>
-    <div class="space-y-1 my-10">
-      <div class="animate flex items-center gap-1.5">
-        <div class="font-base text-sm">
-          <FormattedDate date={artwork.data.date} />
-        </div>
-      </div>
-      <div class="animate text-2xl font-semibold">
-        {artwork.data.title}
-      </div>
+
+    <div class:list={[
+      'my-6',
+      artwork.data.type === 'webcomic' && 'text-center',
+    ]}
+    >
+      <Subheader
+        title={artwork.data.title}
+        subtitle={artwork.data.description}
+        date={artwork.data.date}
+        isPost={true}
+        links={links}
+        pages={Array.isArray(artwork.data.images) ? artwork.data.images.length : 1}
+        backUrl="/art"
+        backLabel="Back"
+      />
     </div>
-    <article class="animate">
+
+    <article class:list={[
+      'animate',
+      artwork.data.type === 'webcomic' && 'mb-12 md:mb-20',
+    ]}
+    >
       <Content />
       <div class="mt-8">
         {artwork.data.type === 'webcomic' && Array.isArray(artwork.data.images)

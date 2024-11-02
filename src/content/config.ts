@@ -21,9 +21,7 @@ const projects = defineCollection({
       description: z.string(),
       date: z.coerce.date(),
       draft: z.boolean().optional(),
-      demoURL: z.string().optional(),
-      repoURL: z.string().optional(),
-      projectURLs: z
+      links: z
         .array(
           z.object({
             label: z.string(),
@@ -59,6 +57,14 @@ const artwork = defineCollection({
     date: z.coerce.date(),
     draft: z.boolean().optional(),
     type: z.enum(['art', 'webcomic', 'video']),
+    links: z
+      .array(
+        z.object({
+          label: z.string(),
+          url: z.string(),
+        }),
+      )
+      .optional(),
     images: z.union([
       image(),
       z.array(image()),

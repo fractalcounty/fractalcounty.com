@@ -1,0 +1,107 @@
+---
+import BackToPrev from '@/components/BackToPrev.astro'
+import Button from '@/components/Button.astro'
+import FormattedDate from '@/components/FormattedDate.astro'
+import Link from '@/components/Link.astro'
+
+interface Props {
+  title: string
+  subtitle?: string
+  categories?: readonly string[]
+  date?: Date
+  readingTime?: string
+  pages?: number
+  isPost?: boolean
+  links?: Array<{ label: string, url: string }>
+  backUrl?: string
+  backLabel?: string
+}
+
+const {
+  title,
+  subtitle,
+  categories,
+  date,
+  readingTime,
+  pages,
+  isPost,
+  links = [],
+  backUrl,
+  backLabel,
+} = Astro.props
+---
+
+<div class="space-y-1">
+  {isPost && date && (
+    <div class="animate flex items-center gap-1.5">
+      <div class="font-base text-sm">
+        <FormattedDate date={date} />
+      </div>
+      {readingTime && (
+        <>
+          <span>&bull;</span>
+          <div class="font-base text-sm">
+            {readingTime}
+          </div>
+        </>
+      )}
+      {pages && (
+        <>
+          <span>&bull;</span>
+          <div class="font-base text-sm">
+            {pages} {pages === 1 ? 'page' : 'pages'}
+          </div>
+        </>
+      )}
+    </div>
+  )}
+
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+    <div class="flex-1">
+      <div class="flex items-center justify-between gap-4">
+        <h1 class:list={[
+          'font-semibold text-base-content',
+          isPost ? 'text-xl' : 'uppercase text-base',
+        ]}
+        >{title}</h1>
+      </div>
+
+      {subtitle && <p class="text-sm text-base-content/70 mt-1">{subtitle}</p>}
+
+      {links.length > 0 && (
+        <div class="animate flex flex-wrap items-center gap-4 mt-2">
+          {links.map(link => (
+            <Link
+              href={link.url}
+              underline={true}
+              class=""
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+
+    {backUrl && (
+      <BackToPrev href={backUrl}>
+        {backLabel}
+      </BackToPrev>
+    )}
+    {categories && (
+      <div class="flex flex-wrap gap-2">
+        {categories.map((category) => {
+          return (
+            <Button
+              href={`#${category}`}
+              data-category={category}
+              data-active={false}
+            >
+              {category}
+            </Button>
+          )
+        })}
+      </div>
+    )}
+  </div>
+</div>

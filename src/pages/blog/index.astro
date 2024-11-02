@@ -1,5 +1,6 @@
 ---
 import Container from '@/components/layout/Container.astro'
+import Subheader from '@/components/layout/Subheader.astro'
 import CollectionPageStructuredData from '@/components/meta/CollectionPageStructuredData.astro'
 import ArrowCard from '@/components/ui/ArrowCard.astro'
 import { BLOG } from '@/consts'
@@ -40,14 +41,11 @@ const years = Object.keys(posts).sort((a, b) => Number.parseInt(b) - Number.pars
   />
   <Container>
     <div class="space-y-10">
-      <div class="animate">
-        <h1 class="font-semibold uppercase text-base-content">Blog</h1>
-        <p class="text-sm text-base-content/70 mt-1">Thoughts and ideas</p>
-      </div>
+      <Subheader title="Blog" subtitle="thoughts and ideas" />
       <div class="space-y-4">
         {years.map(year => (
-          <section class="animate space-y-4">
-            <div class="font-bold uppercase">
+          <section class="animate">
+            <div class="divider divider-start text-base-content/50 font-medium my-8 animate">
               {year}
             </div>
             <div>

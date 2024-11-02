@@ -1,5 +1,6 @@
 ---
 import Container from '@/components/layout/Container.astro'
+import Subheader from '@/components/layout/Subheader.astro'
 import CollectionPageStructuredData from '@/components/meta/CollectionPageStructuredData.astro'
 import ArrowCard from '@/components/ui/ArrowCard.astro'
 import { PROJECTS } from '@/consts'
@@ -20,10 +21,7 @@ const projects = (await getCollection('projects'))
   />
   <Container>
     <div class="space-y-10">
-      <div class="animate">
-        <h1 class="font-semibold uppercase text-base-content">Projects</h1>
-        <p class="text-sm text-base-content/70 mt-1">Projects and experiments</p>
-      </div>
+      <Subheader title="Projects" subtitle="projects and experiments" />
       <ul class="animate flex flex-col gap-4">
         {
           projects.map(project => (
