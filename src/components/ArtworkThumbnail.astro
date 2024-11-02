@@ -1,7 +1,7 @@
 ---
 import type { ImageMetadata } from 'astro'
 import type { CollectionEntry } from 'astro:content'
-import { generateThumbnail, isImageMetadata, THUMBNAIL_SIZES } from '@/lib/image'
+import { THUMBNAIL_SIZES } from '@/lib/image'
 import { Picture } from 'astro:assets'
 
 interface Props {
@@ -14,66 +14,39 @@ interface Props {
 const { artwork, size, priority = false, index = 0 } = Astro.props
 
 // get the first image if it's an array
-const image = Array.isArray(artwork.data.images) ? artwork.data.images[0] : artwork.data.images
+const image = Array.isArray(artwork.data.images)
+  ? artwork.data.images[0]
+  : artwork.data.images
 
-// use custom thumbnail if available, otherwise generate one
-const useCustomThumbnail = artwork.data.thumbnail !== undefined
-const thumbnailImage = useCustomThumbnail ? artwork.data.thumbnail : image
+// use custom thumbnail if available
+const thumbnailImage = artwork.data.thumbnail ?? image
 
-// ensure thumbnailImage is defined before accessing
 if (!thumbnailImage) {
-  throw new Error('Thumbnail image is undefined')
+  throw new Error(`Thumbnail image is undefined for artwork: ${artwork.id}`)
 }
 
-const thumbnail = useCustomThumbnail
-  ? {
-      src: typeof thumbnailImage === 'string' ? thumbnailImage : thumbnailImage.src,
-      width: THUMBNAIL_SIZES[size].width,
-      height: THUMBNAIL_SIZES[size].height,
-      format: 'webp' as const,
-    }
-  : await generateThumbnail({
-      image,
-      ...THUMBNAIL_SIZES[size],
-    })
-
-// Ensure we have ImageMetadata for the Picture component
-const processedImage = useCustomThumbnail
-  ? (isImageMetadata(thumbnailImage)
-      ? thumbnailImage
-      : {
-          src: typeof thumbnailImage === 'string' ? thumbnailImage : '',
-          width: thumbnail.width,
-          height: thumbnail.height,
-          format: 'webp' as const,
-        } as ImageMetadata)
-  : image as ImageMetadata
-
+// optimize loading strategy
 const loading = priority && index < 4 ? 'eager' : 'lazy'
 const decoding = priority && index < 4 ? 'sync' : 'async'
+
+// improve accessibility
+const imgTitle = `${artwork.data.title} - ${artwork.data.description}`
+
+// get dimensions from THUMBNAIL_SIZES
+const { width, height } = THUMBNAIL_SIZES[size]
+
+// handle custom thumbnails vs regular images
+const hasCustomThumbnail = 'thumbnail' in artwork.data && artwork.data.thumbnail !== undefined
 ---
 
-{typeof processedImage === 'string'
-  ? (
-    <img
-      src={processedImage}
-      alt={artwork.data.description}
-      width={thumbnail.width}
-      height={thumbnail.height}
-      class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-      loading={loading}
-      decoding={decoding}
-    />
-  )
-  : (
-    <Picture
-      src={processedImage}
-      alt={artwork.data.description}
-      formats={['webp']}
-      width={thumbnail.width}
-      height={thumbnail.height}
-      class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-      loading={loading}
-      decoding={decoding}
-    />
-  )}
+<Picture
+  src={thumbnailImage as ImageMetadata}
+  alt={imgTitle}
+  title={imgTitle}
+  formats={hasCustomThumbnail ? ['webp'] : ['avif', 'webp']}
+  width={width}
+  height={height}
+  class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+  loading={loading}
+  decoding={decoding}
+/>

@@ -15,7 +15,16 @@ export default defineConfig({
     service: {
       entrypoint: 'astro/assets/services/sharp',
       config: {
-        limitInputPixels: false,
+        formatOptions: {
+          webp: {
+            quality: 75,
+            effort: 6,
+          },
+          avif: {
+            quality: 72,
+            effort: 6,
+          },
+        },
       },
     },
   },

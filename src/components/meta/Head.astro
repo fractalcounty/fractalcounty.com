@@ -258,7 +258,7 @@ function init() {
   const backToPrev = document.getElementById('back-to-prev')
   backToPrev?.addEventListener('click', () => window.history.back())
 
-  document.addEventListener('scroll', onScroll)
+  document.addEventListener('scroll', onScroll, { passive: true })
 }
 
 function animate() {
@@ -272,13 +272,31 @@ function animate() {
 }
 
 function onScroll() {
-  if (window.scrollY > 0) {
-    document.documentElement.classList.add('scrolled')
+  // Debounce scroll events for better performance
+  if (!window.requestAnimationFrame) {
+    return requestAnimationFrame(() => {
+      updateScrollState()
+    })
   }
-  else {
-    document.documentElement.classList.remove('scrolled')
-  }
+  updateScrollState()
 }
+
+function updateScrollState() {
+  const shouldShowButton = window.scrollY > 0
+  // Add a data attribute to track scroll state
+  document.documentElement.dataset.scrolled = shouldShowButton ? 'true' : 'false'
+}
+
+// Handle scroll state during transitions
+document.addEventListener('astro:before-swap', () => {
+  // Reset scroll state before swap
+  document.documentElement.dataset.scrolled = 'false'
+})
+
+document.addEventListener('astro:after-swap', () => {
+  // Update scroll state after swap
+  updateScrollState()
+})
 
 function scrollToTop(event) {
   event.preventDefault()

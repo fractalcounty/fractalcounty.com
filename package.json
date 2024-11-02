@@ -3,9 +3,9 @@
   "type": "module",
   "version": "1.0.0",
   "scripts": {
-    "dev": "astro dev",
-    "dev:host": "astro dev --host",
-    "build": "astro check && astro build",
+    "dev": "astro sync && astro dev",
+    "dev:host": "astro sync && astro dev --host",
+    "build": "astro sync && astro check && astro build",
     "preview": "astro preview",
     "preview:host": "astro preview --host",
     "regen": "fish -c 'npmregen'",
