@@ -7,11 +7,10 @@ import { Picture } from 'astro:assets'
 interface Props {
   artwork: CollectionEntry<'artwork'>
   size: keyof typeof THUMBNAIL_SIZES
-  priority?: boolean
   index?: number
 }
 
-const { artwork, size, priority = false, index = 0 } = Astro.props
+const { artwork, size, index = 0 } = Astro.props
 
 // get the first image if it's an array
 const image = Array.isArray(artwork.data.images)
@@ -24,10 +23,6 @@ const thumbnailImage = artwork.data.thumbnail ?? image
 if (!thumbnailImage) {
   throw new Error(`Thumbnail image is undefined for artwork: ${artwork.id}`)
 }
-
-// optimize loading strategy
-const loading = priority && index < 4 ? 'eager' : 'lazy'
-const decoding = priority && index < 4 ? 'sync' : 'async'
 
 // improve accessibility
 const imgTitle = `${artwork.data.title} - ${artwork.data.description}`
@@ -47,6 +42,7 @@ const hasCustomThumbnail = 'thumbnail' in artwork.data && artwork.data.thumbnail
   width={width}
   height={height}
   class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-  loading={loading}
-  decoding={decoding}
+  loading={index === 0 ? 'eager' : 'lazy'}
+  decoding={index === 0 ? 'sync' : 'async'}
+  fetchpriority={index === 0 ? 'high' : 'auto'}
 />
