@@ -12,8 +12,11 @@ const pageUrl = new URL(Astro.url.pathname, Astro.site)
 
 // Collection pages have 2 levels
 const breadcrumbItems = [
-  { name: 'Home', item: 'https://fractalcounty.com/' },
-  { name, item: pageUrl.toString() },
+  { name: 'Home', item: new URL('/', Astro.site).toString() },
+  {
+    name,
+    item: pageUrl.toString(),
+  },
 ]
 
 const schema = {
@@ -21,6 +24,20 @@ const schema = {
   '@graph': [
     generateCollectionSchema(type, pageUrl, name, description),
     generateBreadcrumbSchema(breadcrumbItems),
+    {
+      '@type': 'WebPage',
+      '@id': pageUrl.toString(),
+      'url': pageUrl.toString(),
+      'name': name,
+      'description': description,
+      'isPartOf': {
+        '@id': 'https://fractalcounty.com/#website',
+      },
+      'breadcrumb': {
+        '@id': `${pageUrl.toString()}#breadcrumb`,
+      },
+      'inLanguage': 'en-US',
+    },
     websiteSchema,
     organizationSchema,
     personSchema,

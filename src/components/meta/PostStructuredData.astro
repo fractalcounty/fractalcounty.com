@@ -11,12 +11,15 @@ const { entry } = Astro.props
 const pageUrl = new URL(Astro.url.pathname, Astro.site)
 const ogImageUrl = getImagePath({ url: Astro.url, site: Astro.site })
 
-// ensure breadcrumbs match the actual site structure
+// improve breadcrumb generation
 const breadcrumbItems = [
-  { name: 'Home', item: 'https://fractalcounty.com/' },
+  { name: 'Home', item: new URL('/', Astro.site).toString() },
   {
     name: entry.data.type === 'project' ? 'Projects' : 'Blog',
-    item: `https://fractalcounty.com/${entry.data.type === 'project' ? 'projects' : 'blog'}/`,
+    item: new URL(
+      `/${entry.data.type === 'project' ? 'projects' : 'blog'}/`,
+      Astro.site,
+    ).toString(),
   },
   {
     name: entry.data.title,
@@ -24,19 +27,43 @@ const breadcrumbItems = [
   },
 ]
 
+// ensure image handling is consistent
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
-    generateArticleSchema(entry, pageUrl),
+    generateArticleSchema(entry, pageUrl, ogImageUrl), // pass ogImageUrl
     generateBreadcrumbSchema(breadcrumbItems),
     {
-      '@type': 'ImageObject',
-      '@id': `${pageUrl.toString()}#primaryimage`,
-      'url': ogImageUrl,
-      'width': 1200,
-      'height': 630,
-      'contentUrl': ogImageUrl,
+      '@type': 'WebPage',
+      '@id': pageUrl.toString(),
+      'url': pageUrl.toString(),
+      'name': entry.data.title,
+      'description': entry.data.description,
+      'isPartOf': {
+        '@id': 'https://fractalcounty.com/#website',
+      },
+      'primaryImageOfPage': ogImageUrl
+        ? {
+            '@id': `${pageUrl.toString()}#primaryimage`,
+          }
+        : undefined,
+      'breadcrumb': {
+        '@id': `${pageUrl.toString()}#breadcrumb`,
+      },
+      'inLanguage': 'en-US',
     },
+    // only include image if exists
+    ...(ogImageUrl
+      ? [
+          {
+            '@type': 'ImageObject',
+            '@id': `${pageUrl.toString()}#primaryimage`,
+            'url': ogImageUrl,
+            'width': 1200,
+            'height': 630,
+          },
+        ]
+      : []),
     websiteSchema,
     organizationSchema,
     personSchema,

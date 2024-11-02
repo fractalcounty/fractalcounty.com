@@ -1,14 +1,28 @@
 ---
+import { HOME, SITE } from '@/consts'
 import { generateBreadcrumbSchema, organizationSchema, personSchema, websiteSchema } from '@/lib/schema'
 
 // For homepage, we only need one item
+const pageUrl = new URL(Astro.url.pathname, Astro.site)
+
 const breadcrumbItems = [
-  { name: 'Home', item: 'https://fractalcounty.com/' },
+  { name: 'Home', item: pageUrl.toString() },
 ]
 
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': pageUrl.toString(),
+      'url': pageUrl.toString(),
+      'name': SITE.NAME,
+      'description': HOME.DESCRIPTION,
+      'isPartOf': {
+        '@id': 'https://fractalcounty.com/#website',
+      },
+      'inLanguage': 'en-US',
+    },
     websiteSchema,
     generateBreadcrumbSchema(breadcrumbItems),
     organizationSchema,
