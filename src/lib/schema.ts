@@ -558,29 +558,20 @@ interface BreadcrumbItem {
 }
 
 export function generateBreadcrumbSchema(items: BreadcrumbItem[]) {
-  // Ensure last item doesn't have an item property per Google's guidelines
-  const itemListElements = items.map((item, index) => {
-    const isLastItem = index === items.length - 1
-    return {
-      '@type': 'ListItem',
-      'position': index + 1,
-      'name': item.name,
-      ...(isLastItem
-        ? {}
-        : {
-            item: {
-              '@type': 'WebPage',
-              '@id': item.item,
-              'name': item.name,
-              'url': item.item,
-            },
-          }),
-    }
-  })
-
   return {
     '@type': 'BreadcrumbList',
     '@id': `${items[items.length - 1].item}#breadcrumb`,
-    'itemListElement': itemListElements,
+    'itemListElement': items.map((item, index) => ({
+      '@type': 'ListItem',
+      'position': index + 1,
+      'item': {
+        '@type': 'WebPage',
+        '@id': item.item,
+        'name': item.name,
+        'url': item.item,
+      },
+      // Only include name for last item per Google guidelines
+      ...(index === items.length - 1 ? { name: item.name } : {}),
+    })),
   }
 }
