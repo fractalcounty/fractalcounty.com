@@ -388,7 +388,7 @@ export function generateArtworkSchema(
     },
   }
 
-  // Improve image handling
+  // modify image handling to use associatedMedia for multiple images
   const imageSchema = Array.isArray(images)
     ? {
         '@type': 'ImageObject',
@@ -397,14 +397,6 @@ export function generateArtworkSchema(
         'width': imageWidth,
         'height': imageHeight,
         'caption': title,
-        'additionalImages': images.map((img, index) => ({
-          '@type': 'ImageObject',
-          '@id': `${url.toString()}#image-${index + 1}`,
-          'url': img.src,
-          'width': img.width,
-          'height': img.height,
-          'caption': `${title} - Image ${index + 1}`,
-        })),
       }
     : {
         '@type': 'ImageObject',
@@ -415,7 +407,8 @@ export function generateArtworkSchema(
         'caption': title,
       }
 
-  return {
+  // base schema with modifications
+  const schema = {
     ...baseSchema,
     '@type': type === 'webcomic' ? ['ComicStory', 'CreativeWork'] : ['VisualArtwork', 'CreativeWork'],
     'encodingFormat': type === 'video' ? 'video/mp4' : 'image/webp',
@@ -424,6 +417,19 @@ export function generateArtworkSchema(
     'accessibilityFeature': ['alternativeText'],
     'accessibilityHazard': ['noFlashingHazard'],
     'image': imageSchema,
+    // add associated media for additional images
+    ...(Array.isArray(images) && images.length > 1
+      ? {
+          associatedMedia: images.slice(1).map((img, index) => ({
+            '@type': 'ImageObject',
+            '@id': `${url.toString()}#image-${index + 1}`,
+            'url': img.src,
+            'width': img.width,
+            'height': img.height,
+            'caption': `${title} - Image ${index + 2}`,
+          })),
+        }
+      : {}),
     ...(type === 'webcomic'
       ? {
           numberOfPages: Array.isArray(images) ? images.length : 1,
@@ -442,6 +448,8 @@ export function generateArtworkSchema(
     'conditionsOfAccess': 'Free to view online',
     'usageInfo': 'https://fractalcounty.com/UNLICENSE',
   }
+
+  return schema
 }
 
 // Enhanced article schema for blog/projects
