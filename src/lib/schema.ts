@@ -460,24 +460,19 @@ export function generateArticleSchema(
 ) {
   const { title, description, date, tags, type } = entry.data
 
-  // handle image schema with explicit nullish check
-  const imageSchema = (() => {
-    if (imageUrl === undefined || imageUrl === null) {
-      return null
-    }
-    if (imageUrl.trim().length === 0) {
-      return null
-    }
-    return {
-      '@type': 'ImageObject',
-      'url': imageUrl,
-      'width': 1200,
-      'height': 630,
-      'caption': title,
-    }
-  })()
+  // create image schema if we have a valid image url
+  const imageSchema = typeof imageUrl === 'string' && imageUrl.length > 0
+    ? {
+        '@type': 'ImageObject',
+        '@id': `${url.toString()}#primaryimage`,
+        'url': imageUrl,
+        'width': 1200, // opengraph images are always this size
+        'height': 630,
+        'caption': title,
+      }
+    : null
 
-  const baseSchema = {
+  return {
     '@type': 'Article',
     '@id': url.toString(),
     'headline': title,
@@ -509,11 +504,8 @@ export function generateArticleSchema(
       '@id': SCHEMA_IDS.PERSON,
     },
     'license': 'https://fractalcounty.com/UNLICENSE',
+    ...(imageSchema && { image: imageSchema }),
   }
-
-  return imageSchema === null
-    ? baseSchema
-    : { ...baseSchema, image: imageSchema }
 }
 
 // Enhanced collection page schema

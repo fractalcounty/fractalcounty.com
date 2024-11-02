@@ -1,7 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content'
 import { generateArticleSchema, generateBreadcrumbSchema, organizationSchema, personSchema, websiteSchema } from '@/lib/schema'
-import { getImagePath } from 'astro-opengraph-images'
 
 interface Props {
   entry: CollectionEntry<'blog' | 'projects'>
@@ -10,20 +9,21 @@ interface Props {
 
 const { entry, type } = Astro.props
 const pageUrl = new URL(Astro.url.pathname, Astro.site)
-const ogImageUrl = getImagePath({ url: Astro.url, site: Astro.site })
 
-// Create proper breadcrumb trail for posts
+// construct the opengraph image url - it will be next to the index.html
+const ogImageUrl = new URL(`${Astro.url.pathname}/index.png`, Astro.site).toString()
+
+// create breadcrumb trail
 const breadcrumbItems = [
   { name: 'Home', item: new URL('/', Astro.site).toString() },
   { name: type === 'blog' ? 'Blog' : 'Projects', item: new URL(`/${type}`, Astro.site).toString() },
   { name: entry.data.title, item: pageUrl.toString() },
 ]
 
-// ensure image handling is consistent
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
-    generateArticleSchema(entry, pageUrl, ogImageUrl), // pass ogImageUrl
+    generateArticleSchema(entry, pageUrl, ogImageUrl),
     generateBreadcrumbSchema(breadcrumbItems),
     {
       '@type': 'WebPage',
@@ -34,28 +34,21 @@ const schema = {
       'isPartOf': {
         '@id': 'https://fractalcounty.com/#website',
       },
-      'primaryImageOfPage': ogImageUrl
-        ? {
-            '@id': `${pageUrl.toString()}#primaryimage`,
-          }
-        : undefined,
+      'primaryImageOfPage': {
+        '@id': `${pageUrl.toString()}#primaryimage`,
+      },
       'breadcrumb': {
         '@id': `${pageUrl.toString()}#breadcrumb`,
       },
       'inLanguage': 'en-US',
     },
-    // only include image if exists
-    ...(ogImageUrl
-      ? [
-          {
-            '@type': 'ImageObject',
-            '@id': `${pageUrl.toString()}#primaryimage`,
-            'url': ogImageUrl,
-            'width': 1200,
-            'height': 630,
-          },
-        ]
-      : []),
+    {
+      '@type': 'ImageObject',
+      '@id': `${pageUrl.toString()}#primaryimage`,
+      'url': ogImageUrl,
+      'width': 1200,
+      'height': 630,
+    },
     websiteSchema,
     organizationSchema,
     personSchema,
