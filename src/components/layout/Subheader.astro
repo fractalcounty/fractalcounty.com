@@ -12,6 +12,7 @@ interface Props {
   readingTime?: string
   pages?: number
   isPost?: boolean
+  makeBig?: boolean
   links?: Array<{ label: string, url: string }>
   backUrl?: string
   backLabel?: string
@@ -25,6 +26,7 @@ const {
   readingTime,
   pages,
   isPost,
+  makeBig,
   links = [],
   backUrl,
   backLabel,
@@ -62,6 +64,7 @@ const {
         <h1 class:list={[
           'font-semibold text-base-content',
           isPost ? 'text-xl' : 'uppercase text-base',
+          makeBig ? 'text-xl' : 'text-base',
         ]}
         >{title}</h1>
       </div>

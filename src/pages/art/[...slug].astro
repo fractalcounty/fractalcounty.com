@@ -61,10 +61,10 @@ const firstImage = Array.isArray(artwork.data.images)
     >
       <Subheader
         title={artwork.data.title}
-        subtitle={artwork.data.description}
         date={artwork.data.date}
         isPost={true}
         links={links}
+        subtitle={artwork.data.description}
         pages={Array.isArray(artwork.data.images) ? artwork.data.images.length : 1}
         backUrl="/art"
         backLabel="Back"
