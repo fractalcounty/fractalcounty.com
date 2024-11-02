@@ -2,6 +2,7 @@
 import Footer from '@/components/layout/Footer.astro'
 import Header from '@/components/layout/Header.astro'
 import Head from '@/components/meta/Head.astro'
+import { ViewTransitions } from 'astro:transitions'
 
 type Props = {
   title: string
@@ -37,6 +38,10 @@ const publishedTimeString = publishedTime?.toISOString();
       tags={tags}
     />
     <slot name="structured-data" />
+    <ViewTransitions
+      fallback="swap"
+      handleForms
+    />
     <style is:global>
       /* webcomic page header styles */
       html.is-webcomic-page header {
@@ -49,9 +54,8 @@ const publishedTimeString = publishedTime?.toISOString();
       }
     </style>
   </head>
-  <body>
+  <body class="flex flex-col min-h-screen">
     <Header role="banner" />
-
     <main
       class="flex-1"
       class:list={[

@@ -15,10 +15,11 @@ const { artworks, priority = false, isHomepage = false } = Astro.props
 const displayArtworks = isHomepage ? artworks.slice(0, 3) : artworks
 ---
 
-<div class:list={[
-  'grid gap-6 animate',
-  isHomepage ? 'homepage-grid' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
-]}
+<div
+  class:list={[
+    'grid gap-6 animate',
+    isHomepage ? 'homepage-grid' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
+  ]}
 >
   {displayArtworks.map((artwork, index) => {
     const isMultiImage = artwork.data.type === 'webcomic'
@@ -30,6 +31,7 @@ const displayArtworks = isHomepage ? artworks.slice(0, 3) : artworks
         href={`/art/${artwork.slug}`}
         class="group relative overflow-hidden rounded-xl bg-base-300 aspect-square hover:shadow-md transition-all duration-150"
         underline={false}
+        data-index={index}
       >
         <ArtworkThumbnail
           artwork={artwork}
@@ -82,3 +84,25 @@ const displayArtworks = isHomepage ? artworks.slice(0, 3) : artworks
   }
 }
 </style>
+
+<script>
+// Handle grid item animations
+document.addEventListener('astro:page-load', () => {
+  const grid = document.querySelector('.grid')
+  if (!grid)
+    return
+
+  const items = grid.querySelectorAll('[data-index]')
+  items.forEach((item, index) => {
+    const delay = Math.min(index * 50, 300) // cap at 300ms
+    item.style.opacity = '0'
+    item.style.transform = 'translateY(10px)'
+    item.style.transition = 'opacity 0.2s ease-out, transform 0.2s ease-out'
+
+    setTimeout(() => {
+      item.style.opacity = '1'
+      item.style.transform = 'translateY(0)'
+    }, delay)
+  })
+})
+</script>

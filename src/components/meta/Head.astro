@@ -263,11 +263,13 @@ function init() {
 
 function animate() {
   const animateElements = document.querySelectorAll('.animate')
+  const MAX_DELAY = 300 // maximum total animation delay in ms
 
   animateElements.forEach((element, index) => {
+    const delay = Math.min(index * 50, MAX_DELAY)
     setTimeout(() => {
       element.classList.add('show')
-    }, index * 150)
+    }, delay)
   })
 }
 
@@ -308,4 +310,44 @@ function scrollToTop(event) {
 
 document.addEventListener('DOMContentLoaded', () => init())
 document.addEventListener('astro:after-swap', () => init())
+
+// handle scroll restoration during view transitions
+document.addEventListener('astro:page-load', () => {
+  // restore scroll position if available
+  const savedScroll = sessionStorage.getItem('scrollPosition')
+  if (savedScroll) {
+    window.scrollTo(0, Number.parseInt(savedScroll))
+    sessionStorage.removeItem('scrollPosition')
+  }
+})
+
+document.addEventListener('astro:before-preparation', () => {
+  // save current scroll position before navigation
+  sessionStorage.setItem('scrollPosition', window.scrollY.toString())
+})
+</script>
+
+<script>
+document.addEventListener('astro:page-load', () => {
+  // announce page changes to screen readers
+  const title = document.title
+  const announcement = document.createElement('div')
+  announcement.setAttribute('role', 'status')
+  announcement.setAttribute('aria-live', 'polite')
+  // Add styles to visually hide the element while keeping it accessible
+  announcement.style.cssText = `
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  `
+  announcement.textContent = `Navigated to ${title}`
+  document.body.appendChild(announcement)
+  setTimeout(() => announcement.remove(), 1000)
+})
 </script>

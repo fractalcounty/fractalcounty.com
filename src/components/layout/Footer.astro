@@ -7,9 +7,12 @@ import { SITE } from '@/consts'
 import { Icon } from 'astro-icon/components';
 ---
 
-<footer class="animate">
+<footer
+  class="animate mt-auto py-6"
+  transition:persist
+>
   <Container>
-    <div class="flex justify-between items-center">
+    <div class="flex justify-between items-center min-h-[2.5rem]">
       <div>
         <Link
           href="/UNLICENSE"
@@ -21,7 +24,7 @@ import { Icon } from 'astro-icon/components';
           2024 | {SITE.NAME}
         </Link>
       </div>
-      <div class="button-group">
+      <div class="button-group flex items-center gap-2">
         <ColorModeButton />
         <div
           id="back-to-top-wrapper"

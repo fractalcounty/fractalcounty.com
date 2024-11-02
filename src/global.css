@@ -57,12 +57,29 @@ footer {
 }
 
 .animate {
-  @apply opacity-0 translate-y-3;
-  @apply transition-all duration-700 ease-out;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.3s ease-out,
+    transform 0.3s ease-out;
 }
 
 .animate.show {
-  @apply opacity-100 translate-y-0;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.animate-fast {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.2s ease-out,
+    transform 0.2s ease-out;
+}
+
+.animate-fast.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 html #back-to-top-wrapper {
