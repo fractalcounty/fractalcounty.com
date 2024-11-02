@@ -5,26 +5,18 @@ import { getImagePath } from 'astro-opengraph-images'
 
 interface Props {
   entry: CollectionEntry<'blog' | 'projects'>
+  type: 'blog' | 'projects'
 }
 
-const { entry } = Astro.props
+const { entry, type } = Astro.props
 const pageUrl = new URL(Astro.url.pathname, Astro.site)
 const ogImageUrl = getImagePath({ url: Astro.url, site: Astro.site })
 
-// improve breadcrumb generation
+// Create proper breadcrumb trail for posts
 const breadcrumbItems = [
   { name: 'Home', item: new URL('/', Astro.site).toString() },
-  {
-    name: entry.data.type === 'project' ? 'Projects' : 'Blog',
-    item: new URL(
-      `/${entry.data.type === 'project' ? 'projects' : 'blog'}/`,
-      Astro.site,
-    ).toString(),
-  },
-  {
-    name: entry.data.title,
-    item: pageUrl.toString(),
-  },
+  { name: type === 'blog' ? 'Blog' : 'Projects', item: new URL(`/${type}`, Astro.site).toString() },
+  { name: entry.data.title, item: pageUrl.toString() },
 ]
 
 // ensure image handling is consistent

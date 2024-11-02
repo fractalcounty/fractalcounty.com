@@ -12,15 +12,10 @@ interface Props {
 const { artwork, imageUrl, imageWidth, imageHeight } = Astro.props
 const pageUrl = new URL(Astro.url.pathname, Astro.site)
 
-// validate required props
-if (!imageUrl || !imageWidth || !imageHeight) {
-  throw new Error('Image properties are required for artwork schema')
-}
-
 // Artwork pages have 3 levels
 const breadcrumbItems = [
   { name: 'Home', item: new URL('/', Astro.site).toString() },
-  { name: 'Art', item: new URL('/art/', Astro.site).toString() },
+  { name: 'Art', item: new URL('/art', Astro.site).toString() },
   { name: artwork.data.title, item: pageUrl.toString() },
 ]
 
@@ -34,7 +29,6 @@ const schema = {
       '@id': pageUrl.toString(),
       'url': pageUrl.toString(),
       'name': artwork.data.title,
-      'description': artwork.data.description,
       'isPartOf': {
         '@id': 'https://fractalcounty.com/#website',
       },
@@ -44,7 +38,6 @@ const schema = {
       'breadcrumb': {
         '@id': `${pageUrl.toString()}#breadcrumb`,
       },
-      'inLanguage': 'en-US',
     },
     {
       '@type': 'ImageObject',

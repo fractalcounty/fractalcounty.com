@@ -13,10 +13,7 @@ const pageUrl = new URL(Astro.url.pathname, Astro.site)
 // Collection pages have 2 levels
 const breadcrumbItems = [
   { name: 'Home', item: new URL('/', Astro.site).toString() },
-  {
-    name,
-    item: pageUrl.toString(),
-  },
+  { name, item: pageUrl.toString() },
 ]
 
 const schema = {
