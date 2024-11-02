@@ -24,7 +24,7 @@ import { SITE } from '@/consts';
         </div>
       </Link>
       <nav role="navigation" aria-label="Main navigation">
-        <ul class="flex gap-1 list-none p-0 m-0" role="menubar">
+        <ul class="flex gap-1 list-none p-0 m-0">
           {[
             { href: '/blog', label: 'Blog', text: 'blog' },
             { href: '/projects', label: 'Projects', text: 'projects' },
@@ -32,20 +32,20 @@ import { SITE } from '@/consts';
             { href: 'https://links.fractalcounty.com/', label: 'Links', text: 'links', external: true },
           ].map((item, index) => (
             <>
-              <li role="none">
+              <li>
                 <Link
                   href={item.href}
                   title={`View ${item.label.toLowerCase()}`}
                   externalInNewTab={item.external}
                   underline={true}
-                  aria-label={`${item.label}${item.external ? ' (opens in new tab)' : ''}`}
+                  aria-current={Astro.url.pathname === item.href ? 'page' : undefined}
                 >
                   {item.text}
                 </Link>
               </li>
               {index < 3 && (
-                <li role="none">
-                  <span aria-hidden="true">/</span>
+                <li aria-hidden="true">
+                  <span>/</span>
                 </li>
               )}
             </>
