@@ -46,7 +46,7 @@ const categories = ['all', ...artworkTypes] as const
     description={ARTWORK.DESCRIPTION}
   />
   <ProfilePageStructuredData slot="structured-data" />
-  <Container>
+  <Container as="main">
     <div class="space-y-12 animate">
       <Subheader title="Art" subtitle="my archived artwork" categories={categories} />
       <div class="gallery-container">

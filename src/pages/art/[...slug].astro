@@ -75,7 +75,9 @@ const imageData = {
     slot="head"
   />
 
-  <Container class:list={[
+  <Container
+    as="main"
+    class:list={[
     artwork.data.type === 'webcomic' && 'max-w-5xl px-2 md:px-4',
   ]}
   >

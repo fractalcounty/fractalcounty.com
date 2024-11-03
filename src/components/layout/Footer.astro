@@ -4,29 +4,39 @@ import Button from '@/components/Button.astro'
 // import ColorModeButton from '@/components/ColorModeButton.astro'
 import Container from '@/components/layout/Container.astro'
 import Link from '@/components/Link.astro'
-import { SITE } from '@/consts'
 import { Icon } from 'astro-icon/components'
 ---
 
 <footer
   class="animate mt-auto py-6"
 >
-  <Container>
+  <Container as="section">
     <div class="flex flex-col">
       <nav aria-label="Breadcrumb" class="h-6">
         <Breadcrumbs />
       </nav>
       <div class="flex justify-between items-center h-10 pt-2">
         <div>
-          <Link
-            href="/UNLICENSE"
-            class="flex items-center gap-1"
-            underline={false}
-            externalInNewTab={false}
-          >
+          <div class="flex items-center gap-1">
             <Icon name="anticopyright" class="text-[11px]" />
-            2024 | {SITE.NAME}
-          </Link>
+            <Link
+              href="/unlicense"
+              class="hover:underline"
+              underline={false}
+              externalInNewTab={false}
+            >
+              UNLICENSE 2024
+            </Link>
+            <span>|</span>
+            <Link
+              href="https://youtube.com/watch?v=XO9FKQAxWZc"
+              class="hover:underline"
+              externalInNewTab={true}
+              underline={false}
+            >
+              copyright is brain damage
+            </Link>
+          </div>
         </div>
         <div class="button-group flex items-center gap-2 min-w-[4.4rem]">
           <!-- <ColorModeButton /> -->

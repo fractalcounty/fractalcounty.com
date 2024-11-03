@@ -1,0 +1,67 @@
+---
+import { YouTube } from '@astro-community/astro-embed-youtube'
+
+interface Props {
+    id: string
+    title?: string
+    class?: string
+    showShadow?: boolean
+    rounded?: boolean
+    scale?: number
+}
+
+const {
+    id,
+    title,
+    class: className,
+    showShadow = true,
+    rounded = true,
+    scale = 1,
+} = Astro.props
+---
+
+<div class={`custom-video-card-wrapper ${className || ''}`} style={`--scale-factor: ${scale};`}>
+    <figure class="custom-video-card prose">
+        <div class={`video-container ${rounded ? 'rounded-2xl overflow-hidden' : ''} ${showShadow ? 'shadow-xl' : ''}`}>
+            <YouTube
+              {id}
+              {title}
+              playlabel={title ? `Play: ${title}` : 'Play video'}
+              params="rel=0&modestbranding=1"
+            />
+        </div>
+        {title && (
+            <figcaption class="custom-video-card-caption">
+                {title}
+            </figcaption>
+        )}
+    </figure>
+</div>
+
+<style>
+    .custom-video-card-wrapper {
+        width: calc(100% * var(--scale-factor));
+        margin: 0 auto;
+    }
+
+    .custom-video-card {
+        max-width: 100%;
+    }
+
+    .video-container {
+        position: relative;
+        width: 100%;
+        background-color: theme(colors.base-200);
+    }
+
+    /* preserve 16:9 aspect ratio */
+    .video-container :global(lite-youtube) {
+        max-width: none;
+        width: 100%;
+    }
+
+    .custom-video-card-caption {
+        @apply prose-sm text-center mt-2 italic text-accent-content;
+    }
+
+</style>

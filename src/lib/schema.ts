@@ -334,7 +334,7 @@ export const websiteSchema = {
   ],
   'inLanguage': 'en-US',
   'copyrightYear': new Date().getFullYear(),
-  'license': 'https://fractalcounty.com/UNLICENSE',
+  'license': 'https://fractalcounty.com/unlicense',
 }
 
 // Enhanced artwork schema generation
@@ -444,9 +444,9 @@ export function generateArtworkSchema(
     'copyrightHolder': {
       '@id': SCHEMA_IDS.PERSON,
     },
-    'license': 'https://fractalcounty.com/UNLICENSE',
+    'license': 'https://fractalcounty.com/unlicense',
     'conditionsOfAccess': 'Free to view online',
-    'usageInfo': 'https://fractalcounty.com/UNLICENSE',
+    'usageInfo': 'https://fractalcounty.com/unlicense',
   }
 
   return schema
@@ -503,7 +503,7 @@ export function generateArticleSchema(
     'copyrightHolder': {
       '@id': SCHEMA_IDS.PERSON,
     },
-    'license': 'https://fractalcounty.com/UNLICENSE',
+    'license': 'https://fractalcounty.com/unlicense',
     ...(imageSchema && { image: imageSchema }),
   }
 }

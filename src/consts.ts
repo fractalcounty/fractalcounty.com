@@ -10,7 +10,6 @@ export const SITE: Site = {
   AUTHOR: 'chip fractalcounty',
   EMAIL: 'chip@fractalcounty.com',
   NUM_POSTS_ON_HOMEPAGE: 3,
-  NUM_WORKS_ON_HOMEPAGE: 2,
   NUM_PROJECTS_ON_HOMEPAGE: 3,
   NUM_ARTWORK_ON_HOMEPAGE: 6,
 }
@@ -55,3 +54,8 @@ export const LINKS_FOOTER: Socials = [
     HREF: 'https://www.instagram.com/fractalcounty/',
   },
 ]
+
+export const LICENSE: Metadata = {
+  TITLE: 'License',
+  DESCRIPTION: 'This is free and unencumbered software released into the public domain.',
+}

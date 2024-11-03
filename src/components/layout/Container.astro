@@ -1,7 +1,11 @@
 ---
+interface Props {
+  as?: 'main' | 'section'
+}
 
+const { as: Element = 'section' } = Astro.props;
 ---
 
-<div class="mx-auto max-w-screen-sm px-5">
+<Element class="mx-auto max-w-screen-sm px-5">
   <slot />
-</div>
+</Element>

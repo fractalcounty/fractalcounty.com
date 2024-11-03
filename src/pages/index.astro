@@ -43,7 +43,7 @@ const recentArtwork = (await getCollection('artwork'))
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
   <WebsiteStructuredData slot="structured-data" />
   <ProfilePageStructuredData slot="structured-data" />
-  <Container>
+  <Container as="main">
     <Subheader title="Hello, I'm Chip" />
     <div class="space-y-16">
       <section>

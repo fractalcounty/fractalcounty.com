@@ -21,7 +21,7 @@ const projects = (await getCollection('projects'))
     description={PROJECTS.DESCRIPTION}
   />
   <ProfilePageStructuredData slot="structured-data" />
-  <Container>
+  <Container as="main">
     <div class="space-y-10">
       <Subheader title="Projects" subtitle="projects and experiments" />
       <ul class="animate flex flex-col gap-4">
