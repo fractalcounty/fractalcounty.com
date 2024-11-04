@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "prepare": "fish -c 'towebp /src/content/artwork'",
-    "predev": "bun run prepare-assets && astro sync && astro check",
+    "predev": "bun run prepare && astro sync && astro check",
     "dev": "astro dev",
     "dev:host": "astro dev --host",
     "prebuild": "bun run prepare-assets && astro sync && astro check",
