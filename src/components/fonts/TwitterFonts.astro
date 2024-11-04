@@ -9,23 +9,23 @@ import { AstroFont } from 'astro-font'
       src: [
         {
           style: 'normal',
-          weight: '400',
-          path: './public/fonts/ChirpRegular.woff2',
+          weight: 'normal',
+          path: '/fonts/ChirpRegular.woff2',
         },
         {
           style: 'normal',
           weight: '500',
-          path: './public/fonts/ChirpMedium.woff2',
+          path: '/fonts/ChirpMedium.woff2',
         },
         {
           style: 'normal',
           weight: '600',
-          path: './public/fonts/ChirpBold.woff2',
+          path: '/fonts/ChirpBold.woff2',
         },
         {
           style: 'normal',
           weight: '700',
-          path: './public/fonts/ChirpHeavy.woff2',
+          path: '/fonts/ChirpHeavy.woff2',
         },
       ],
       preload: false,
@@ -35,3 +35,9 @@ import { AstroFont } from 'astro-font'
     },
   ]}
 />
+
+<style is:global>
+  .tweet {
+    font-family: 'Chirp', sans-serif;
+  }
+</style>

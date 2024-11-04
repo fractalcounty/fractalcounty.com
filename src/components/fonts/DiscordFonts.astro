@@ -10,18 +10,24 @@ import { AstroFont } from 'astro-font'
         {
           style: 'normal',
           weight: 'normal',
-          path: './public/fonts/ggSansRegular.woff2',
+          path: '/fonts/ggSansRegular.woff2',
         },
         {
           style: 'normal',
           weight: 'bold',
-          path: './public/fonts/ggSansSemiBold.woff2',
+          path: '/fonts/ggSansSemiBold.woff2',
         },
       ],
       preload: false,
       display: 'swap',
-      selector: '.discord-conversation',
+      selector: '.discord-conversation, .discord-message',
       fallback: 'sans-serif',
     },
   ]}
 />
+
+<style is:global>
+  .discord-conversation, .discord-message {
+    font-family: 'gg-sans', sans-serif;
+  }
+</style>

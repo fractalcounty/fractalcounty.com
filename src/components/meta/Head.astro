@@ -50,7 +50,7 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
   languageAlternates={languageAlternates}
   openGraph={{
     basic: {
-      title: `${SITE.NAME} - ${title}`,
+      title: `${SITE.NAME} | ${title}`,
       type,
       image: openGraphImageUrl,
       url: Astro.url.href,
@@ -187,20 +187,6 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
       display: 'block',
       selector: 'body',
       fallback: 'sans-serif',
-    },
-    {
-      name: 'CommitMono',
-      src: [
-        {
-          style: 'normal',
-          weight: '400',
-          path: './public/fonts/CommitMono.woff2',
-        },
-      ],
-      preload: false,
-      display: 'swap',
-      selector: 'code',
-      fallback: 'monospace',
     },
   ]}
 />

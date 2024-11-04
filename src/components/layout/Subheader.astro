@@ -1,5 +1,4 @@
 ---
-import BackToPrev from '@/components/BackToPrev.astro'
 import Button from '@/components/Button.astro'
 import FormattedDate from '@/components/FormattedDate.astro'
 import Link from '@/components/Link.astro'
@@ -87,9 +86,9 @@ const {
     </div>
 
     {backUrl && (
-      <BackToPrev href={backUrl}>
+      <Button as="a" href={backUrl} arrow="left">
         {backLabel}
-      </BackToPrev>
+      </Button>
     )}
     {categories && (
       <div class="flex flex-wrap gap-2">

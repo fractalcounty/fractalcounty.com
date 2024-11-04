@@ -5,6 +5,7 @@ export interface Site {
   NUM_POSTS_ON_HOMEPAGE: number
   NUM_PROJECTS_ON_HOMEPAGE: number
   NUM_ARTWORK_ON_HOMEPAGE: number
+  TITLE_TEMPLATE: string
 }
 
 export interface Metadata {
