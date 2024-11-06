@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "astro sync && astro dev",
-    "build": "astro sync && astro check && astro build",
+    "build": "bun install && astro sync && ([ \"$NODE_ENV\" = \"production\" ] || astro check) && astro build",
     "preview": "astro preview",
     "check": "astro check",
     "lint": "eslint . --flag unstable_ts_config --fix && prettier --write .",
