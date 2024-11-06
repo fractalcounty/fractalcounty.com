@@ -11,14 +11,11 @@ import { type CollectionEntry, getCollection } from 'astro:content'
 const blogPosts = (await getCollection('blog'))
   .filter(post => !post.data.draft)
 
-const projectsInBlog = (await getCollection('projects'))
-  .filter(project => !project.data.draft && project.data.showInBlog)
-
-const allPosts = [...blogPosts, ...projectsInBlog]
+const allPosts = [...blogPosts]
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 
 type Acc = {
-  [year: string]: (CollectionEntry<'blog'> | CollectionEntry<'projects'>)[]
+  [year: string]: CollectionEntry<'blog'>[]
 }
 
 const posts = allPosts.reduce((acc: Acc, post) => {
@@ -55,7 +52,12 @@ const years = Object.keys(posts).sort((a, b) => Number.parseInt(b) - Number.pars
                 {
                   posts[year].map(post => (
                     <li>
-                      <ArrowCard entry={post} context="blog" />
+                      <ArrowCard
+                        title={post.data.title}
+                        description={post.data.description}
+                        icon={post.data.icon}
+                        href={`/blog/${post.id}`}
+                      />
                     </li>
                   ))
                 }

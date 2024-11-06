@@ -1,5 +1,4 @@
 ---
-import type { CollectionEntry } from 'astro:content'
 import ArrowCard from '@/components/ArrowCard.astro'
 import ArtworkCarousel from '@/components/ArtworkCarousel.astro'
 import Container from '@/components/layout/Container.astro'
@@ -11,32 +10,14 @@ import { HOME, LINKS_FOOTER, SITE } from '@/consts'
 import PageLayout from '@/layouts/PageLayout.astro'
 import { getCollection } from 'astro:content'
 
-const blogPosts = (await getCollection('blog'))
-  .filter((post: CollectionEntry<'blog'>) => !post.data.draft)
-
-const projectsInBlog = (await getCollection('projects'))
-  .filter((project: CollectionEntry<'projects'>) =>
-    !project.data.draft && project.data.showInBlog,
-  )
-
-const allBlogPosts = [...blogPosts, ...projectsInBlog]
-  .sort((a: CollectionEntry<'blog' | 'projects'>, b: CollectionEntry<'blog' | 'projects'>) =>
-    b.data.date.valueOf() - a.data.date.valueOf(),
-  )
+const allPosts = (await getCollection('blog'))
+  .filter(post => !post.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE)
 
-const projects = (await getCollection('projects'))
-  .filter((project: CollectionEntry<'projects'>) => !project.data.draft)
-  .sort((a: CollectionEntry<'projects'>, b: CollectionEntry<'projects'>) =>
-    b.data.date.valueOf() - a.data.date.valueOf(),
-  )
-  .slice(0, SITE.NUM_PROJECTS_ON_HOMEPAGE)
-
 const recentArtwork = (await getCollection('artwork'))
-  .filter((artwork: CollectionEntry<'artwork'>) => !artwork.data.draft)
-  .sort((a: CollectionEntry<'artwork'>, b: CollectionEntry<'artwork'>) =>
-    b.data.date.valueOf() - a.data.date.valueOf(),
-  )
+  .filter(artwork => !artwork.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, SITE.NUM_ARTWORK_ON_HOMEPAGE)
 ---
 
@@ -78,31 +59,14 @@ const recentArtwork = (await getCollection('artwork'))
           </Link>
         </div>
         <ul class="flex flex-col gap-4">
-          {allBlogPosts.map(post => (
+          {allPosts.map(post => (
             <li>
-              <ArrowCard entry={post} context="blog" />
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section class="animate space-y-6">
-        <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h2 class="font-bold uppercase">
-            Recent projects
-          </h2>
-          <Link
-            href="/projects"
-            title="Projects"
-            externalInNewTab={false}
-          >
-            See all projects
-          </Link>
-        </div>
-        <ul class="flex flex-col gap-4">
-          {projects.map((project: CollectionEntry<'projects'>) => (
-            <li>
-              <ArrowCard entry={project} context="projects" />
+              <ArrowCard
+                title={post.data.title}
+                description={post.data.description}
+                icon={post.data.icon}
+                href={`/blog/${post.id}`}
+              />
             </li>
           ))}
         </ul>

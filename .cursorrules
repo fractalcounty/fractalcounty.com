@@ -1,32 +1,27 @@
-You are a senior frontend/backend/full stack web developer that primarily focuses on producing elegant and efficient code in the Astro framework that is both easy to maintain and aligns with best practices.
+<project>
+<project_description>
+fractalcounty.com, a minimalist and accessible content-focused personal website for Chip (@fractalcounty) to showcase his thoughts, projects, creative works, and more built using the Astro framework (v5-beta), Astro Content, Typescript, TailwindCSS, DaisyUI, and ESLint.
+</project_description>
 
-<rules>
-1. Always send the full script with your changes if explicitly requested.
-2. Always follow Astro's recommended component and content collection patterns.
-3. Write accessible, semantic, and SEO-friendly code and markup following ARIA best practices
-4. Follow the project's established design system using Tailwind CSS, custom components, and/or DaisyUI where applicable
-5. Always follow best modern full stack development practices (i.e Don't Repeat Yourself/DRY, avoid bugs, stay organized, etc)
-6. Ensure proper TypeScript types and validation using Zod schemas where applicable, always writing elegant type-safe code with no nulls and robust types and schemas
-</rules>
+<project_features>
+- Index homepage w/ previews of recent content from each collection
+- Blog content collections for posts in traditional prose in MDX article format
+- Artwork content collection for visual media such as images, animations, and webcomics (w/ custom comic reader UI!)
+- Page with links to external socials and online profiles (think linktree)
+- Music page w/ library of recent albums via links to bancamp/custom player, displayed last.fm metadata/history, custom mixtapes/favorite songs (w/ links to respective playlists on Spotify/Youtube, maybe also with custom player UI as legality permits?)
+- Commisions page (fractalcounty.com/commissions) w/ a simple "price calculator" for web design commisions
+- 404 and public domain license pages (fractalcounty.com/[404, unlicense])
+- Outstandingly accessible and responsive design with mobile-first layout
+- Optimized SEO w/ semantic HTML, breadcrumbs, aria/alt tags, extensive json-ld structured data for rich results
+- Neurotically optimized bundle size for 10/10 Lighthouse scores w/ compression and CSS purging
+- Config-based design where as many constants as possible are defined in a single config file with full type/schema
+</project_features>
 
-<project_info>
-fractalcounty.com: A minimalist personal blog and portfolio website for Chip (fractalcounty) built with Astro featuring:
-- Content collections for blog posts, project showcases, and artwork media
-- Accessible and responsive design with mobile-first layout
-- Dark/light theme support using DaisyUI themes
-- Animation and page transition effects
-</project_info>
-
-<dev_environment>
-- IDE: Cursor (VSCode fork)
-- Framework: Astro v5-beta
-- Runtime: Bun
-- Language: Typescript
-- Linter: ESLint (@antfu/eslint-config)
-- Formatter: Prettier (via eslint-plugin-format)
-- CSS Framework: Tailwind CSS
-- UI framework: Custom (with some DaisyUI)
-- Platform: Cloudflare Pages Pro (paid plan) via GitHub repository
-- Content collections: MDX + Astro Content
-</dev_environment>
-
+<project_rules>
+1. Always follow Astro's recommended component/content collection patterns, style guidelines, and best practices.
+2. Write accessible, semantic, and SEO-friendly code and markup following ARIA best practices and standards
+3. Follow the project's established design system using custom (Tailwind CSS) or DaisyUI components where applicable
+4. Abide by general principles of good development (i.e Don't Repeat Yourself aka DRY, use types, error handling, etc)
+5. Validate data with types and/or Zod schemas where applicable
+</project_rules>
+</project>

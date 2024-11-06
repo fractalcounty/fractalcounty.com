@@ -1,27 +1,29 @@
 ---
-import type { CollectionEntry } from 'astro:content'
 import Link from '@/components/Link.astro'
 import { Icon } from 'astro-icon/components'
 
 type Props = {
-  entry: CollectionEntry<'blog'> | CollectionEntry<'projects'>
-  context: 'blog' | 'projects'
+  title: string
+  description: string
+  icon?: string
+  href: string
+  externalInNewTab?: boolean
 }
 
-const { entry, context } = Astro.props
-const title = entry.data.type === 'project' && context === 'blog' ? entry.data.blogTitle : entry.data.title
-const defaultIconName = context === 'blog' ? 'content-blog' : 'content-project'
-const iconName = entry.data.thumbnail || defaultIconName;
+const { title, description, icon, href, externalInNewTab = true } = Astro.props
 ---
 
 <Link
-  href={`/${entry.collection}/${entry.slug}`}
+  href={href || `/`}
   class="relative group flex items-center flex-nowrap py-3 px-4 pr-10 rounded-lg border border-base-content/25 bg-transparent hover:bg-neutral text-base-content duration-200 ease-in-out"
   underline={false}
+  externalInNewTab={externalInNewTab}
 >
 
   <!-- Icon -->
-  <Icon name={iconName} class="size-6 mr-3 flex-shrink-0" />
+  {icon && (
+    <Icon name={icon} class="size-6 mr-3 flex-shrink-0" />
+  )}
 
   <!-- Title and description -->
   <div class="flex flex-col flex-1 truncate">
@@ -29,7 +31,7 @@ const iconName = entry.data.thumbnail || defaultIconName;
       {title}
     </div>
     <div class="text-sm">
-      {entry.data.description}
+      {description}
     </div>
   </div>
 

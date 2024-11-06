@@ -33,7 +33,8 @@ node_modules/
 
 # content
 **/*.mdx
-**/*.md
+src/content/artwork/**
+src/content/blog/**
 
 # misc
 UNLICENSE

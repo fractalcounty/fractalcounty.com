@@ -3,11 +3,11 @@ import type { CollectionEntry } from 'astro:content'
 import { generateArticleSchema, generateBreadcrumbSchema, organizationSchema, personSchema, websiteSchema } from '@/lib/schema'
 
 interface Props {
-  entry: CollectionEntry<'blog' | 'projects'>
-  type: 'blog' | 'projects'
+  entry: CollectionEntry<'blog'>
+  type: 'blog'
 }
 
-const { entry, type } = Astro.props
+const { entry } = Astro.props
 const pageUrl = new URL(Astro.url.pathname, Astro.site)
 
 // construct the opengraph image url - it will be next to the index.html
@@ -16,7 +16,7 @@ const ogImageUrl = new URL(`${Astro.url.pathname}/index.png`, Astro.site).toStri
 // create breadcrumb trail
 const breadcrumbItems = [
   { name: 'Home', item: new URL('/', Astro.site).toString() },
-  { name: type === 'blog' ? 'Blog' : 'Projects', item: new URL(`/${type}`, Astro.site).toString() },
+  { name: 'Blog', item: new URL('/blog', Astro.site).toString() },
   { name: entry.data.title, item: pageUrl.toString() },
 ]
 

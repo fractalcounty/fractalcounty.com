@@ -452,13 +452,13 @@ export function generateArtworkSchema(
   return schema
 }
 
-// Enhanced article schema for blog/projects
+// Enhanced article schema for blog
 export function generateArticleSchema(
-  entry: CollectionEntry<'blog' | 'projects'>,
+  entry: CollectionEntry<'blog'>,
   url: URL,
   imageUrl?: string,
 ) {
-  const { title, description, date, tags, type } = entry.data
+  const { title, description, date, tags } = entry.data
 
   // create image schema if we have a valid image url
   const imageSchema = typeof imageUrl === 'string' && imageUrl.length > 0
@@ -498,7 +498,7 @@ export function generateArticleSchema(
       '@type': 'WebPage',
       '@id': url.toString(),
     },
-    'articleSection': type === 'project' ? 'Projects' : 'Blog',
+    'articleSection': 'Blog',
     'inLanguage': 'en-US',
     'copyrightHolder': {
       '@id': SCHEMA_IDS.PERSON,
@@ -510,7 +510,7 @@ export function generateArticleSchema(
 
 // Enhanced collection page schema
 export function generateCollectionSchema(
-  type: 'blog' | 'projects' | 'artwork',
+  type: 'blog' | 'artwork',
   url: URL,
   title: string,
   description: string,
@@ -526,7 +526,7 @@ export function generateCollectionSchema(
     },
     'about': {
       '@type': 'Thing',
-      'name': type === 'blog' ? 'Blog Posts' : type === 'projects' ? 'Projects' : 'Artwork',
+      'name': 'Blog Posts',
     },
     'author': {
       '@id': SCHEMA_IDS.PERSON,

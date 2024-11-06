@@ -4,38 +4,29 @@ import Subheader from '@/components/layout/Subheader.astro'
 import PostStructuredData from '@/components/meta/PostStructuredData.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
 import { readingTime } from '@/lib/utils'
-import { type CollectionEntry, getCollection } from 'astro:content'
+import { getCollection, render } from 'astro:content'
 
 export async function getStaticPaths() {
-  const blogPosts = await getCollection('blog')
-  const projectsInBlog = await getCollection('projects')
-
-  const filteredBlogPosts = blogPosts.filter(post => !post.data.draft)
-  const filteredProjects = projectsInBlog.filter(project => !project.data.draft && project.data.showInBlog)
-
-  const allPosts = [...filteredBlogPosts, ...filteredProjects]
-    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-
-  return allPosts.map(post => ({
-    params: { slug: post.slug },
-    props: post,
-  }))
+  const posts = await getCollection('blog')
+  return posts
+    .filter(post => !post.data.draft)
+    .map(post => ({
+      params: {
+        slug: post.id,
+      },
+      props: { post },
+    }))
 }
-
-type Props = CollectionEntry<'blog'> | CollectionEntry<'projects'>
-
-const post = Astro.props
-const { Content } = await post.render()
-const title = (post.data.type === 'project' && post.data.showInBlog ? post.data.blogTitle : post.data.title) || 'Untitled Post'
-const tags = post.data.tags || []
+const { post } = Astro.props
+const { Content } = await render(post)
 ---
 
 <PageLayout
-  title={title}
+  title={post.data.title}
   description={post.data.description}
   type="article"
   publishedTime={post.data.date}
-  tags={tags}
+  tags={post.data.tags}
   isContentPage={true}
 >
   <PostStructuredData
@@ -44,14 +35,15 @@ const tags = post.data.tags || []
     type="blog"
   />
   <Container as="main">
-    <Subheader
-      title={title}
-      date={post.data.date}
-      readingTime={readingTime(post.body)}
-      isPost={true}
-      backUrl="/blog"
-      backLabel="Back"
-    />
+    <div class="my-10">
+      <Subheader
+        title={post.data.title}
+        date={post.data.date}
+        readingTime={readingTime(post.body || '')}
+        backUrl="/blog"
+        backLabel="Back"
+      />
+    </div>
 
     <article class="animate">
       <Content />

@@ -10,7 +10,6 @@ export const SITE: Site = {
   AUTHOR: 'chip fractalcounty',
   EMAIL: 'chip@fractalcounty.com',
   NUM_POSTS_ON_HOMEPAGE: 3,
-  NUM_PROJECTS_ON_HOMEPAGE: 3,
   NUM_ARTWORK_ON_HOMEPAGE: 6,
   TITLE_TEMPLATE: '%s | %t',
 }
@@ -24,12 +23,6 @@ export const HOME: Metadata = {
 export const BLOG: Metadata = {
   TITLE: 'Blog',
   DESCRIPTION: 'Various thoughts and writings on topics I think are neat.',
-}
-
-export const PROJECTS: Metadata = {
-  TITLE: 'Projects',
-  DESCRIPTION:
-    'A collection of my projects and other works I\'ve made over the years.',
 }
 
 export const LINKS: Metadata = {

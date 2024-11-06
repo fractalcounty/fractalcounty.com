@@ -8,35 +8,22 @@ import ArtworkStructuredData from '@/components/meta/ArtworkStructuredData.astro
 import WebcomicViewer from '@/components/WebcomicViewer.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
 import { Image } from 'astro:assets'
-import { getCollection } from 'astro:content'
+import { getCollection, render } from 'astro:content'
 
 export async function getStaticPaths() {
-  const artworks = (await getCollection('artwork'))
-    .filter((artwork: CollectionEntry<'artwork'>) => !artwork.data.draft)
-    .sort((a: CollectionEntry<'artwork'>, b: CollectionEntry<'artwork'>) =>
-      b.data.date.valueOf() - a.data.date.valueOf(),
-    )
-  return artworks.map((artwork: CollectionEntry<'artwork'>) => ({
-    params: { slug: artwork.slug },
-    props: artwork,
-  }))
+  const artworks = await getCollection('artwork')
+  return artworks
+    .filter(artwork => !artwork.data.draft)
+    .map(artwork => ({
+      params: { id: artwork.id.replace(/\.(md|mdx)$/, '') },
+      props: artwork,
+    }))
 }
 
-// explicitly type the props to extend only the data property
-type Props = {
-  data: CollectionEntry<'artwork'>['data']
-  slug: string
-  id: string
-  collection: string
-  render: () => Promise<{
-    Content: any
-    headings: any[]
-    remarkPluginFrontmatter: Record<string, any>
-  }>
-}
+type Props = CollectionEntry<'artwork'>
 
 const artwork = Astro.props
-const { Content } = await artwork.render()
+const { Content } = await render(artwork)
 const links = artwork.data.links || []
 
 // Get the full URL and dimensions for the image
