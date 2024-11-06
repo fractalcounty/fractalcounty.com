@@ -198,6 +198,7 @@ if (!resolvedTitle && resolvedCollection && resolvedId) {
                   `${resolvedTitle || ''}${resolvedImages.length > 1 ? ` - Image ${index + 1}` : ''}`
                 }
                 formats={type === 'animation' ? ['webp'] : ['avif', 'webp']}
+                fallbackFormat={type === 'animation' ? 'webp' : 'png'}
                 loading={index === 0 ? 'eager' : 'lazy'}
                 decoding={index === 0 ? 'sync' : 'async'}
                 {width}
@@ -225,6 +226,7 @@ if (!resolvedTitle && resolvedCollection && resolvedId) {
                 `${resolvedTitle || ''}${resolvedImages.length > 1 ? ` - Image ${index + 1}` : ''}`
               }
               formats={type === 'animation' ? ['webp'] : ['avif', 'webp']}
+              fallbackFormat={type === 'animation' ? 'webp' : 'png'}
               loading={index === 0 ? 'eager' : 'lazy'}
               decoding={index === 0 ? 'sync' : 'async'}
               {width}
