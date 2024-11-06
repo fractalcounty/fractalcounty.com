@@ -1,0 +1,84 @@
+---
+import type { ImageMetadata } from 'astro'
+import type { CollectionEntry } from 'astro:content'
+import ImageStructuredData from '@/components/meta/ImageStructuredData.astro'
+import { SITE } from '@/consts'
+import { Picture } from 'astro:assets'
+
+interface Props {
+  art: CollectionEntry<'art'>
+  size?: 'sm' | 'md' | 'lg'
+  index?: number
+}
+
+const { art, size = 'md', index = 0 } = Astro.props
+
+const sizes = {
+  sm: 300,
+  md: 400,
+  lg: 600,
+} as const
+
+// Get the thumbnail or first image
+const image =
+  art.data.thumbnail ??
+  (Array.isArray(art.data.images) ? art.data.images[0] : art.data.images)
+
+if (!image) {
+  throw new Error(`No image found for art: ${art.id}`)
+}
+
+// helper to get public url for full resolution image
+function getFullResUrl(image: ImageMetadata): string {
+  // extract filename without hash
+  const filename = image.src
+    .split('/')
+    .pop()!
+    .replace(
+      /\.[a-zA-Z0-9]+_[a-zA-Z0-9]+\.(webp|png|jpg|jpeg|gif|avif)$/,
+      '.$1'
+    )
+    .replace(/\.[a-zA-Z0-9]+\.(webp|png|jpg|jpeg|gif|avif)$/, '.$1')
+
+  // construct public path preserving collection structure
+  return `/images/art/${art.id}/${filename}`
+}
+
+// improve accessibility
+const imgTitle = `${art.data.title} - ${art.data.description}`
+const width = sizes[size]
+
+const formats = art.data.type === 'animation' ? ['webp'] : ['avif', 'webp']
+---
+
+<ImageStructuredData
+  image={image as ImageMetadata}
+  title={imgTitle}
+  caption={art.data.thumbnailCaption}
+  url={new URL(`/art/${art.id}`, Astro.site)}
+  collection='art'
+  id={art.id}
+  isRepresentative={index === 0}
+  datePublished={art.data.publishDate.toISOString()}
+  dateModified={art.data.updatedDate?.toISOString()}
+  keywords={art.data.tags}
+  type={art.data.type}
+/>
+<Picture
+  src={image as ImageMetadata}
+  alt={imgTitle}
+  title={imgTitle}
+  formats={formats}
+  width={width}
+  height={width}
+  class='h-full w-full object-cover transition-transform duration-500 group-hover:scale-105'
+  loading={index === 0 ? 'eager' : 'lazy'}
+  decoding={index === 0 ? 'sync' : 'async'}
+  fetchpriority={index === 0 ? 'high' : 'auto'}
+  itemprop='thumbnail'
+  itemscope
+  itemtype='http://schema.org/ImageObject'
+  data-original={getFullResUrl(image)}
+  data-license='https://fractalcounty.com/unlicense'
+  data-creator={SITE.AUTHOR}
+/>

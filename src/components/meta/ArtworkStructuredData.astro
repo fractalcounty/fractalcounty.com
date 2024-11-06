@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content'
 import {
-  generateArtworkSchema,
+  generateArtSchema,
   generateBreadcrumbSchema,
   organizationSchema,
   personSchema,
@@ -9,37 +9,54 @@ import {
 } from '@/lib/schema'
 
 interface Props {
-  artwork: CollectionEntry<'artwork'>
-  imageUrl: string
-  imageWidth: number
-  imageHeight: number
+  art: CollectionEntry<'art'>
 }
 
-const { artwork, imageUrl, imageWidth, imageHeight } = Astro.props
+const { art } = Astro.props
 const pageUrl = new URL(Astro.url.pathname, Astro.site)
 
-// Artwork pages have 3 levels
+// art pages have 3 levels
 const breadcrumbItems = [
   { name: 'Home', item: new URL('/', Astro.site).toString() },
   { name: 'Art', item: new URL('/art', Astro.site).toString() },
-  { name: artwork.data.title, item: pageUrl.toString() },
+  { name: art.data.title, item: pageUrl.toString() },
 ]
+
+const primaryImage = Array.isArray(art.data.images)
+  ? art.data.images[0]
+  : art.data.images
+
+function getPublicPath(src: string, id: string) {
+  if (src.startsWith('/_astro/')) {
+    const filename = src
+      .split('/')
+      .pop()!
+      .split('.')[0]
+      .replace(/_[a-z0-9]+$/i, '')
+
+    const relativePath = `/images/art/${id}/${filename}.webp`
+    return new URL(relativePath, Astro.site).toString()
+  }
+  return src.startsWith('http') ? src : new URL(src, Astro.site).toString()
+}
+
+const publicPath = getPublicPath(primaryImage.src, art.id)
 
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
-    generateArtworkSchema(artwork, pageUrl, imageUrl, imageWidth, imageHeight),
+    generateArtSchema(art, pageUrl),
     generateBreadcrumbSchema(breadcrumbItems),
     {
       '@type': 'WebPage',
       '@id': pageUrl.toString(),
       url: pageUrl.toString(),
-      name: artwork.data.title,
+      name: art.data.title,
       isPartOf: {
         '@id': 'https://fractalcounty.com/#website',
       },
       primaryImageOfPage: {
-        '@id': `${pageUrl.toString()}#artwork-image`,
+        '@id': `${pageUrl.toString()}#artwork`,
       },
       breadcrumb: {
         '@id': `${pageUrl.toString()}#breadcrumb`,
@@ -47,11 +64,26 @@ const schema = {
     },
     {
       '@type': 'ImageObject',
-      '@id': `${pageUrl.toString()}#artwork-image`,
-      url: imageUrl,
-      width: imageWidth,
-      height: imageHeight,
-      caption: artwork.data.title,
+      '@id': `${pageUrl.toString()}#artwork`,
+      contentUrl: publicPath,
+      url: publicPath,
+      thumbnailUrl: publicPath,
+      name: art.data.title,
+      description: art.data.description,
+      width: primaryImage.width,
+      height: primaryImage.height,
+      caption: art.data.title,
+      datePublished: art.data.publishDate.toISOString(),
+      ...(art.data.updatedDate && {
+        dateModified: art.data.updatedDate.toISOString(),
+      }),
+      author: {
+        '@id': 'https://fractalcounty.com/#person',
+      },
+      copyrightHolder: {
+        '@id': 'https://fractalcounty.com/#person',
+      },
+      license: 'https://fractalcounty.com/unlicense',
     },
     websiteSchema,
     organizationSchema,

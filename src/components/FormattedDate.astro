@@ -1,17 +1,36 @@
 ---
 interface Props {
   date: Date
+  format?: 'short' | 'long' | 'relative'
 }
 
-const { date } = Astro.props
+const { date, format = 'short' } = Astro.props
+
+const formatDate = (date: Date, format: Props['format']) => {
+  switch (format) {
+    case 'long':
+      return date.toLocaleDateString('en-us', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      })
+    case 'relative':
+      // relative time like "2 days ago" or "in 3 months"
+      return new Intl.RelativeTimeFormat('en').format(
+        Math.ceil((date.getTime() - Date.now()) / (1000 * 60 * 60 * 24)),
+        'day'
+      )
+    default:
+      return date.toLocaleDateString('en-us', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      })
+  }
+}
 ---
 
 <time datetime={date.toISOString()}>
-  {
-    date.toLocaleDateString('en-us', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    })
-  }
+  {formatDate(date, format)}
 </time>

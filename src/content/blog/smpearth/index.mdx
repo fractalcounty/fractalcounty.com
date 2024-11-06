@@ -1,7 +1,12 @@
 ---
-title: 'SMPEarth'
+title: 'The Genesis of SMPEarth'
 description: 'A spiritual successor to the SMPLive Minecraft server'
-date: '2019-11-22T00:00:00.000Z'
+publishDate: '2019-11-22'
+updatedDate: '2024-10-07'
+thumbnail: './smpearth-christmas-map.webp'
+thumbnailStyle: true
+thumbnailCaption: "SMPEarth's dynmap, circa Christmas 2019"
+thumbnailCaptionType: 'alt'
 links:
   - label: 'wiki'
     url: 'https://smpearth.fandom.com/wiki/SMPEarth'
@@ -30,12 +35,7 @@ import Tweet from '@components/Tweet.astro'
 import DiscordMessage from '@components/DiscordMessage.astro'
 import DiscordConversation from '@components/DiscordConversation.astro'
 import ImageCard from '@components/ImageCard.astro'
-
-<ImageCard
-  imagePath='/src/content/blog/smpearth/smpearth-christmas-map.webp'
-  altText="screenshot of SMPEarth's map, Christmas 2019"
-  name='SMPEarth'
-/>
+import ContentImage from '@components/content/ContentImage.astro'
 
 [SMPEarth](https://smpearth.fandom.com/wiki/SMPEarth) was a private Minecraft server set on a scale map of Earth that I created in high school, designed specifically for content creators to livestream on.
 
@@ -47,15 +47,7 @@ SMPEarth was the direct successor of two other Minecraft servers:
 
 2. [/int/craft](https://intcraft.wiki/intcraft), a geopolitical roleplaying Minecraft server founded in 2015 by users of 4chan's [/int/](https://www.4chan.org/) board that has had various iterations over the years.
 
-<ImageCard
-  imagePath='/src/content/blog/smpearth/intcraft-mascot.webp'
-  altText="/int/craft's mascot, intchan"
-  name='/int/craft'
-  rounded={false}
-  showShadow={false}
-  showCaption={true}
-  scale={0.65}
-/>
+<ContentImage src={'./intcraft-mascot.webp'} style={false} alt='/int/chan, the official mascot of /int/craft' />
 
 It all started when my left testicle swelled up to the size of a grapefruit.
 
@@ -141,6 +133,7 @@ I also pivoted my attention towards the project's marketing and branding, opting
   id='yyezbVbQeHY'
   title='SMPEarth Official Trailer'
   playlabel='Play the SMPEarth trailer'
+  class='rounded-xl shadow-lg'
 />
 
 Up until this point, I had been hosting the development environment for SMPEarth on my own computer. For the purposes of testing amongst a few friends, it worked just as good as even the priciest dedicated server since Minecraft's infamously single-threaded design bottlenecked even on my consumer-grade CPU.
@@ -221,12 +214,7 @@ As I came to learn later, he was much more than just an enthusiastic customer of
 
 To cut a long story short, I don't even know if JoshA20 was a real person.
 
-<ImageCard
-  imagePath='/src/content/blog/smpearth/smpearth-josh-missing.webp'
-  altText="a screenshot of JoshA20's deleted Twitter account"
-  name='SMPEarth'
-  scale={0.85}
-/>
+<ContentImage src='./smpearth-josh-missing.webp' alt="a screenshot of JoshA20's deleted Twitter account" size='sm'/>
 
 At one time, I genuinely believed that he was a false identity created to astroturf the hosting company's service. Although I wouldn't dare to go _that_ far, mostly for legal reasons, I'd be lying if I said that I wasn't suspicious of his true intentions. To name just a few oddities:
 
@@ -260,22 +248,11 @@ One of the most notable warning signs in regards to this JoshA20 character was h
 
 A good example was the branding. I had viewed SMPEarth with the mindset of a humble project that was thrown together by a ragtag group of friends with a shared hobby. He, however, viewed it as a "platform" for creators to make money and become famous. This difference in perspective can be seen in the server's hilariously inconsistent branding:
 
-<ImageCard
-  imagePath='/src/content/blog/smpearth/smpearth-epstein.webp'
-  altText="a screenshot of the official SMPEarth twitter page, clearly showing Epstein's temple in the header"
-  name='SMPEarth'
-/>
+![a screenshot of the official SMPEarth twitter page with a header image that clearly depicts Jeffery Epstein's temple on Little St. James Island](./smpearth-epstein.webp)
 
 Eventually, the topic of creating a public server came up. I was initially all for the idea, even suggesting that it would be a fantastic way to _make money_ off of the server (assuming it would be put back into making the server) so I wouldn't need to keep borrowing from whatever savings I had at age 17.
 
 Another idea brought to the table was the creation of a merch store for SMPEarth. While I was much more hesitant to this idea, I was eventually convinced by promises that the money would go towards the artists and creators and be used to fund the server. Obviously, I had no problem with that if it meant I could stop eating into my college savings.
-
-<ImageCard
-  imagePath='/src/content/blog/smpearth/smpearth-prism-shirt.webp'
-  altText='a screenshot of the SMPEarth merch store'
-  name='SMPEarth'
-  scale={0.85}
-/>
 
 However, in hindsight, JoshA20 seemed a little _too_ eager to make SMPEarth into a commercial product.
 
@@ -319,21 +296,19 @@ The merch store was a weird one and isn't something I can speak confidently abou
 
 As far as the artists go, to this day I still have no idea if they got paid or not. I wasn't privy to the details to the merch stuff and was far too preoccupied to get involved. All I know is that the endavour didn't tangibly offset server costs or operational burden like it was promised to. I'm skeptical. The only real tangible claim I can make here is that I designed this T-shirt. I don't think I got paid for it, but it might've been because nobody bought it. Or the fact that I was the owner of the server. Either way, I didn't care at the time and I still don't- it's just worth noting.
 
-<ImageCard
-  imagePath='/src/content/blog/smpearth/smpearth-prism-shirt.webp'
-  altText='a T-shirt I designed for the SMPEarth merch store'
-  name='SMPEarth'
-  scale={0.6}
-  showCaption={false}
+<ContentImage
+  src='./smpearth-prism-shirt.webp'
+  alt='a T-shirt I designed for the SMPEarth merch store'
+  title='SMPEarth'
+  size='sm'
 />
 
 The public server was a different story. I think I joined the server a grand total of one time and forgot about it until a good year or two after I had already left the project.Unless you count complacency, I had absolutely zero involvement from day one and have no idea about the details of its creation.
 
-<ImageCard
-  imagePath='/src/content/blog/smpearth/smpearth-public-creators.webp'
-  altText='a screenshot of the SMPEarth public server website advertising me as one of the creators'
-  name='SMPEarth'
-  scale={0.75}
+<ContentImage
+  src='./smpearth-public-creators.webp'
+  alt='a screenshot of the SMPEarth public server website advertising me as one of the creators'
+  title='SMPEarth creators'
 />
 
 All I know is that it was fully spun off from my server as a for-profit business venture once they removed me from the picture, fully adopting the same branding and premise as the original (even using the same domain name!). I have a hunch that it might have been sold off, but I'm not sure. To this day, it maintains thousands of active members in the Discord and is still going strong. I have no idea if it's still ran by the same people, but I'm sure it's made more money than I'll ever see in my lifetime.
@@ -344,36 +319,34 @@ On a much funnier and lighthearted note, JoshA20 was also a bit of a copycat. I 
 
 One of my favorite aspects of SMPEarth was the [crappy little ARG](https://smpearth.fandom.com/wiki/Laramie_Online) I threw together. It was probably the worst ARG in the history of ARGs, but I had a lot of fun with it and it helped add a sense of depth to the project that was somewhat lost with AbsoluteMC's opressive branding.
 
-<ImageCard
-  imagePath='/src/content/blog/smpearth/smpearth-arg.webp'
-  altText='a screenshot from one of the structures in my ARG'
-  name='SMPEarth'
+<ContentImage
+  src='./smpearth-arg.webp'
+  alt='a screenshot from one of the structures in the "Laramie Online" ARG'
+  title='SMPEarth ARG'
 />
 
 Regardless, it was legitimately cool seeing people trying to solve a mystery that I had haphazardly thrown together on a whim, and it really lit a fire under my ass to keep putting in work on the server. Although I'm not particularly proud of it, I think a lot of people enjoyed it for what it was.
 
-<ImageCard
-  imagePath='/src/content/blog/smpearth/smpearth-arg-specto.webp'
-  altText='a spectogram from one of the ARG clues'
-  name='SMPEarth'
+<ContentImage
+  src='./smpearth-arg-specto.webp'
+  alt='a spectogram from one of the SMPEarth ARG clues'
+  title='SMPEarth'
 />
 
 In fact, JoshA20 thought it was _such_ a good idea that he started [his own ARG](https://smpearth.fandom.com/wiki/7_ARG) on the same server, at the same time, with the same exact premise. And he used his leverage as a AbsoluteMC employee to host an official countdown timer on the SMPEarth website.
 
-<ImageCard
-  imagePath='/src/content/blog/smpearth/smpearth-arg-countdown.webp'
-  altText='source: https://smpearth.fandom.com/wiki/6542_Countdown'
-  name='SMPEarth'
-  scale={0.85}
+<ContentImage
+  src='./smpearth-arg-countdown.webp'
+  alt="a screenshot of the SMPEarth website's countdown timer"
+  title='SMPEarth countdown'
 />
 
 Needless to say, this was insanely confusing and pretty much killed all traction my [Laramie Online ARG](https://smpearth.fandom.com/wiki/Laramie_Online) had. Josh's ARG didn't fare any better either, likely due to the fact that everyone just thought it was part of mine. He announced the end of his ARG around the time I lost interest, and I never got a chance to ask him why he even did it- although I have my suspicions.
 
-<ImageCard
-  imagePath='/src/content/blog/smpearth/smpearth-arg-thank-you.webp'
-  altText='a thank you message from the SMPEarth subreddit'
-  name='SMPEarth'
-  showCaption={false}
+<ContentImage
+  src='./smpearth-arg-thank-you.webp'
+  alt='a thank you message from the SMPEarth subreddit'
+  title='SMPEarth'
 />
 
 > And the LORD had regard for Abel and his offering,
@@ -591,11 +564,12 @@ And without the ability to defend myself, he started setting a new narrative.
 
 Oh, wait, nevermind.
 
-<ImageCard
-  imagePath='/src/content/blog/smpearth/smpearth-bwu-huh.webp'
-  altText='JoshA20 flip flopping'
-  scale={0.75}
-  showCaption={false}
+<ContentImage
+  src='./smpearth-bwu-huh.webp'
+  alt='JoshA20 flip flopping'
+  title='SMPEarth'
+  size='sm'
+  captionType='hidden'
 />
 
 A lot of the original founding members of SMPEarth weren't happy with the way things were going, either.
@@ -704,12 +678,11 @@ For as negative as it may have sounded, it wasn't all bad. Even at the time of w
 
 I just got more than I bargained for, for better and worse.
 
-<ImageCard
-  imagePath='/src/content/blog/smpearth/smpearth-bedhead-bernie-mc.webp'
-  altText='One of the first interactions I had with Bedhead Bernie'
-  showShadow={false}
-  rounded={false}
-  scale={0.75}
+<ContentImage
+  src='./smpearth-bedhead-bernie-mc.webp'
+  alt='One of the first interactions I had with Bedhead Bernie'
+  title='SMPEarth'
+  style={false}
 />
 
 I met some of my best friends through SMPEarth and made too many good memories for me to simply write it off as a mistake. Without turning this into a personal diary, my life would look radically different I wasn't in the mood to play Minecraft with some friends during the months leading up to the 2020 pandemic.

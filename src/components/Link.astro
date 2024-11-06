@@ -2,6 +2,77 @@
 import { cn } from '@lib/utils'
 import { Link as AstroLink } from 'astro-link'
 
+type AriaRole =
+  | 'alert'
+  | 'alertdialog'
+  | 'application'
+  | 'article'
+  | 'banner'
+  | 'button'
+  | 'cell'
+  | 'checkbox'
+  | 'columnheader'
+  | 'combobox'
+  | 'complementary'
+  | 'contentinfo'
+  | 'definition'
+  | 'dialog'
+  | 'directory'
+  | 'document'
+  | 'feed'
+  | 'figure'
+  | 'form'
+  | 'grid'
+  | 'gridcell'
+  | 'group'
+  | 'heading'
+  | 'img'
+  | 'link'
+  | 'list'
+  | 'listbox'
+  | 'listitem'
+  | 'log'
+  | 'main'
+  | 'marquee'
+  | 'math'
+  | 'menu'
+  | 'menubar'
+  | 'menuitem'
+  | 'menuitemcheckbox'
+  | 'menuitemradio'
+  | 'navigation'
+  | 'none'
+  | 'note'
+  | 'option'
+  | 'presentation'
+  | 'progressbar'
+  | 'radio'
+  | 'radiogroup'
+  | 'region'
+  | 'row'
+  | 'rowgroup'
+  | 'rowheader'
+  | 'scrollbar'
+  | 'search'
+  | 'searchbox'
+  | 'separator'
+  | 'slider'
+  | 'spinbutton'
+  | 'status'
+  | 'switch'
+  | 'tab'
+  | 'table'
+  | 'tablist'
+  | 'tabpanel'
+  | 'term'
+  | 'textbox'
+  | 'timer'
+  | 'toolbar'
+  | 'tooltip'
+  | 'tree'
+  | 'treegrid'
+  | 'treeitem'
+
 export interface Props {
   href: string
   title?: string
@@ -9,7 +80,13 @@ export interface Props {
   style?: string
   underline?: boolean
   externalInNewTab?: boolean
+  rel?: string
   prefetch?: boolean
+  itemprop?: string
+  itemscope?: boolean
+  itemtype?: string
+  'aria-label'?: string
+  role?: string
 }
 
 const {
@@ -18,7 +95,13 @@ const {
   externalInNewTab,
   underline = true,
   prefetch = true,
+  rel,
   class: className,
+  itemprop,
+  itemscope,
+  itemtype,
+  'aria-label': ariaLabel,
+  role = 'link',
   ...rest
 } = Astro.props
 
@@ -28,6 +111,8 @@ const shouldPrefetch = prefetch && href.startsWith('/')
 <AstroLink
   href={href}
   title={title}
+  role={role as AriaRole}
+  rel={rel}
   externalInNewTab={externalInNewTab}
   data-astro-prefetch={shouldPrefetch ? 'hover' : undefined}
   class={cn(
@@ -38,6 +123,10 @@ const shouldPrefetch = prefetch && href.startsWith('/')
     'hover:text-primary',
     className
   )}
+  itemprop={itemprop}
+  aria-label={ariaLabel}
+  itemscope={itemscope}
+  itemtype={itemtype}
   {...rest}
 >
   <slot />

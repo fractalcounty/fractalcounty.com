@@ -6,7 +6,7 @@ fractalcounty.com, a minimalist and accessible content-focused personal website 
 <project_features>
 - Index homepage w/ previews of recent content from each collection
 - Blog content collections for posts in traditional prose in MDX article format
-- Artwork content collection for visual media such as images, animations, and webcomics (w/ custom comic reader UI!)
+- Art content collection for visual media such as images, animations, and webcomics (w/ custom comic reader UI!)
 - Page with links to external socials and online profiles (think linktree)
 - Music page w/ library of recent albums via links to bancamp/custom player, displayed last.fm metadata/history, custom mixtapes/favorite songs (w/ links to respective playlists on Spotify/Youtube, maybe also with custom player UI as legality permits?)
 - Commisions page (fractalcounty.com/commissions) w/ a simple "price calculator" for web design commisions

@@ -33,7 +33,49 @@ export default defineConfig({
   },
   integrations: [
     mdx(),
-    sitemap(),
+    sitemap({
+      changefreq: 'weekly',
+      priority: 1.0,
+      lastmod: new Date(),
+      i18n: {
+        defaultLocale: 'en',
+        locales: {
+          en: 'en-US',
+        },
+      },
+      customPages: ['https://links.fractalcounty.com'],
+      serialize(item) {
+        if (item.url.includes('/blog/')) {
+          return {
+            url: item.url,
+            priority: 0.9,
+            img: [
+              {
+                url: `${item.url.replace('/blog/', '/images/blog/')}`,
+                title: 'Blog post content images'
+              }
+            ],
+            lastmod: new Date().toISOString()
+          }
+        }
+
+        if (item.url.includes('/art/')) {
+          return {
+            url: item.url,
+            priority: 0.9,
+            img: [
+              {
+                url: `${item.url.replace('/art/', '/images/art/')}`,
+                title: 'Artwork'
+              }
+            ],
+            lastmod: new Date().toISOString()
+          }
+        }
+
+        return item
+      }
+    }),
     tailwind(),
     icon(),
     opengraphImages({

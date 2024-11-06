@@ -1,0 +1,61 @@
+---
+import ContentImage from '@/components/content/ContentImage.astro'
+import Container from '@/components/layout/Container.astro'
+import Subheader from '@/components/layout/Subheader.astro'
+import ArtworkStructuredData from '@/components/meta/ArtworkStructuredData.astro'
+import PageLayout from '@/layouts/PageLayout.astro'
+import { readingTime } from '@/lib/utils'
+import { getCollection, render } from 'astro:content'
+
+export async function getStaticPaths() {
+  const posts = await getCollection('art')
+  return posts
+    .filter((post) => !post.data.draft)
+    .map((post) => ({
+      params: {
+        slug: post.id.replace(/\/index\.mdx$|\.mdx$/, ''),
+      },
+      props: { post },
+    }))
+}
+const { post } = Astro.props
+const { Content } = await render(post)
+---
+
+<PageLayout
+  title={post.data.title}
+  description={post.data.description}
+  type='article'
+  publishDate={post.data.publishDate}
+  updatedDate={post.data.updatedDate}
+  tags={post.data.tags}
+  isContentPage={true}
+>
+  <ArtworkStructuredData slot='structured-data' art={post} />
+  <Container as='section'>
+    <Subheader
+      title={post.data.title}
+      publishDate={post.data.publishDate}
+      updatedDate={post.data.updatedDate}
+      readingTime={readingTime(post.body || '')}
+      backUrl='/art'
+      backLabel='Back'
+      isPost={true}
+      links={post.data.links}
+    />
+
+    <article class='animate' id='main-content'>
+      <ContentImage
+        src={post.data.images}
+        title={post.data.title}
+        collection='art'
+        type={post.data.type}
+        style={post.data.thumbnailStyle ?? true}
+        alt={post.data.thumbnailCaption}
+        captionType={post.data.thumbnailCaptionType ?? 'original'}
+        class='-mt-12'
+      />
+      <Content />
+    </article>
+  </Container>
+</PageLayout>

@@ -8,7 +8,8 @@ type Props = {
   title: string
   description: string
   type?: 'website' | 'article'
-  publishedTime?: Date
+  publishDate?: Date
+  updatedDate?: Date
   tags?: string[]
   isWebcomic?: boolean
   isContentPage?: boolean
@@ -18,12 +19,14 @@ const {
   title,
   description,
   type = 'website',
-  publishedTime,
+  publishDate,
+  updatedDate,
   tags = [],
   isWebcomic = false,
 } = Astro.props
 
-const publishedTimeString = publishedTime?.toISOString()
+const publishDateString = publishDate?.toISOString()
+const updatedDateString = updatedDate?.toISOString()
 ---
 
 <!doctype html>
@@ -38,7 +41,8 @@ const publishedTimeString = publishedTime?.toISOString()
       title={title}
       description={description}
       type={type}
-      publishedTime={publishedTimeString}
+      publishDate={publishDateString}
+      updatedDate={updatedDateString}
       tags={tags}
     />
     <slot name='structured-data' />

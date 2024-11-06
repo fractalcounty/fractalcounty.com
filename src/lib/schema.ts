@@ -16,7 +16,7 @@ type SchemaType =
   | OrganizationSchema
   | PersonSchema
   | ImageObjectSchema
-  | ArtworkSchema
+  | ArtSchema
   | CollectionPageSchema
 
 // Schema type definitions
@@ -44,8 +44,7 @@ interface ArticleSchema {
   headline: string
   description: string
   datePublished: string
-  dateModified: string
-  dateCreated: string
+  dateModified?: string
   author: {
     '@id': string
   }
@@ -157,15 +156,14 @@ interface ImageObjectSchema {
   contentUrl?: string
 }
 
-interface ArtworkSchema {
+interface ArtSchema {
   '@type': string | string[]
   '@id': string
   name: string
   headline: string
   description: string
-  dateCreated: string
   datePublished: string
-  dateModified: string
+  dateModified?: string
   url: string
   author: {
     '@id': string
@@ -337,30 +335,53 @@ export const websiteSchema = {
   license: 'https://fractalcounty.com/unlicense',
 }
 
-// Enhanced artwork schema generation
-export function generateArtworkSchema(
-  entry: CollectionEntry<'artwork'>,
-  url: URL,
-  imageUrl: string,
-  imageWidth: number,
-  imageHeight: number
+// Simplify the path transformation
+function getPublicImagePath(imageSrc: string, collection?: string, id?: string): string {
+  if (imageSrc.startsWith('/_astro/')) {
+    const filename = imageSrc
+      .split('/')
+      .pop()!
+      .split('.')[0]
+      .replace(/_[a-z0-9]+$/i, '') // remove hash
+    
+    // explicitly handle nullish/empty cases for collection and id
+    const relativePath = (collection ?? '') && (id ?? '')
+      ? `/images/${collection}/${id}/${filename}.webp`
+      : `/images/${filename}.webp`
+      
+    // make url absolute
+    return new URL(relativePath, 'https://fractalcounty.com').toString()
+  }
+  return imageSrc.startsWith('http') ? imageSrc : new URL(imageSrc, 'https://fractalcounty.com').toString()
+}
+
+// Enhanced art schema generation with automatic image metadata handling
+export function generateArtSchema(
+  entry: CollectionEntry<'art'>,
+  url: URL
 ) {
-  if (!imageUrl || !imageWidth || !imageHeight) {
-    throw new Error('Image properties are required for artwork schema')
+  const { title, description, publishDate, updatedDate, type } = entry.data
+
+  // get the primary image from the entry
+  const primaryImage = Array.isArray(entry.data.images)
+    ? entry.data.images[0]
+    : entry.data.thumbnail
+
+  if (!primaryImage) {
+    throw new Error('Art must have either images or thumbnail defined')
   }
 
-  const { title, description, date, type, images } = entry.data
+  const publicPath = getPublicImagePath(primaryImage.src, 'art', entry.id)
 
-  // base artwork properties
+  // base art properties
   const baseSchema = {
     '@type': type === 'webcomic' ? 'ComicStory' : 'VisualArtwork',
     '@id': url.toString(),
     name: title,
     headline: title,
     description,
-    dateCreated: date.toISOString(),
-    datePublished: date.toISOString(),
-    dateModified: date.toISOString(),
+    datePublished: publishDate.toISOString(),
+    dateModified: (updatedDate || publishDate).toISOString(),
     url: url.toString(),
     author: {
       '@id': SCHEMA_IDS.PERSON,
@@ -381,31 +402,14 @@ export function generateArtworkSchema(
     image: {
       '@type': 'ImageObject',
       '@id': `${url.toString()}#primaryimage`,
-      url: imageUrl,
-      width: imageWidth,
-      height: imageHeight,
+      url: publicPath,
+      contentUrl: publicPath,
+      thumbnailUrl: publicPath,
+      width: primaryImage.width,
+      height: primaryImage.height,
       caption: title,
     },
   }
-
-  // modify image handling to use associatedMedia for multiple images
-  const imageSchema = Array.isArray(images)
-    ? {
-        '@type': 'ImageObject',
-        '@id': `${url.toString()}#primaryimage`,
-        url: imageUrl,
-        width: imageWidth,
-        height: imageHeight,
-        caption: title,
-      }
-    : {
-        '@type': 'ImageObject',
-        '@id': `${url.toString()}#primaryimage`,
-        url: imageUrl,
-        width: imageWidth,
-        height: imageHeight,
-        caption: title,
-      }
 
   // base schema with modifications
   const schema = {
@@ -414,19 +418,15 @@ export function generateArtworkSchema(
       type === 'webcomic'
         ? ['ComicStory', 'CreativeWork']
         : ['VisualArtwork', 'CreativeWork'],
-    encodingFormat: type === 'video' ? 'video/mp4' : 'image/webp',
-    thumbnailUrl:
-      typeof entry.data.thumbnail === 'string'
-        ? entry.data.thumbnail
-        : imageUrl,
+    encodingFormat: 'image/webp',
+    thumbnailUrl: publicPath,
     accessMode: ['visual'],
     accessibilityFeature: ['alternativeText'],
     accessibilityHazard: ['noFlashingHazard'],
-    image: imageSchema,
     // add associated media for additional images
-    ...(Array.isArray(images) && images.length > 1
+    ...(Array.isArray(entry.data.images) && entry.data.images.length > 1
       ? {
-          associatedMedia: images.slice(1).map((img, index) => ({
+          associatedMedia: entry.data.images.slice(1).map((img, index) => ({
             '@type': 'ImageObject',
             '@id': `${url.toString()}#image-${index + 1}`,
             url: img.src,
@@ -438,14 +438,16 @@ export function generateArtworkSchema(
       : {}),
     ...(type === 'webcomic'
       ? {
-          numberOfPages: Array.isArray(images) ? images.length : 1,
+          numberOfPages: Array.isArray(entry.data.images)
+            ? entry.data.images.length
+            : 1,
           genre: 'webcomic',
         }
       : {
-          artform: type === 'video' ? 'Digital Video' : 'Digital Art',
+          artform: type === 'animation' ? 'Animation' : 'Drawing',
           artMedium: 'Digital',
           artworkSurface: 'Digital Canvas',
-          genre: type === 'video' ? 'Animation' : 'Digital Art',
+          genre: type === 'animation' ? 'Animation' : 'Digital Art',
         }),
     copyrightHolder: {
       '@id': SCHEMA_IDS.PERSON,
@@ -464,7 +466,7 @@ export function generateArticleSchema(
   url: URL,
   imageUrl?: string
 ) {
-  const { title, description, date, tags } = entry.data
+  const { title, description, publishDate, updatedDate, tags } = entry.data
 
   // create image schema if we have a valid image url
   const imageSchema =
@@ -484,9 +486,8 @@ export function generateArticleSchema(
     '@id': url.toString(),
     headline: title,
     description,
-    datePublished: date.toISOString(),
-    dateModified: date.toISOString(),
-    dateCreated: date.toISOString(),
+    datePublished: publishDate.toISOString(),
+    dateModified: (updatedDate || publishDate).toISOString(),
     author: {
       '@id': SCHEMA_IDS.PERSON,
     },
@@ -517,7 +518,7 @@ export function generateArticleSchema(
 
 // Enhanced collection page schema
 export function generateCollectionSchema(
-  type: 'blog' | 'artwork',
+  type: 'blog' | 'art',
   url: URL,
   title: string,
   description: string
@@ -581,5 +582,53 @@ export function generateBreadcrumbSchema(items: BreadcrumbItem[]) {
     '@type': 'BreadcrumbList',
     '@id': `${items[items.length - 1].item}#breadcrumb`,
     itemListElement: itemListElements,
+  }
+}
+
+// Add to your existing schema.ts
+export function generateImageSchema({
+  image,
+  title,
+  caption,
+  url,
+  isRepresentative = false,
+  contentLocation,
+  keywords,
+  datePublished,
+}: {
+  image: ImageMetadata
+  title: string
+  caption?: string
+  url: string
+  isRepresentative?: boolean
+  contentLocation?: string
+  keywords?: string[]
+  datePublished?: string
+}) {
+  return {
+    '@type': 'ImageObject',
+    '@id': `${url}#image`,
+    contentUrl: url,
+    url: image.src,
+    width: image.width,
+    height: image.height,
+    caption,
+    name: title,
+    encodingFormat: image.format,
+    representativeOfPage: isRepresentative,
+    license: 'https://fractalcounty.com/unlicense',
+    copyrightHolder: {
+      '@id': SCHEMA_IDS.PERSON
+    },
+    contentLocation: contentLocation != null && contentLocation.length > 0
+      ? {
+          '@type': 'Place',
+          name: contentLocation,
+        }
+      : undefined,
+    keywords: keywords?.join(', '),
+    datePublished,
+    accessibilityHazard: ['noFlashingHazard'],
+    accessibilityFeature: ['alternativeText', 'highContrast'],
   }
 }

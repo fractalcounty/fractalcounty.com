@@ -13,7 +13,7 @@ const blogPosts = (await getCollection('blog')).filter(
 )
 
 const allPosts = [...blogPosts].sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
 )
 
 type Acc = {
@@ -21,7 +21,7 @@ type Acc = {
 }
 
 const posts = allPosts.reduce((acc: Acc, post) => {
-  const year = post.data.date.getFullYear().toString()
+  const year = post.data.publishDate.getFullYear().toString()
   if (!acc[year]) {
     acc[year] = []
   }
@@ -42,7 +42,7 @@ const years = Object.keys(posts).sort(
     description={BLOG.DESCRIPTION}
   />
   <ProfilePageStructuredData slot='structured-data' />
-  <Container as='main'>
+  <Container as='section'>
     <div class='space-y-10'>
       <Subheader title='Blog' subtitle='thoughts and ideas' />
       <div class='space-y-4'>
@@ -60,7 +60,7 @@ const years = Object.keys(posts).sort(
                         title={post.data.title}
                         description={post.data.description}
                         icon={post.data.icon}
-                        href={`/blog/${post.id}`}
+                        href={`/blog/${post.id.replace(/\/index\.mdx$/, '')}`}
                       />
                     </li>
                   ))}

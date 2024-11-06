@@ -1,0 +1,118 @@
+---
+import type { ImageMetadata } from 'astro'
+import { SITE } from '@/consts'
+import { SCHEMA_IDS } from '@/lib/schema'
+
+interface Props {
+  image: ImageMetadata
+  title: string
+  description?: string
+  url: URL | string
+  caption?: string
+  isRepresentative?: boolean
+  contentLocation?: string
+  keywords?: string[]
+  datePublished?: string
+  dateModified?: string
+  license?: string
+  type?: 'photograph' | 'illustration' | 'animation' | 'webcomic'
+  collection?: string
+  id?: string
+}
+
+const {
+  image,
+  title,
+  description,
+  url,
+  caption,
+  isRepresentative = false,
+  contentLocation,
+  keywords,
+  datePublished,
+  dateModified,
+  license = 'https://fractalcounty.com/unlicense',
+  collection,
+  id,
+} = Astro.props
+
+const pageUrl = typeof url === 'string' ? new URL(url) : url
+
+// Simplify path handling
+function getPublicPath(src: string, collection?: string, id?: string) {
+  if (src.startsWith('/_astro/')) {
+    const filename = src
+      .split('/')
+      .pop()!
+      .split('.')[0]
+      .replace(/_[a-z0-9]+$/i, '')
+
+    const relativePath =
+      collection && id
+        ? `/images/${collection}/${id}/${filename}.webp`
+        : `/images/${filename}.webp`
+
+    return new URL(relativePath, Astro.site).toString()
+  }
+  return src.startsWith('http') ? src : new URL(src, Astro.site).toString()
+}
+
+const publicPath = getPublicPath(image.src, collection, id)
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': ['ImageObject'],
+  '@id': `${pageUrl.toString()}#image`,
+  name: title,
+  description: description || caption || title,
+  url: publicPath,
+  contentUrl: publicPath,
+  thumbnailUrl: publicPath,
+  associatedMedia: {
+    '@type': 'ImageObject',
+    contentUrl: publicPath.replace('/_astro/', '/images/'),
+    encodingFormat: `image/${image.format}`,
+    width: image.width,
+    height: image.height,
+  },
+  thumbnail: {
+    '@type': 'ImageObject',
+    contentUrl: publicPath,
+    encodingFormat: `image/${image.format}`,
+    width: image.width,
+    height: image.height,
+  },
+  width: image.width,
+  height: image.height,
+  encodingFormat: `image/${image.format}`,
+  caption,
+  representativeOfPage: isRepresentative,
+  license,
+  datePublished,
+  ...(dateModified && { dateModified }),
+  keywords: keywords?.join(', '),
+  author: {
+    '@id': SCHEMA_IDS.PERSON,
+  },
+  copyrightHolder: {
+    '@id': SCHEMA_IDS.PERSON,
+  },
+  ...(contentLocation && {
+    contentLocation: {
+      '@type': 'Place',
+      name: contentLocation,
+    },
+  }),
+  accessibilityHazard: ['noFlashingHazard'],
+  accessibilityFeature: ['alternativeText', 'highContrast'],
+  acquireLicensePage: license,
+  creditText: SITE.AUTHOR,
+  creator: {
+    '@type': 'Person',
+    '@id': SCHEMA_IDS.PERSON,
+  },
+  copyrightNotice: `Unlicensed. ${new Date().getFullYear()} ${SITE.AUTHOR}`,
+}
+---
+
+<script type='application/ld+json' set:html={JSON.stringify(schema)} />

@@ -3,7 +3,7 @@ export interface Site {
   AUTHOR: string
   EMAIL: string
   NUM_POSTS_ON_HOMEPAGE: number
-  NUM_ARTWORK_ON_HOMEPAGE: number
+  NUM_ART_ON_HOMEPAGE: number
   TITLE_TEMPLATE: string
 }
 

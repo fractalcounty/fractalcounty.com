@@ -5,10 +5,10 @@
   "scripts": {
     "dev": "astro sync && astro dev",
     "build": "astro sync && astro check && astro build",
-    "lint": "eslint . --flag unstable_ts_config",
-    "format": "prettier --write .",
-    "fix": "bun run astro sync && bun run lint && bun run format",
-    "convert-images": "bun run scripts/convert-images.ts"
+    "preview": "astro preview",
+    "check": "astro check",
+    "lint": "eslint . --flag unstable_ts_config --fix && prettier --write .",
+    "prebuild": "bun run scripts/convert-images.ts && bun run scripts/sync-images.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^3.1.7",
@@ -66,7 +66,7 @@
     "typescript-eslint": "^8.8.0"
   },
   "simple-git-hooks": {
-    "pre-commit": "bun run convert-images && bun run lint-staged"
+    "pre-commit": "bun run prebuild && bun run lint-staged"
   },
   "lint-staged": {
     "*.astro": "prettier --write",

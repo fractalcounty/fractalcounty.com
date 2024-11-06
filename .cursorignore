@@ -33,7 +33,7 @@ node_modules/
 
 # content
 **/*.mdx
-src/content/artwork/**
+src/content/art/**
 src/content/blog/**
 
 # misc

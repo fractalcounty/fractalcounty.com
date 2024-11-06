@@ -1,62 +1,54 @@
+import type { SchemaContext } from 'astro:content'
 import { glob } from 'astro/loaders'
 import { defineCollection, z } from 'astro:content'
 
+const baseSchema = ({ image }: SchemaContext) =>
+  z.object({
+    title: z.string(), // title, displayed in header, seo/metadata
+    description: z.string(), // description, displayed in header, seo/metadata
+    publishDate: z.coerce.date(), // publish date, displayed in header, seo/metadata
+    updatedDate: z.coerce.date().optional(), // update date, displayed in header, seo/metadata
+    draft: z.boolean().optional(), // controls visibility/existence
+    tags: z.array(z.string()).optional(), // array of tags used for SEO/metadata
+    links: z
+      .array(
+        z.object({
+          label: z.string(),
+          url: z.string(),
+        })
+      )
+      .optional(), // external resource links
+    thumbnail: image().optional(), // thumbnail image
+    thumbnailStyle: z.boolean().optional(), // thumbnail style
+    thumbnailCaption: z.string().optional(), // thumbnail caption
+    thumbnailCaptionType: z.enum(['hidden', 'original', 'alt']).optional(), // thumbnail caption type
+  })
+
 const blog = defineCollection({
-  // update loader to use proper base path and include images
   loader: glob({
-    pattern: '**/*.{md,mdx,jpeg,jpg,png,gif,webp}',
+    pattern: '**/*.{md,mdx}',
     base: 'blog',
   }),
   schema: ({ image }) =>
-    z.object({
-      title: z.string(), // title of the post, displayed in header of post page, SEO/metadata, et cetera
-      description: z.string(), // description of the post, displayed in header of post page, SEO/metadata, et cetera
-      date: z.coerce.date(), // date of the post, displayed in header of post page, used for SEO/metadata
-      draft: z.boolean().optional(), // effectively controls if post even exists or not
-      tags: z.array(z.string()).optional(), // array of tags used for SEO/metadata
-      links: z
-        .array(
-          // array of links to external resources, displayed in header of post page as buttons
-          z.object({
-            label: z.string(),
-            url: z.string(),
-          })
-        )
-        .optional(),
-      icon: z.string().optional(), // local svg relative to /src/icons or iconify id, displayed in card component that links to post
-      images: z.array(image()).optional(), // array of images that represent the post used for metadata/SEO (i.e first in array is used for open graph image)
+    baseSchema({ image }).extend({
+      icon: z.string().optional(),
     }),
 })
 
-const artwork = defineCollection({
+const art = defineCollection({
   loader: glob({
     pattern: '**/*.{md,mdx}',
-    base: 'artwork',
+    base: 'art',
   }),
   schema: ({ image }) =>
-    z.object({
-      title: z.string(),
-      description: z.string(),
-      date: z.coerce.date(),
-      draft: z.boolean().optional(),
-      type: z.enum(['art', 'webcomic', 'video']),
-      links: z
-        .array(
-          z.object({
-            label: z.string(),
-            url: z.string(),
-          })
-        )
-        .optional(),
-      thumbnail: z.union([image(), z.string()]).optional(),
+    baseSchema({ image }).extend({
+      type: z
+        .enum(['illustration', 'webcomic', 'animation'])
+        .default('illustration'),
       images: z.union([image(), z.array(image())]),
     }),
 })
 
-export const collections = {
-  blog,
-  artwork,
-} as const
-
-export const artworkTypes = ['art', 'webcomic', 'video'] as const
-export type ArtworkType = (typeof artworkTypes)[number]
+export const collections = { blog, art } as const
+export const artTypes = ['illustration', 'webcomic', 'animation'] as const
+export type ArtType = (typeof artTypes)[number]

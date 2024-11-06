@@ -9,10 +9,7 @@ interface Context {
 export async function GET(context: Context) {
   const items = (await getCollection('blog'))
     .filter((post) => !post.data.draft)
-    .sort(
-      (a, b) =>
-        new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf()
-    )
+    .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
 
   return rss({
     title: HOME.TITLE,
@@ -21,7 +18,7 @@ export async function GET(context: Context) {
     items: items.map((item) => ({
       title: item.data.title,
       description: item.data.description,
-      pubDate: item.data.date,
+      pubDate: item.data.publishDate,
       link: `/blog/${item.slug}/`,
     })),
   })

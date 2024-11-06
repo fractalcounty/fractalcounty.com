@@ -24,6 +24,10 @@
     @apply prose max-w-full prose-img:mx-auto prose-img:my-auto;
     @apply prose-headings:font-bold prose-p:font-serif;
   }
+
+  #main-content {
+    @apply mt-12;
+  }
 }
 
 .sr-only {

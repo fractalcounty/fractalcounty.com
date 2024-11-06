@@ -1,6 +1,8 @@
 ---
+import ContentImage from '@/components/content/ContentImage.astro'
 import Container from '@/components/layout/Container.astro'
 import Subheader from '@/components/layout/Subheader.astro'
+import Link from '@/components/Link.astro'
 import PostStructuredData from '@/components/meta/PostStructuredData.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
 import { readingTime } from '@/lib/utils'
@@ -12,11 +14,12 @@ export async function getStaticPaths() {
     .filter((post) => !post.data.draft)
     .map((post) => ({
       params: {
-        slug: post.id,
+        slug: post.id.replace(/\/index\.mdx$|\.mdx$/, ''),
       },
       props: { post },
     }))
 }
+
 const { post } = Astro.props
 const { Content } = await render(post)
 ---
@@ -25,24 +28,39 @@ const { Content } = await render(post)
   title={post.data.title}
   description={post.data.description}
   type='article'
-  publishedTime={post.data.date}
+  publishDate={post.data.publishDate}
+  updatedDate={post.data.updatedDate}
   tags={post.data.tags}
   isContentPage={true}
 >
   <PostStructuredData slot='structured-data' entry={post} type='blog' />
-  <Container as='main'>
-    <div class='my-10'>
-      <Subheader
-        title={post.data.title}
-        date={post.data.date}
-        readingTime={readingTime(post.body || '')}
-        backUrl='/blog'
-        backLabel='Back'
-      />
-    </div>
+  <Container as='section'>
+    <Subheader
+      title={post.data.title}
+      publishDate={post.data.publishDate}
+      updatedDate={post.data.updatedDate}
+      readingTime={readingTime(post.body || '')}
+      backUrl='/blog'
+      backLabel='Back'
+      isPost={true}
+      links={post.data.links}
+    />
 
-    <article class='animate'>
-      <Content />
+    <article class='animate' id='main-content'>
+      {
+        post.data.thumbnail && (
+          <ContentImage
+            src={post.data.thumbnail}
+            title={post.data.title}
+            collection='blog'
+            style={post.data.thumbnailStyle ?? true}
+            alt={post.data.thumbnailCaption}
+            captionType={post.data.thumbnailCaptionType ?? 'alt'}
+            class='-mt-12'
+          />
+        )
+      }
+      <Content components={{ a: Link, img: ContentImage }} />
     </article>
   </Container>
 </PageLayout>

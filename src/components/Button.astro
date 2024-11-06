@@ -26,13 +26,18 @@ const baseStyles =
 // Add padding for arrow if present
 const paddingClass = arrow !== 'none' ? 'pl-7' : ''
 
-// Calculate rotation based on arrow direction
-const rotationClass = {
-  left: '',
-  right: 'rotate-180',
-  up: 'rotate-90',
-  none: '',
-}[arrow]
+// add type for arrow directions
+type ArrowDirection = 'left' | 'right' | 'up' | 'none'
+
+// type the rotation mapping - make sure arrow is typed
+const rotationClass = (
+  {
+    left: '',
+    right: 'rotate-180',
+    up: 'rotate-90',
+    none: '',
+  } as const
+)[arrow as ArrowDirection]
 ---
 
 <Component
