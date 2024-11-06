@@ -44,7 +44,9 @@ async function convertToWebp() {
       // convert image to webp
       await sharp(file)
         .webp({
-          lossless: true,
+          nearLossless: true,
+          minSize: false,
+          mixed: true,
           effort: 6, // max compression effort
         })
         .toFile(outputPath)

@@ -48,7 +48,11 @@ function getFullResUrl(image: ImageMetadata): string {
 const imgTitle = `${art.data.title} - ${art.data.description}`
 const width = sizes[size]
 
-const formats = art.data.type === 'animation' ? ['webp'] : ['avif', 'webp']
+// Update the formats logic to handle animations
+const formats =
+  art.data.type === 'animation'
+    ? ['webp'] // only use webp for animations
+    : ['avif', 'webp'] // use both for static images
 ---
 
 <ImageStructuredData
