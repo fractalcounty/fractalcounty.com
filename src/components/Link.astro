@@ -86,7 +86,7 @@ export interface Props {
   itemscope?: boolean
   itemtype?: string
   'aria-label'?: string
-  role?: string
+  role?: AriaRole
 }
 
 const {
@@ -111,7 +111,7 @@ const shouldPrefetch = prefetch && href.startsWith('/')
 <AstroLink
   href={href}
   title={title}
-  role={role as AriaRole}
+  role={role}
   rel={rel}
   externalInNewTab={externalInNewTab}
   data-astro-prefetch={shouldPrefetch ? 'hover' : undefined}
@@ -123,10 +123,10 @@ const shouldPrefetch = prefetch && href.startsWith('/')
     'hover:text-primary',
     className
   )}
-  itemprop={itemprop}
+  {...itemprop ? { itemprop } : {}}
+  {...itemscope ? { itemscope } : {}}
+  {...itemtype ? { itemtype } : {}}
   aria-label={ariaLabel}
-  itemscope={itemscope}
-  itemtype={itemtype}
   {...rest}
 >
   <slot />

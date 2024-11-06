@@ -2,7 +2,6 @@
 import type { ImageMetadata } from 'astro'
 import type { CollectionEntry } from 'astro:content'
 import ImageStructuredData from '@/components/meta/ImageStructuredData.astro'
-import { SITE } from '@/consts'
 import { Picture } from 'astro:assets'
 
 interface Props {
@@ -29,18 +28,18 @@ if (!image) {
 }
 
 // helper to get public url for full resolution image
-function getFullResUrl(image: ImageMetadata): string {
-  // simplify hash removal to match ContentImage approach
-  const filename = image.src
-    .split('/')
-    .pop()!
-    .replace(/\.[a-z0-9|-]+(_[a-z0-9|-]+)*\./i, '.')
+// function getFullResUrl(image: ImageMetadata): string {
+//   // simplify hash removal to match ContentImage approach
+//   const filename = image.src
+//     .split('/')
+//     .pop()!
+//     .replace(/\.[a-z0-9|-]+(_[a-z0-9|-]+)*\./i, '.')
 
-  // remove index.mdx from path
-  const cleanId = art.id.replace(/\/index$/, '')
+//   // remove index.mdx from path
+//   const cleanId = art.id.replace(/\/index$/, '')
 
-  return `/images/art/${cleanId}/${filename}`
-}
+//   return `/images/art/${cleanId}/${filename}`
+// }
 
 // improve accessibility
 const imgTitle = `${art.data.title} - ${art.data.description}`
@@ -79,10 +78,7 @@ const formats =
   loading={index === 0 ? 'eager' : 'lazy'}
   decoding={index === 0 ? 'sync' : 'async'}
   fetchpriority={index === 0 ? 'high' : 'auto'}
-  itemprop='thumbnail'
+  itemprop='image'
   itemscope
   itemtype='http://schema.org/ImageObject'
-  data-original={getFullResUrl(image)}
-  data-license='https://fractalcounty.com/unlicense'
-  data-creator={SITE.AUTHOR}
 />

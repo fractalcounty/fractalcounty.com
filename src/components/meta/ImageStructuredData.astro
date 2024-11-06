@@ -63,27 +63,13 @@ const publicPath = getPublicPath(image.src, collection, id)
 
 const schema = {
   '@context': 'https://schema.org',
-  '@type': ['ImageObject'],
+  '@type': 'ImageObject',
   '@id': `${pageUrl.toString()}#image`,
   name: title,
   description: description || caption || title,
   url: publicPath,
   contentUrl: publicPath,
   thumbnailUrl: publicPath,
-  associatedMedia: {
-    '@type': 'ImageObject',
-    contentUrl: publicPath.replace('/_astro/', '/images/'),
-    encodingFormat: `image/${image.format}`,
-    width: image.width,
-    height: image.height,
-  },
-  thumbnail: {
-    '@type': 'ImageObject',
-    contentUrl: publicPath,
-    encodingFormat: `image/${image.format}`,
-    width: image.width,
-    height: image.height,
-  },
   width: image.width,
   height: image.height,
   encodingFormat: `image/${image.format}`,

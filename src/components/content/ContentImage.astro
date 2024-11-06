@@ -180,10 +180,9 @@ if (!resolvedTitle && resolvedCollection && resolvedId) {
               aria-label={`View full resolution version of ${resolvedTitle || 'image'}${resolvedImages.length > 1 ? ` - Image ${index + 1}` : ''}`}
               data-tip='Click to view original'
               rel='canonical license'
+              itemprop='image'
               itemscope
               itemtype='http://schema.org/ImageObject'
-              itemprop='image'
-              itemprop='isBasedOn'
             >
               <Picture
                 src={image}
