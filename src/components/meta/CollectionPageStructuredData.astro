@@ -1,5 +1,11 @@
 ---
-import { generateBreadcrumbSchema, generateCollectionSchema, organizationSchema, personSchema, websiteSchema } from '@/lib/schema'
+import {
+  generateBreadcrumbSchema,
+  generateCollectionSchema,
+  organizationSchema,
+  personSchema,
+  websiteSchema,
+} from '@/lib/schema'
 
 interface Props {
   type: 'blog' | 'artwork'
@@ -24,16 +30,16 @@ const schema = {
     {
       '@type': 'WebPage',
       '@id': pageUrl.toString(),
-      'url': pageUrl.toString(),
-      'name': name,
-      'description': description,
-      'isPartOf': {
+      url: pageUrl.toString(),
+      name,
+      description,
+      isPartOf: {
         '@id': 'https://fractalcounty.com/#website',
       },
-      'breadcrumb': {
+      breadcrumb: {
         '@id': `${pageUrl.toString()}#breadcrumb`,
       },
-      'inLanguage': 'en-US',
+      inLanguage: 'en-US',
     },
     websiteSchema,
     organizationSchema,
@@ -42,4 +48,4 @@ const schema = {
 }
 ---
 
-<script type="application/ld+json" set:html={JSON.stringify(schema)} />
+<script type='application/ld+json' set:html={JSON.stringify(schema)} />

@@ -31,7 +31,8 @@ const imgTitle = `${artwork.data.title} - ${artwork.data.description}`
 const { width, height } = THUMBNAIL_SIZES[size]
 
 // handle custom thumbnails vs regular images
-const hasCustomThumbnail = 'thumbnail' in artwork.data && artwork.data.thumbnail !== undefined
+const hasCustomThumbnail =
+  'thumbnail' in artwork.data && artwork.data.thumbnail !== undefined
 ---
 
 <Picture
@@ -41,7 +42,7 @@ const hasCustomThumbnail = 'thumbnail' in artwork.data && artwork.data.thumbnail
   formats={hasCustomThumbnail ? ['webp'] : ['avif', 'webp']}
   width={width}
   height={height}
-  class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+  class='h-full w-full object-cover transition-transform duration-500 group-hover:scale-105'
   loading={index === 0 ? 'eager' : 'lazy'}
   decoding={index === 0 ? 'sync' : 'async'}
   fetchpriority={index === 0 ? 'high' : 'auto'}

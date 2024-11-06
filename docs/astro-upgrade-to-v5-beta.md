@@ -9,21 +9,20 @@ Need to upgrade an older project to v4 first? See our [older migration guide](ht
 
 The following features are **new/stable in Astro v5.0-beta**:
 
-*   The [new content collections](https://5-0-0-beta.docs.astro.build/en/guides/content-collections/) using the [Content Layer API](https://5-0-0-beta.docs.astro.build/en/reference/modules/astro-content/) and [Content Loader API](https://5-0-0-beta.docs.astro.build/en/reference/content-loader-reference/)
-*   [Server Islands](https://5-0-0-beta.docs.astro.build/en/guides/server-islands/)
-*   [Type Safe environment variables](https://5-0-0-beta.docs.astro.build/en/guides/environment-variables/#type-safe-environment-variables)
-*   [On-demand rendering available in `static` mode](https://5-0-0-beta.docs.astro.build/en/guides/on-demand-rendering/) (like the previous `hybrid` mode)
+- The [new content collections](https://5-0-0-beta.docs.astro.build/en/guides/content-collections/) using the [Content Layer API](https://5-0-0-beta.docs.astro.build/en/reference/modules/astro-content/) and [Content Loader API](https://5-0-0-beta.docs.astro.build/en/reference/content-loader-reference/)
+- [Server Islands](https://5-0-0-beta.docs.astro.build/en/guides/server-islands/)
+- [Type Safe environment variables](https://5-0-0-beta.docs.astro.build/en/guides/environment-variables/#type-safe-environment-variables)
+- [On-demand rendering available in `static` mode](https://5-0-0-beta.docs.astro.build/en/guides/on-demand-rendering/) (like the previous `hybrid` mode)
 
-Start a new v5-beta project
----------------------------
+## Start a new v5-beta project
 
 [Section titled Start a new v5-beta project](https://5-0-0-beta.docs.astro.build/en/guides/upgrade-to/v5/#start-a-new-v5-beta-project)
 
 Try the Astro v5-beta in a new project:
 
-*   [npm](https://5-0-0-beta.docs.astro.build/en/guides/upgrade-to/v5/#tab-panel-504)
-*   [pnpm](https://5-0-0-beta.docs.astro.build/en/guides/upgrade-to/v5/#tab-panel-505)
-*   [Yarn](https://5-0-0-beta.docs.astro.build/en/guides/upgrade-to/v5/#tab-panel-506)
+- [npm](https://5-0-0-beta.docs.astro.build/en/guides/upgrade-to/v5/#tab-panel-504)
+- [pnpm](https://5-0-0-beta.docs.astro.build/en/guides/upgrade-to/v5/#tab-panel-505)
+- [Yarn](https://5-0-0-beta.docs.astro.build/en/guides/upgrade-to/v5/#tab-panel-506)
 
 ```
 npm create astro@latest -- --ref next
@@ -31,9 +30,9 @@ npm create astro@latest -- --ref next
 
 Update your existing project’s version of Astro and all official integrations to the latest versions using your package manager.
 
-*   [npm](https://5-0-0-beta.docs.astro.build/en/guides/upgrade-to/v5/#tab-panel-507)
-*   [pnpm](https://5-0-0-beta.docs.astro.build/en/guides/upgrade-to/v5/#tab-panel-508)
-*   [Yarn](https://5-0-0-beta.docs.astro.build/en/guides/upgrade-to/v5/#tab-panel-509)
+- [npm](https://5-0-0-beta.docs.astro.build/en/guides/upgrade-to/v5/#tab-panel-507)
+- [pnpm](https://5-0-0-beta.docs.astro.build/en/guides/upgrade-to/v5/#tab-panel-508)
+- [Yarn](https://5-0-0-beta.docs.astro.build/en/guides/upgrade-to/v5/#tab-panel-509)
 
 ```
 # Upgrade Astro and official integrations togethernpx @astrojs/upgrade beta
@@ -45,8 +44,7 @@ If your project doesn’t work as expected after upgrading to v5.0, check this g
 
 See [the Astro changelog](https://github.com/withastro/astro/blob/main/packages/astro/CHANGELOG.md) for full release notes.
 
-Dependency Upgrades
--------------------
+## Dependency Upgrades
 
 [Section titled Dependency Upgrades](https://5-0-0-beta.docs.astro.build/en/guides/upgrade-to/v5/#dependency-upgrades)
 
@@ -144,11 +142,11 @@ By default, collections that use the old types (`content` or `data`) and do not 
 
 While this backwards compatibility implementation is able to emulate most of the features of legacy collections, **there are some differences and limitations that may cause breaking changes to existing collections**:
 
-*   In previous versions of Astro, collections would be generated for all folders in `src/content/`, even if they were not defined in `src/content/config.ts`. This behavior is now deprecated, and collections should always be defined in `src/content/config.ts`. For existing collections, these can just be empty declarations (e.g. `const blog = defineCollection({})`) and Astro will implicitly define your legacy collection for you in a way that is compatible with the new loading behavior.
-*   The special `layout` field is not supported in Markdown collection entries. This property is intended only for standalone page files located in `src/pages/` and not likely to be in your collection entries. However, if you were using this property, you must now create dynamic routes that include your page styling.
-*   Sort order of generated collections is non-deterministic and platform-dependent. This means that if you are calling `getCollection()`, the order in which entries are returned may be different than before. If you need a specific order, you should sort the collection entries yourself.
-*   `image().refine()` is not supported. If you need to validate the properties of an image you will need to do this at runtime in your page or component.
-*   the `key` argument of `getEntry(collection, key)` is typed as `string`, rather than having types for every entry.
+- In previous versions of Astro, collections would be generated for all folders in `src/content/`, even if they were not defined in `src/content/config.ts`. This behavior is now deprecated, and collections should always be defined in `src/content/config.ts`. For existing collections, these can just be empty declarations (e.g. `const blog = defineCollection({})`) and Astro will implicitly define your legacy collection for you in a way that is compatible with the new loading behavior.
+- The special `layout` field is not supported in Markdown collection entries. This property is intended only for standalone page files located in `src/pages/` and not likely to be in your collection entries. However, if you were using this property, you must now create dynamic routes that include your page styling.
+- Sort order of generated collections is non-deterministic and platform-dependent. This means that if you are calling `getCollection()`, the order in which entries are returned may be different than before. If you need a specific order, you should sort the collection entries yourself.
+- `image().refine()` is not supported. If you need to validate the properties of an image you will need to do this at runtime in your page or component.
+- the `key` argument of `getEntry(collection, key)` is typed as `string`, rather than having types for every entry.
 
 ##### Enabling the `legacy.collections` flag
 
@@ -296,18 +294,18 @@ Remove any types that now cause errors in your project as you no longer have acc
 
 The following experimental flags have been removed in Astro v5.0 and these features are available for use:
 
-*   `env`
-*   `serverIslands`
+- `env`
+- `serverIslands`
 
 Additionally, the following experimental flags have been removed and **are now the default or recommended behavior in Astro v5.0**.
 
-*   `directRenderScript` (See below for breaking changes to [default `<script>` behavior](https://5-0-0-beta.docs.astro.build/en/guides/upgrade-to/v5/#script-tags-are-rendered-directly-as-declared).)
-*   `globalRoutePriority` (See below for breaking changes to [default route priority order](https://5-0-0-beta.docs.astro.build/en/guides/upgrade-to/v5/#route-priority-order-for-injected-routes-and-redirects).)
-*   `contentLayer` (See guidance for [upgrading existing content collections](https://5-0-0-beta.docs.astro.build/en/guides/upgrade-to/v5/#legacy-v20-content-collections-api) to the new, preferred Content Layer API.)
+- `directRenderScript` (See below for breaking changes to [default `<script>` behavior](https://5-0-0-beta.docs.astro.build/en/guides/upgrade-to/v5/#script-tags-are-rendered-directly-as-declared).)
+- `globalRoutePriority` (See below for breaking changes to [default route priority order](https://5-0-0-beta.docs.astro.build/en/guides/upgrade-to/v5/#route-priority-order-for-injected-routes-and-redirects).)
+- `contentLayer` (See guidance for [upgrading existing content collections](https://5-0-0-beta.docs.astro.build/en/guides/upgrade-to/v5/#legacy-v20-content-collections-api) to the new, preferred Content Layer API.)
 
 The following experimental flags have been removed and **their corresponding features are not part of Astro v5.0**.
 
-*   `contentCollectionsCache`
+- `contentCollectionsCache`
 
 Remove these experimental flags if you were previously using them, and move your `env` configuration to the root of your Astro config:
 
@@ -317,8 +315,7 @@ import { defineConfig } from 'astro/config';export default defineConfig({  exper
 
 These features are all available by default in Astro v5.0.
 
-Changed Defaults
-----------------
+## Changed Defaults
 
 [Section titled Changed Defaults](https://5-0-0-beta.docs.astro.build/en/guides/upgrade-to/v5/#changed-defaults)
 
@@ -364,17 +361,17 @@ If your project includes injected routes or redirects, please check that your ro
 
 In a project containing the following routes:
 
-*   File-based route: `/blog/post/[pid]`
-*   File-based route: `/[page]`
-*   Injected route: `/blog/[...slug]`
-*   Redirect: `/blog/tags/[tag] -> /[tag]`
-*   Redirect: `/posts -> /blog`
+- File-based route: `/blog/post/[pid]`
+- File-based route: `/[page]`
+- Injected route: `/blog/[...slug]`
+- Redirect: `/blog/tags/[tag] -> /[tag]`
+- Redirect: `/posts -> /blog`
 
 The following URLs will be built (instead of following the route priority order of Astro v4.x):
 
-*   `/blog/tags/astro` is built by the redirect to `/tags/[tag]` (instead of the injected route `/blog/[...slug]`)
-*   `/blog/post/0` is built by the file-based route `/blog/post/[pid]` (instead of the injected route `/blog/[...slug]`)
-*   `/posts` is built by the redirect to `/blog` (instead of the file-based route `/[page]`)
+- `/blog/tags/astro` is built by the redirect to `/tags/[tag]` (instead of the injected route `/blog/[...slug]`)
+- `/blog/post/0` is built by the file-based route `/blog/post/[pid]` (instead of the injected route `/blog/[...slug]`)
+- `/posts` is built by the redirect to `/blog` (instead of the file-based route `/[page]`)
 
 In the event of route collisions, where two routes of equal route priority attempt to build the same URL, Astro will log a warning identifying the conflicting routes.
 
@@ -392,8 +389,7 @@ Astro 5.0 removes this experimental flag and makes this the new default behavior
 
 Please review your `<script>` tags and ensure they behave as desired.
 
-Breaking Changes
-----------------
+## Breaking Changes
 
 [Section titled Breaking Changes](https://5-0-0-beta.docs.astro.build/en/guides/upgrade-to/v5/#breaking-changes)
 
@@ -535,8 +531,8 @@ In Astro 4.x, the Astro-specific metadata attached to `vfile.data` in remark and
 
 Astro 5 cleans up the API and the metadata is now renamed as below:
 
-*   `vfile.data.__astroHeadings` -\> `vfile.data.astro.headings`
-*   `vfile.data.imagePaths` -\> `vfile.data.astro.imagePaths`
+- `vfile.data.__astroHeadings` -\> `vfile.data.astro.headings`
+- `vfile.data.imagePaths` -\> `vfile.data.astro.imagePaths`
 
 The types of `imagePaths` has also been updated from `Set<string>` to `string[]`. The `vfile.data.astro.frontmatter` metadata is left unchanged.
 
@@ -572,13 +568,13 @@ In Astro v4.x, the `build.client` and `build.server` options were documented to 
 
 Astro 5.0 fixes the behavior to correctly resolve from the `outDir` option. For example, if `outDir` is set to `./dist/nested/`, then by default:
 
-*   `build.client` will resolve to `<root>/dist/nested/client/`
-*   `build.server` will resolve to `<root>/dist/nested/server/`
+- `build.client` will resolve to `<root>/dist/nested/client/`
+- `build.server` will resolve to `<root>/dist/nested/server/`
 
 Previously the values were incorrectly resolved:
 
-*   `build.client` was resolved to `<root>/dist/nested/dist/client/`
-*   `build.server` was resolved to `<root>/dist/nested/dist/server/`
+- `build.client` was resolved to `<root>/dist/nested/dist/client/`
+- `build.server` was resolved to `<root>/dist/nested/dist/server/`
 
 #### What should I do?
 

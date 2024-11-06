@@ -1,54 +1,65 @@
 ---
 import Container from '@/components/layout/Container.astro'
 import Link from '@/components/Link.astro'
-import { SITE } from '@/consts';
+import { SITE } from '@/consts'
 ---
 
 <header
-  role="banner"
-  class="fixed top-0 left-0 right-0 z-50 py-4 backdrop-blur-sm bg-base-100/80"
+  role='banner'
+  class='fixed left-0 right-0 top-0 z-50 bg-base-100/80 py-4 backdrop-blur-sm'
   transition:persist
 >
-  <Container as="section">
-    <div class="flex flex-wrap gap-y-2 justify-between">
+  <Container as='section'>
+    <div class='flex flex-wrap justify-between gap-y-2'>
       <Link
-        href="/"
+        href='/'
         title={`${SITE.NAME} - Return to homepage`}
         externalInNewTab={false}
         underline={false}
-        class="font-bold"
+        class='font-bold'
         aria-label={`${SITE.NAME} - Return to homepage`}
       >
-        <div class="font-bold uppercase hover:scale-105 transition-transform ease-out duration-500">
+        <div
+          class='font-bold uppercase transition-transform duration-500 ease-out hover:scale-105'
+        >
           {SITE.NAME}
         </div>
       </Link>
-      <nav role="navigation" aria-label="Main navigation">
-        <ul class="flex gap-1 list-none p-0 m-0">
-          {[
-            { href: '/blog', label: 'Blog', text: 'blog' },
-            { href: '/art', label: 'Art', text: 'art' },
-            { href: 'https://links.fractalcounty.com/', label: 'Links', text: 'links', external: true },
-          ].map((item, index) => (
-            <>
-              <li>
-                <Link
-                  href={item.href}
-                  title={`View ${item.label.toLowerCase()}`}
-                  externalInNewTab={item.external}
-                  underline={true}
-                  aria-current={Astro.url.pathname === item.href ? 'page' : undefined}
-                >
-                  {item.text}
-                </Link>
-              </li>
-              {index < 2 && (
-                <li aria-hidden="true">
-                  <span>/</span>
+      <nav role='navigation' aria-label='Main navigation'>
+        <ul class='m-0 flex list-none gap-1 p-0'>
+          {
+            [
+              { href: '/blog', label: 'Blog', text: 'blog' },
+              { href: '/art', label: 'Art', text: 'art' },
+              {
+                href: 'https://links.fractalcounty.com/',
+                label: 'Links',
+                text: 'links',
+                external: true,
+              },
+            ].map((item, index) => (
+              <>
+                <li>
+                  <Link
+                    href={item.href}
+                    title={`View ${item.label.toLowerCase()}`}
+                    externalInNewTab={item.external}
+                    underline={true}
+                    aria-current={
+                      Astro.url.pathname === item.href ? 'page' : undefined
+                    }
+                  >
+                    {item.text}
+                  </Link>
                 </li>
-              )}
-            </>
-          ))}
+                {index < 2 && (
+                  <li aria-hidden='true'>
+                    <span>/</span>
+                  </li>
+                )}
+              </>
+            ))
+          }
         </ul>
       </nav>
     </div>

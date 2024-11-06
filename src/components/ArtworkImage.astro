@@ -14,7 +14,7 @@ const { image, title, index } = Astro.props
 <Image
   src={image}
   alt={`${title} - Image ${index + 1}`}
-  class="w-full rounded-lg"
+  class='w-full rounded-lg'
   loading={index === 0 ? 'eager' : 'lazy'}
-  decoding="async"
+  decoding='async'
 />

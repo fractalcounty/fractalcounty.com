@@ -25,12 +25,12 @@ const {
 } = Astro.props
 
 const images = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/content/blog/**/*.{jpeg,jpg,png,gif,webp}',
+  '/src/content/blog/**/*.{jpeg,jpg,png,gif,webp}'
 )
 
 if (!images[imagePath]) {
   throw new Error(
-    `"${imagePath}" does not exist in glob: "src/content/blog/**/*.{jpeg,jpg,png,gif,webp}"`,
+    `"${imagePath}" does not exist in glob: "src/content/blog/**/*.{jpeg,jpg,png,gif,webp}"`
   )
 }
 ---
@@ -39,7 +39,7 @@ if (!images[imagePath]) {
   class={`custom-image-card-wrapper ${className || ''}`}
   style={`--scale-factor: ${scale};`}
 >
-  <figure class="custom-image-card prose">
+  <figure class='custom-image-card prose'>
     <Image
       src={images[imagePath]()}
       alt={altText}
@@ -47,7 +47,7 @@ if (!images[imagePath]) {
     />
     {
       showCaption && (
-        <figcaption class="custom-image-card-caption">{altText}</figcaption>
+        <figcaption class='custom-image-card-caption'>{altText}</figcaption>
       )
     }
   </figure>
@@ -69,6 +69,6 @@ if (!images[imagePath]) {
     object-fit: cover;
   }
   .custom-image-card-caption {
-    @apply prose-sm text-center mt-2 italic text-accent-content;
+    @apply prose-sm mt-2 text-center italic text-accent-content;
   }
 </style>

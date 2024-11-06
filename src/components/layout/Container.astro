@@ -3,9 +3,9 @@ interface Props {
   as?: 'main' | 'section'
 }
 
-const { as: Element = 'section' } = Astro.props;
+const { as: Element = 'section' } = Astro.props
 ---
 
-<Element class="mx-auto max-w-screen-sm px-5">
+<Element class='mx-auto max-w-screen-sm px-5'>
   <slot />
 </Element>

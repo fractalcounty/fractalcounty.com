@@ -1,6 +1,12 @@
 ---
 import type { CollectionEntry } from 'astro:content'
-import { generateArticleSchema, generateBreadcrumbSchema, organizationSchema, personSchema, websiteSchema } from '@/lib/schema'
+import {
+  generateArticleSchema,
+  generateBreadcrumbSchema,
+  organizationSchema,
+  personSchema,
+  websiteSchema,
+} from '@/lib/schema'
 
 interface Props {
   entry: CollectionEntry<'blog'>
@@ -11,7 +17,10 @@ const { entry } = Astro.props
 const pageUrl = new URL(Astro.url.pathname, Astro.site)
 
 // construct the opengraph image url - it will be next to the index.html
-const ogImageUrl = new URL(`${Astro.url.pathname}/index.png`, Astro.site).toString()
+const ogImageUrl = new URL(
+  `${Astro.url.pathname}/index.png`,
+  Astro.site
+).toString()
 
 // create breadcrumb trail
 const breadcrumbItems = [
@@ -28,26 +37,26 @@ const schema = {
     {
       '@type': 'WebPage',
       '@id': pageUrl.toString(),
-      'url': pageUrl.toString(),
-      'name': entry.data.title,
-      'description': entry.data.description,
-      'isPartOf': {
+      url: pageUrl.toString(),
+      name: entry.data.title,
+      description: entry.data.description,
+      isPartOf: {
         '@id': 'https://fractalcounty.com/#website',
       },
-      'primaryImageOfPage': {
+      primaryImageOfPage: {
         '@id': `${pageUrl.toString()}#primaryimage`,
       },
-      'breadcrumb': {
+      breadcrumb: {
         '@id': `${pageUrl.toString()}#breadcrumb`,
       },
-      'inLanguage': 'en-US',
+      inLanguage: 'en-US',
     },
     {
       '@type': 'ImageObject',
       '@id': `${pageUrl.toString()}#primaryimage`,
-      'url': ogImageUrl,
-      'width': 1200,
-      'height': 630,
+      url: ogImageUrl,
+      width: 1200,
+      height: 630,
     },
     websiteSchema,
     organizationSchema,
@@ -56,4 +65,4 @@ const schema = {
 }
 ---
 
-<script type="application/ld+json" set:html={JSON.stringify(schema)} />
+<script type='application/ld+json' set:html={JSON.stringify(schema)} />

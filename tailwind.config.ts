@@ -39,18 +39,18 @@ export default {
       {
         // dark theme
         laramie: {
-          'primary': '#7aa2f7',
-          'secondary': '#bb9af7',
-          'info': '#2AC3DE',
+          primary: '#7aa2f7',
+          secondary: '#bb9af7',
+          info: '#2AC3DE',
           'info-content': '#c0caf5',
-          'success': '#9ECE6A',
-          'warning': '#FF9E64',
-          'error': '#F7768E',
+          success: '#9ECE6A',
+          warning: '#FF9E64',
+          error: '#F7768E',
 
           'base-100': '#1A1B26',
-          'neutral': '#24283b',
+          neutral: '#24283b',
           'neutral-content': '#414868',
-          'accent': '#565f89',
+          accent: '#565f89',
           'accent-content': '#9aa5ce',
           'base-content': '#a9b1d6',
         },

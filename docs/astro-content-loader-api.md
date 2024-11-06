@@ -5,8 +5,7 @@ URL Source: https://5-0-0-beta.docs.astro.build/en/reference/content-loader-refe
 Markdown Content:
 Astro’s Content Loader API allows you to load your data from any source, local or remote, and interact with Astro’s content layer to manage your [content collections](https://5-0-0-beta.docs.astro.build/en/guides/content-collections/).
 
-What is a loader?
------------------
+## What is a loader?
 
 [Section titled What is a loader?](https://5-0-0-beta.docs.astro.build/en/reference/content-loader-reference/#what-is-a-loader)
 

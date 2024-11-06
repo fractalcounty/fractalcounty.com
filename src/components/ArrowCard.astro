@@ -15,33 +15,39 @@ const { title, description, icon, href, externalInNewTab = true } = Astro.props
 
 <Link
   href={href || `/`}
-  class="relative group flex items-center flex-nowrap py-3 px-4 pr-10 rounded-lg border border-base-content/25 bg-transparent hover:bg-neutral text-base-content duration-200 ease-in-out"
+  class='group relative flex flex-nowrap items-center rounded-lg border border-base-content/25 bg-transparent px-4 py-3 pr-10 text-base-content duration-200 ease-in-out hover:bg-neutral'
   underline={false}
   externalInNewTab={externalInNewTab}
 >
-
   <!-- Icon -->
-  {icon && (
-    <Icon name={icon} class="size-6 mr-3 flex-shrink-0" />
-  )}
+  {icon && <Icon name={icon} class='mr-3 size-6 flex-shrink-0' />}
 
   <!-- Title and description -->
-  <div class="flex flex-col flex-1 truncate">
-    <div class="font-semibold group-hover:text-primary">
+  <div class='flex flex-1 flex-col truncate'>
+    <div class='font-semibold group-hover:text-primary'>
       {title}
     </div>
-    <div class="text-sm">
+    <div class='text-sm'>
       {description}
     </div>
   </div>
 
   <!-- Arrow icon -->
   <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    class="absolute top-1/2 right-2 -translate-y-1/2 size-5 stroke-2 fill-none stroke-current group-hover:stroke-primary transition-colors duration-300 ease-in-out"
+    xmlns='http://www.w3.org/2000/svg'
+    viewBox='0 0 24 24'
+    class='absolute right-2 top-1/2 size-5 -translate-y-1/2 fill-none stroke-current stroke-2 transition-colors duration-300 ease-in-out group-hover:stroke-primary'
   >
-    <line x1="5" y1="12" x2="19" y2="12" class="translate-x-3 group-hover:translate-x-0 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out" />
-    <polyline points="12 5 19 12 12 19" class="-translate-x-1 group-hover:translate-x-0 transition-transform duration-300 ease-in-out" />
+    <line
+      x1='5'
+      y1='12'
+      x2='19'
+      y2='12'
+      class='translate-x-3 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:scale-x-100'
+    ></line>
+    <polyline
+      points='12 5 19 12 12 19'
+      class='-translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0'
+    ></polyline>
   </svg>
 </Link>

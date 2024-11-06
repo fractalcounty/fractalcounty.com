@@ -23,15 +23,15 @@ const {
   isWebcomic = false,
 } = Astro.props
 
-const publishedTimeString = publishedTime?.toISOString();
+const publishedTimeString = publishedTime?.toISOString()
 ---
 
 <!doctype html>
 <html
-  lang="en"
+  lang='en'
   class:list={[isWebcomic && 'is-webcomic-page']}
-  data-theme="laramie"
-  transition:persist="theme"
+  data-theme='laramie'
+  transition:persist='theme'
 >
   <head>
     <Head
@@ -41,11 +41,8 @@ const publishedTimeString = publishedTime?.toISOString();
       publishedTime={publishedTimeString}
       tags={tags}
     />
-    <slot name="structured-data" />
-    <ViewTransitions
-      fallback="swap"
-      handleForms
-    />
+    <slot name='structured-data' />
+    <ViewTransitions fallback='swap' handleForms />
     <style is:global>
       /* webcomic page header styles */
       html.is-webcomic-page header {
@@ -58,11 +55,11 @@ const publishedTimeString = publishedTime?.toISOString();
       }
     </style>
   </head>
-  <body class="flex flex-col min-h-screen">
-    <Header role="banner" />
-    <main id="main" class="mt-24">
+  <body class='flex min-h-screen flex-col'>
+    <Header role='banner' />
+    <main id='main' class='mt-24'>
       <slot />
     </main>
-    <Footer role="contentinfo" />
+    <Footer role='contentinfo' />
   </body>
 </html>

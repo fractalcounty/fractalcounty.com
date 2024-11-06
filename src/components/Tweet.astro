@@ -39,113 +39,134 @@ const {
   quotedTweet,
 } = Astro.props
 
-const hasContent = text || imageUrl;
+const hasContent = text || imageUrl
 ---
 
 <TwitterFonts />
 
-<div class="tweet bg-neutral outline outline-neutral-content/75 shadow-lg text-base-content rounded-lg p-6 mx-auto my-auto prose prose-sm" role="article" aria-label={`Tweet by ${name}`}>
-  <div class="header flex items-start pr-2">
-    <div class="avatar size-12 rounded-full mr-[16px] overflow-hidden flex-shrink-0">
+<div
+  class='tweet prose prose-sm mx-auto my-auto rounded-lg bg-neutral p-6 text-base-content shadow-lg outline outline-neutral-content/75'
+  role='article'
+  aria-label={`Tweet by ${name}`}
+>
+  <div class='header flex items-start pr-2'>
+    <div
+      class='avatar mr-[16px] size-12 flex-shrink-0 overflow-hidden rounded-full'
+    >
       <ImageCard
         imagePath={pfp}
         altText={`${name}'s profile picture`}
         showShadow={false}
         rounded={false}
         showCaption={false}
-        class="w-full h-full"
-        imageClass="w-full h-full object-cover"
+        class='h-full w-full'
+        imageClass='w-full h-full object-cover'
       />
     </div>
 
-    <div class="flex-grow">
-      <div class="flex justify-between items-center">
-        <div class="info">
-          <span class="username">{name}</span>
-          <span class="handle" aria-label={`${handle} username`}>@{handle}</span>
+    <div class='flex-grow'>
+      <div class='flex items-center justify-between'>
+        <div class='info'>
+          <span class='username'>{name}</span>
+          <span class='handle' aria-label={`${handle} username`}>@{handle}</span
+          >
         </div>
       </div>
 
-      {text && <p class="body text-base-content">{text}</p>}
+      {text && <p class='body text-base-content'>{text}</p>}
 
-      {imageUrl && (
-        <div class={`tweet-image ${text ? '-mt-3' : ''} -my-4`}>
-          <ImageCard
-            imagePath={imageUrl}
-            altText="Tweet image"
-            showShadow={false}
-            rounded={true}
-            showCaption={false}
-            class="w-full"
-            imageClass="w-full h-auto object-cover rounded-lg"
-          />
-        </div>
-      )}
-
-      {quotedTweet && (
-        <div class="quoted-tweet border border-neutral-content bg-neutral rounded-lg mb-3 mt-3 pt-2 pb-3 pl-3 pr-3" role="article" aria-label={`Quoted tweet by ${quotedTweet.name}`}>
-          <div class="flex items-center gap-2">
-            <span class="quoted-pfp size-6 rounded-full overflow-hidden flex-shrink-0">
-              <ImageCard
-                imagePath={quotedTweet.pfp}
-                altText={`${quotedTweet.name}'s profile picture`}
-                showShadow={false}
-                rounded={false}
-                showCaption={false}
-                class="w-full h-full"
-                imageClass="w-full h-full object-cover"
-              />
-            </span>
-
-            <div class="info">
-              <span class="username">{quotedTweet.name}</span>
-              <span class="handle">@{quotedTweet.handle}</span>
-            </div>
+      {
+        imageUrl && (
+          <div class={`tweet-image ${text ? '-mt-3' : ''} -my-4`}>
+            <ImageCard
+              imagePath={imageUrl}
+              altText='Tweet image'
+              showShadow={false}
+              rounded={true}
+              showCaption={false}
+              class='w-full'
+              imageClass='w-full h-auto object-cover rounded-lg'
+            />
           </div>
+        )
+      }
 
-          {quotedTweet.text && <p class="body">{quotedTweet.text}</p>}
-          {quotedTweet.imageUrl && (
-            <div class={`tweet-image ${quotedTweet.text ? 'mt-2' : ''} mb-2`}>
-              <ImageCard
-                imagePath={quotedTweet.imageUrl}
-                altText="Quoted tweet image"
-                showShadow={false}
-                rounded={true}
-                showCaption={false}
-                class="w-full"
-                imageClass="w-full h-auto object-cover rounded-lg"
-              />
-            </div>
-          )}
-        </div>
-      )}
-
-      {hasContent && (
-        <div class="actions text-accent-content bg-inherit flex justify-between items-center mt-2" role="group" aria-label="Tweet actions">
-          <button class="action" aria-label={`Reply, ${replies} replies`}>
-            <Icon name="solar:chat-square-linear" />
-            <span>{replies}</span>
-          </button>
-          <button class="action" aria-label={`Retweet, ${retweets} retweets`}>
-            <Icon name="solar:repeat-bold" />
-            <span>{retweets}</span>
-          </button>
-          <button class="action" aria-label={`Like, ${likes} likes`}>
-            <Icon name="solar:heart-linear" />
-            <span>{likes}</span>
-          </button>
-          <Link
-            href={source}
-            class="menu text-accent-content tooltip tooltip-primary tooltip-bottom flex items-center justify-center"
-            data-tip="View original source"
-            underline={false}
-            externalInNewTab={true}
-            aria-label="View original tweet"
+      {
+        quotedTweet && (
+          <div
+            class='quoted-tweet mb-3 mt-3 rounded-lg border border-neutral-content bg-neutral pb-3 pl-3 pr-3 pt-2'
+            role='article'
+            aria-label={`Quoted tweet by ${quotedTweet.name}`}
           >
-            <Icon name="solar:link-bold" class="size-4" />
-          </Link>
-        </div>
-      )}
+            <div class='flex items-center gap-2'>
+              <span class='quoted-pfp size-6 flex-shrink-0 overflow-hidden rounded-full'>
+                <ImageCard
+                  imagePath={quotedTweet.pfp}
+                  altText={`${quotedTweet.name}'s profile picture`}
+                  showShadow={false}
+                  rounded={false}
+                  showCaption={false}
+                  class='h-full w-full'
+                  imageClass='w-full h-full object-cover'
+                />
+              </span>
+
+              <div class='info'>
+                <span class='username'>{quotedTweet.name}</span>
+                <span class='handle'>@{quotedTweet.handle}</span>
+              </div>
+            </div>
+
+            {quotedTweet.text && <p class='body'>{quotedTweet.text}</p>}
+            {quotedTweet.imageUrl && (
+              <div class={`tweet-image ${quotedTweet.text ? 'mt-2' : ''} mb-2`}>
+                <ImageCard
+                  imagePath={quotedTweet.imageUrl}
+                  altText='Quoted tweet image'
+                  showShadow={false}
+                  rounded={true}
+                  showCaption={false}
+                  class='w-full'
+                  imageClass='w-full h-auto object-cover rounded-lg'
+                />
+              </div>
+            )}
+          </div>
+        )
+      }
+
+      {
+        hasContent && (
+          <div
+            class='actions mt-2 flex items-center justify-between bg-inherit text-accent-content'
+            role='group'
+            aria-label='Tweet actions'
+          >
+            <button class='action' aria-label={`Reply, ${replies} replies`}>
+              <Icon name='solar:chat-square-linear' />
+              <span>{replies}</span>
+            </button>
+            <button class='action' aria-label={`Retweet, ${retweets} retweets`}>
+              <Icon name='solar:repeat-bold' />
+              <span>{retweets}</span>
+            </button>
+            <button class='action' aria-label={`Like, ${likes} likes`}>
+              <Icon name='solar:heart-linear' />
+              <span>{likes}</span>
+            </button>
+            <Link
+              href={source}
+              class='menu tooltip tooltip-bottom tooltip-primary flex items-center justify-center text-accent-content'
+              data-tip='View original source'
+              underline={false}
+              externalInNewTab={true}
+              aria-label='View original tweet'
+            >
+              <Icon name='solar:link-bold' class='size-4' />
+            </Link>
+          </div>
+        )
+      }
     </div>
   </div>
 </div>
@@ -169,7 +190,7 @@ const hasContent = text || imageUrl;
   }
 
   .info {
-    @apply space-x-1 flex flex-row items-center justify-center;
+    @apply flex flex-row items-center justify-center space-x-1;
   }
 
   .username {
@@ -182,7 +203,7 @@ const hasContent = text || imageUrl;
 
   .body {
     font-weight: 400;
-    @apply leading-5 !m-0;
+    @apply !m-0 leading-5;
   }
 
   .quoted-pfp {

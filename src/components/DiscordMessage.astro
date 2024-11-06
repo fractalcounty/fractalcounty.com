@@ -18,15 +18,18 @@ function formatDate(dateString: string) {
       return dateString // Return the original string if it's not a valid date
     }
     return dateObject.toISOString()
-  }
- catch {
+  } catch {
     return dateString // Return the original string if there's any error
   }
 }
 ---
 
-<div class="discord-message group" role="listitem" aria-label={`Discord message from ${author}`}>
-  <div class="avatar-wrapper" role="img" aria-label={`${author}'s avatar`}>
+<div
+  class='discord-message group'
+  role='listitem'
+  aria-label={`Discord message from ${author}`}
+>
+  <div class='avatar-wrapper' role='img' aria-label={`${author}'s avatar`}>
     <ImageCard
       imagePath={avatar}
       altText={`${author}'s avatar`}
@@ -34,19 +37,27 @@ function formatDate(dateString: string) {
       rounded={true}
       showCaption={false}
       scale={1}
-      class="avatar"
+      class='avatar'
     />
   </div>
-  <div class="message-content">
-    <div class="message-header">
-      <strong class="author">{author}</strong>
-      {date && <time class="date" datetime={formatDate(date)}>{date}</time>}
+  <div class='message-content'>
+    <div class='message-header'>
+      <strong class='author'>{author}</strong>
+      {
+        date && (
+          <time class='date' datetime={formatDate(date)}>
+            {date}
+          </time>
+        )
+      }
     </div>
-    {content.map((item, index) => (
-      <div class={`content ${index > 0 ? 'follow-up' : ''}`}>
-        {typeof item === 'string' ? item : <Fragment set:html={item} />}
-      </div>
-    ))}
+    {
+      content.map((item, index) => (
+        <div class={`content ${index > 0 ? 'follow-up' : ''}`}>
+          {typeof item === 'string' ? item : <Fragment set:html={item} />}
+        </div>
+      ))
+    }
   </div>
 </div>
 

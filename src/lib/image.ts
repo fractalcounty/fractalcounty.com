@@ -27,15 +27,18 @@ export interface ThumbnailResult {
 
 // improve type guard with more specific checks
 export function isImageMetadata(image: unknown): image is ImageMetadata {
-  return typeof image === 'object' && image !== null
-    && 'src' in image
-    && typeof image.src === 'string'
-    && 'width' in image
-    && typeof image.width === 'number'
-    && 'height' in image
-    && typeof image.height === 'number'
-    && 'format' in image
-    && typeof image.format === 'string'
+  return (
+    typeof image === 'object' &&
+    image !== null &&
+    'src' in image &&
+    typeof image.src === 'string' &&
+    'width' in image &&
+    typeof image.width === 'number' &&
+    'height' in image &&
+    typeof image.height === 'number' &&
+    'format' in image &&
+    typeof image.format === 'string'
+  )
 }
 
 // add helper for dimension validation
@@ -71,8 +74,7 @@ export async function generateThumbnail({
     }
 
     throw new Error('Invalid image input')
-  }
-  catch (error) {
+  } catch (error) {
     console.warn('thumbnail generation failed:', error)
     if (isImageMetadata(image)) {
       return {

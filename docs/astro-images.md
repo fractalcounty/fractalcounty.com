@@ -5,8 +5,7 @@ URL Source: https://5-0-0-beta.docs.astro.build/en/guides/images/
 Markdown Content:
 Astro provides several ways for you to use images on your site, whether they are stored locally inside your project, linked to from an external URL, or managed in a CMS or CDN!
 
-Where to store images
----------------------
+## Where to store images
 
 [Section titled Where to store images](https://5-0-0-beta.docs.astro.build/en/guides/images/#where-to-store-images)
 
@@ -24,8 +23,7 @@ You can also choose to store your images remotely, in a [content management syst
 
 For extra protection when dealing with external sources, Astro’s image components and helper function will only process (e.g. optimize, transform) images from [authorized image sources specified in your configuration](https://5-0-0-beta.docs.astro.build/en/guides/images/#authorizing-remote-images). Remote images from other sources will be displayed with no processing.
 
-Images in `.astro` files
-------------------------
+## Images in `.astro` files
 
 [Section titled Images in .astro files](https://5-0-0-beta.docs.astro.build/en/guides/images/#images-in-astro-files)
 
@@ -45,8 +43,8 @@ Import and use Astro’s native [`<Image />`](https://5-0-0-beta.docs.astro.buil
 
 Use the built-in `<Image />` Astro component to display optimized versions of:
 
-*   your local images located within the `src/` folder
-*   [configured remote images](https://5-0-0-beta.docs.astro.build/en/guides/images/#authorizing-remote-images) from authorized sources
+- your local images located within the `src/` folder
+- [configured remote images](https://5-0-0-beta.docs.astro.build/en/guides/images/#authorizing-remote-images) from authorized sources
 
 `<Image />` can transform a local or authorized remote image’s dimensions, file type, and quality for control over your displayed image. The resulting `<img>` tag includes `alt`, `loading`, and `decoding` attributes and infers image dimensions to avoid Cumulative Layout Shift (CLS).
 
@@ -130,9 +128,9 @@ The `<Image />` component optimizes your image and infers width and height (for 
 
 Use the HTML `<img>` element when you cannot use the `<Image />` component, for example:
 
-*   for unsupported image formats
-*   when you do not want your image optimized by Astro
-*   to access and change the `src` attribute dynamically client-side
+- for unsupported image formats
+- when you do not want your image optimized by Astro
+- to access and change the `src` attribute dynamically client-side
 
 ### Setting Default Values
 
@@ -162,8 +160,7 @@ The following configuration will only allow remote images from HTTPS hosts:
 export default defineConfig({  image: {    remotePatterns: [{ protocol: "https" }],  }});
 ```
 
-Using Images from a CMS or CDN
-------------------------------
+## Using Images from a CMS or CDN
 
 [Section titled Using Images from a CMS or CDN](https://5-0-0-beta.docs.astro.build/en/guides/images/#using-images-from-a-cms-or-cdn)
 
@@ -171,8 +168,7 @@ Image CDNs work with [all Astro image options](https://5-0-0-beta.docs.astro.bui
 
 Alternatively, the CDN may provide its own SDKs to more easily integrate in an Astro project. For example, Cloudinary supports an [Astro SDK](https://astro.cloudinary.dev/) which allows you to easily drop in images with their `CldImage` component or a [Node.js SDK](https://cloudinary.com/documentation/node_integration) that can generate URLs to use with an `<img>` tag in a Node.js environment.
 
-Images in Markdown files
-------------------------
+## Images in Markdown files
 
 [Section titled Images in Markdown files](https://5-0-0-beta.docs.astro.build/en/guides/images/#images-in-markdown-files)
 
@@ -186,8 +182,7 @@ The `<img>` tag is not supported for local images, and the `<Image />` and `<Pic
 
 If you require more control over your image attributes, we recommend using [Astro’s MDX integration](https://5-0-0-beta.docs.astro.build/en/guides/integrations-guide/mdx/) to add support for`.mdx` file format. MDX allows adding components to Markdown and there are additional [image options available in MDX](https://5-0-0-beta.docs.astro.build/en/guides/images/#images-in-mdx-files).
 
-Images in MDX files
--------------------
+## Images in MDX files
 
 [Section titled Images in MDX files](https://5-0-0-beta.docs.astro.build/en/guides/images/#images-in-mdx-files)
 
@@ -199,8 +194,7 @@ Additionally, there is support for [standard Markdown `![alt](src)` syntax](http
 ---title: My Page title---import { Image } from 'astro:assets';import rocket from '../assets/rocket.png';# My MDX Page// Local image stored in the the same folder![Houston in the wild](houston.png)// Local image stored in src/assets/<Image src={rocket} alt="A rocketship in space." /><img src={rocket.src} alt="A rocketship in space." />![A rocketship in space](../assets/rocket.png)// Image stored in public/images/<Image src="/images/stars.png" alt="A starry night sky." /><img src="/images/stars.png" alt="A starry night sky." />![A starry night sky.](/images/stars.png)// Remote image on another server<Image src="https://example.com/images/remote-image.png" /><img src="https://example.com/images/remote-image.png" />![Astro](https://example.com/images/remote-image.png)
 ```
 
-Images in content collections
------------------------------
+## Images in content collections
 
 [Section titled Images in content collections](https://5-0-0-beta.docs.astro.build/en/guides/images/#images-in-content-collections)
 
@@ -226,8 +220,7 @@ The example below shows a blog index page that renders the cover photo and title
 ---import { Image } from "astro:assets";import { getCollection } from "astro:content";const allBlogPosts = await getCollection("blog");---{  allBlogPosts.map((post) => (    <div>      <Image src={post.data.cover} alt={post.data.coverAlt} />      <h2>        <a href={"/blog/" + post.slug}>{post.data.title}</a>      </h2>    </div>  ))}
 ```
 
-Images in UI framework components
----------------------------------
+## Images in UI framework components
 
 [Section titled Images in UI framework components](https://5-0-0-beta.docs.astro.build/en/guides/images/#images-in-ui-framework-components)
 
@@ -251,8 +244,7 @@ import stars from "../assets/stars.png";export default function ReactImage() {  
 <script>  import stars from '../assets/stars.png';</script><img src={stars.src} alt="A starry night sky." />
 ```
 
-Generating images with `getImage()`
------------------------------------
+## Generating images with `getImage()`
 
 [Section titled Generating images with getImage()](https://5-0-0-beta.docs.astro.build/en/guides/images/#generating-images-with-getimage)
 
@@ -264,8 +256,7 @@ This attribute is required for both the `<Image />` and `<Picture />` components
 
 If the image is merely decorative (i.e. doesn’t contribute to the understanding of the page), set `alt=""` so that screen readers know to ignore the image.
 
-Default image service
----------------------
+## Default image service
 
 [Section titled Default image service](https://5-0-0-beta.docs.astro.build/en/guides/images/#default-image-service)
 

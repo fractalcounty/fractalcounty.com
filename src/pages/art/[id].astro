@@ -13,8 +13,8 @@ import { getCollection, render } from 'astro:content'
 export async function getStaticPaths() {
   const artworks = await getCollection('artwork')
   return artworks
-    .filter(artwork => !artwork.data.draft)
-    .map(artwork => ({
+    .filter((artwork) => !artwork.data.draft)
+    .map((artwork) => ({
       params: { id: artwork.id.replace(/\.(md|mdx)$/, '') },
       props: artwork,
     }))
@@ -27,9 +27,11 @@ const { Content } = await render(artwork)
 const links = artwork.data.links || []
 
 // Get the full URL and dimensions for the image
-const firstImage = (Array.isArray(artwork.data.images)
-  ? artwork.data.images[0]
-  : artwork.data.images) as ImageMetadata
+const firstImage = (
+  Array.isArray(artwork.data.images)
+    ? artwork.data.images[0]
+    : artwork.data.images
+) as ImageMetadata
 
 const imageData = {
   url: new URL(firstImage.src, Astro.site).toString(),
@@ -41,13 +43,13 @@ const imageData = {
 <PageLayout
   title={artwork.data.title}
   description={artwork.data.description}
-  type="article"
+  type='article'
   publishedTime={artwork.data.date}
   isWebcomic={artwork.data.type === 'webcomic'}
   isContentPage={true}
 >
   <ArtworkStructuredData
-    slot="structured-data"
+    slot='structured-data'
     artwork={artwork}
     imageUrl={imageData.url}
     imageWidth={imageData.width}
@@ -55,30 +57,23 @@ const imageData = {
   />
 
   <!-- Preload first image -->
-  <link
-    rel="preload"
-    as="image"
-    href={firstImage.src}
-    slot="head"
-  />
+  <link rel='preload' as='image' href={firstImage.src} slot='head' />
 
   <Container
-    as="main"
-    class:list={[
-    artwork.data.type === 'webcomic' && 'max-w-5xl px-2 md:px-4',
-  ]}
+    as='main'
+    class:list={[artwork.data.type === 'webcomic' && 'max-w-5xl px-2 md:px-4']}
   >
-    <div class:list={[
-      'animate',
-      artwork.data.type === 'webcomic' && 'md:fixed md:top-4 md:left-4 md:z-30',
-    ]}
+    <div
+      class:list={[
+        'animate',
+        artwork.data.type === 'webcomic' &&
+          'md:fixed md:left-4 md:top-4 md:z-30',
+      ]}
     >
     </div>
 
-    <div class:list={[
-      'my-6',
-      artwork.data.type === 'webcomic' && 'text-center',
-    ]}
+    <div
+      class:list={['my-6', artwork.data.type === 'webcomic' && 'text-center']}
     >
       <Subheader
         title={artwork.data.title}
@@ -86,48 +81,50 @@ const imageData = {
         isPost={true}
         links={links}
         subtitle={artwork.data.description}
-        pages={Array.isArray(artwork.data.images) ? artwork.data.images.length : 1}
-        backUrl="/art"
-        backLabel="Back"
+        pages={Array.isArray(artwork.data.images)
+          ? artwork.data.images.length
+          : 1}
+        backUrl='/art'
+        backLabel='Back'
       />
     </div>
 
-    <article class:list={[
-      'animate',
-      artwork.data.type === 'webcomic' && 'mb-12 md:mb-20',
-    ]}
+    <article
+      class:list={[
+        'animate',
+        artwork.data.type === 'webcomic' && 'mb-12 md:mb-20',
+      ]}
     >
       <Content />
-      <div class="mt-8">
-        {artwork.data.type === 'webcomic' && Array.isArray(artwork.data.images)
-          ? (
+      <div class='mt-8'>
+        {
+          artwork.data.type === 'webcomic' &&
+          Array.isArray(artwork.data.images) ? (
             <WebcomicViewer
               images={artwork.data.images as ImageMetadata[]}
               title={artwork.data.title}
               description={artwork.data.description}
             />
+          ) : Array.isArray(artwork.data.images) ? (
+            <div class='space-y-4'>
+              {artwork.data.images.map((image, index) => (
+                <ArtworkImage
+                  image={image}
+                  title={artwork.data.title}
+                  index={index}
+                />
+              ))}
+            </div>
+          ) : (
+            <Image
+              src={artwork.data.images as ImageMetadata}
+              alt={artwork.data.title}
+              class='w-full rounded-lg'
+              loading='eager'
+              decoding='async'
+            />
           )
-          : Array.isArray(artwork.data.images)
-            ? (
-              <div class="space-y-4">
-                {artwork.data.images.map((image, index) => (
-                  <ArtworkImage
-                    image={image}
-                    title={artwork.data.title}
-                    index={index}
-                  />
-                ))}
-              </div>
-            )
-            : (
-              <Image
-                src={artwork.data.images as ImageMetadata}
-                alt={artwork.data.title}
-                class="w-full rounded-lg"
-                loading="eager"
-                decoding="async"
-              />
-            )}
+        }
       </div>
     </article>
   </Container>

@@ -8,16 +8,16 @@ const schema = {
   '@context': 'https://schema.org',
   '@type': 'ProfilePage',
   '@id': pageUrl.toString(),
-  'dateCreated': '2024-01-01T00:00:00Z', // adjust to actual site launch date
-  'dateModified': new Date().toISOString(),
-  'mainEntity': personSchema, // directly reference the person schema
-  'hasPart': [
+  dateCreated: '2024-01-01T00:00:00Z', // adjust to actual site launch date
+  dateModified: new Date().toISOString(),
+  mainEntity: personSchema, // directly reference the person schema
+  hasPart: [
     {
       '@type': 'Article',
-      'headline': 'SMPEarth',
-      'url': new URL('/blog/smpearth', Astro.site).toString(),
-      'datePublished': '2019-11-22T18:34:00Z',
-      'author': {
+      headline: 'SMPEarth',
+      url: new URL('/blog/smpearth', Astro.site).toString(),
+      datePublished: '2019-11-22T18:34:00Z',
+      author: {
         '@id': SCHEMA_IDS.PERSON,
       },
     },
@@ -25,7 +25,4 @@ const schema = {
 }
 ---
 
-<script
-  type="application/ld+json"
-  set:html={JSON.stringify(schema)}
-/>
+<script type='application/ld+json' set:html={JSON.stringify(schema)} />

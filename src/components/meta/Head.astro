@@ -16,7 +16,7 @@ interface Props {
   tags?: string[]
   noindex?: boolean
   nofollow?: boolean
-  languageAlternates?: Array<{ href: string, hrefLang: string }>
+  languageAlternates?: Array<{ href: string; hrefLang: string }>
 }
 
 const {
@@ -31,7 +31,8 @@ const {
   languageAlternates = [],
 } = Astro.props
 
-const openGraphImageUrl = image || getImagePath({ url: Astro.url, site: Astro.site })
+const openGraphImageUrl =
+  image || getImagePath({ url: Astro.url, site: Astro.site })
 const defaultTags = ['chippledipple', 'fractal', 'county', 'art', 'gamedev']
 const combinedTags = Array.from(new Set([...tags, ...defaultTags]))
 const tagsContent = combinedTags.join(', ')
@@ -44,7 +45,7 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
   titleTemplate={`${SITE.NAME} | %s`}
   titleDefault={SITE.NAME}
   description={description}
-  charset="utf-8"
+  charset='utf-8'
   noindex={noindex}
   nofollow={nofollow}
   languageAlternates={languageAlternates}
@@ -59,7 +60,7 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
       description,
       locale: 'en_US',
       siteName: SITE.NAME,
-      localeAlternate: languageAlternates.map(alt => alt.hrefLang),
+      localeAlternate: languageAlternates.map((alt) => alt.hrefLang),
     },
     image: {
       url: openGraphImageUrl,
@@ -69,13 +70,14 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
       height: 630,
       alt: `White text on a black background that says ${SITE.NAME} followed by ${title}`,
     },
-    ...(type === 'article' && publishedTime && {
-      article: {
-        publishedTime: formatDateForOpenGraph(publishedTime),
-        authors: [SITE.AUTHOR],
-        tags: combinedTags,
-      },
-    }),
+    ...(type === 'article' &&
+      publishedTime && {
+        article: {
+          publishedTime: formatDateForOpenGraph(publishedTime),
+          authors: [SITE.AUTHOR],
+          tags: combinedTags,
+        },
+      }),
   }}
   twitter={{
     card: 'summary_large_image',
@@ -152,17 +154,17 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
         content: canonicalUrl,
       },
       ...(type === 'article'
-? [
-        {
-          property: 'article:published_time',
-          content: publishedTime,
-        },
-        {
-          property: 'article:author',
-          content: `https://fractalcounty.com/#person`,
-        },
-      ]
-: []),
+        ? [
+            {
+              property: 'article:published_time',
+              content: publishedTime,
+            },
+            {
+              property: 'article:author',
+              content: `https://fractalcounty.com/#person`,
+            },
+          ]
+        : []),
     ],
   }}
 />
@@ -193,117 +195,120 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
 
 <ViewTransitions />
 <script>
-import type { TransitionBeforeSwapEvent } from 'astro:transitions/client'
+  import type { TransitionBeforeSwapEvent } from 'astro:transitions/client'
 
-document.addEventListener('astro:before-swap', e =>
-  [
-    ...(e as TransitionBeforeSwapEvent).newDocument.head.querySelectorAll(
-      'link[as="font"]',
-    ),
-  ].forEach(link => link.remove()))
+  document.addEventListener('astro:before-swap', (e) =>
+    [
+      ...(e as TransitionBeforeSwapEvent).newDocument.head.querySelectorAll(
+        'link[as="font"]'
+      ),
+    ].forEach((link) => link.remove())
+  )
 </script>
 
 <script is:inline>
-function init() {
-  onScroll()
-  animate()
+  function init() {
+    onScroll()
+    animate()
 
-  const backToTop = document.getElementById('back-to-top')
-  backToTop?.addEventListener('click', event => scrollToTop(event))
+    const backToTop = document.getElementById('back-to-top')
+    backToTop?.addEventListener('click', (event) => scrollToTop(event))
 
-  const backToPrev = document.getElementById('back-to-prev')
-  backToPrev?.addEventListener('click', () => window.history.back())
+    const backToPrev = document.getElementById('back-to-prev')
+    backToPrev?.addEventListener('click', () => window.history.back())
 
-  document.addEventListener('scroll', onScroll, { passive: true })
-}
+    document.addEventListener('scroll', onScroll, { passive: true })
+  }
 
-function animate() {
-  const animateElements = document.querySelectorAll('.animate')
-  const MAX_DELAY = 300 // maximum total animation delay in ms
+  function animate() {
+    const animateElements = document.querySelectorAll('.animate')
+    const MAX_DELAY = 300 // maximum total animation delay in ms
 
-  animateElements.forEach((element, index) => {
-    const delay = Math.min(index * 50, MAX_DELAY)
-    setTimeout(() => {
-      element.classList.add('show')
-    }, delay)
-  })
-}
-
-function onScroll() {
-  // Debounce scroll events for better performance
-  if (!window.requestAnimationFrame) {
-    return requestAnimationFrame(() => {
-      updateScrollState()
+    animateElements.forEach((element, index) => {
+      const delay = Math.min(index * 50, MAX_DELAY)
+      setTimeout(() => {
+        element.classList.add('show')
+      }, delay)
     })
   }
-  updateScrollState()
-}
 
-function updateScrollState() {
-  const shouldShowButton = window.scrollY > 0
-  // Add a data attribute to track scroll state
-  document.documentElement.dataset.scrolled = shouldShowButton ? 'true' : 'false'
-}
-
-// Handle scroll state during transitions
-document.addEventListener('astro:before-swap', () => {
-  // Reset scroll state before swap
-  document.documentElement.dataset.scrolled = 'false'
-})
-
-document.addEventListener('astro:after-swap', () => {
-  // Update scroll state after swap
-  updateScrollState()
-})
-
-function scrollToTop(event) {
-  event.preventDefault()
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth',
-  })
-}
-
-document.addEventListener('DOMContentLoaded', () => init())
-document.addEventListener('astro:after-swap', () => init())
-
-// handle scroll restoration during view transitions
-document.addEventListener('astro:page-load', () => {
-  // restore scroll position if available
-  const savedScroll = sessionStorage.getItem('scrollPosition')
-  if (savedScroll) {
-    window.scrollTo(0, Number.parseInt(savedScroll))
-    sessionStorage.removeItem('scrollPosition')
+  function onScroll() {
+    // Debounce scroll events for better performance
+    if (!window.requestAnimationFrame) {
+      return requestAnimationFrame(() => {
+        updateScrollState()
+      })
+    }
+    updateScrollState()
   }
-})
 
-document.addEventListener('astro:before-preparation', () => {
-  // save current scroll position before navigation
-  sessionStorage.setItem('scrollPosition', window.scrollY.toString())
-})
+  function updateScrollState() {
+    const shouldShowButton = window.scrollY > 0
+    // Add a data attribute to track scroll state
+    document.documentElement.dataset.scrolled = shouldShowButton
+      ? 'true'
+      : 'false'
+  }
 
-// enforce laramie theme during transitions
-document.addEventListener('astro:before-swap', () => {
+  // Handle scroll state during transitions
+  document.addEventListener('astro:before-swap', () => {
+    // Reset scroll state before swap
+    document.documentElement.dataset.scrolled = 'false'
+  })
+
+  document.addEventListener('astro:after-swap', () => {
+    // Update scroll state after swap
+    updateScrollState()
+  })
+
+  function scrollToTop(event) {
+    event.preventDefault()
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
+  }
+
+  document.addEventListener('DOMContentLoaded', () => init())
+  document.addEventListener('astro:after-swap', () => init())
+
+  // handle scroll restoration during view transitions
+  document.addEventListener('astro:page-load', () => {
+    // restore scroll position if available
+    const savedScroll = sessionStorage.getItem('scrollPosition')
+    if (savedScroll) {
+      window.scrollTo(0, Number.parseInt(savedScroll))
+      sessionStorage.removeItem('scrollPosition')
+    }
+  })
+
+  document.addEventListener('astro:before-preparation', () => {
+    // save current scroll position before navigation
+    sessionStorage.setItem('scrollPosition', window.scrollY.toString())
+  })
+
+  // enforce laramie theme during transitions
+  document.addEventListener('astro:before-swap', () => {
+    document.documentElement.setAttribute('data-theme', 'laramie')
+  })
+
+  document.addEventListener('astro:after-swap', () => {
+    document.documentElement.setAttribute('data-theme', 'laramie')
+  })
+
+  // ensure theme on initial load
   document.documentElement.setAttribute('data-theme', 'laramie')
-})
-
-document.addEventListener('astro:after-swap', () => {
-  document.documentElement.setAttribute('data-theme', 'laramie')
-})
-
-// ensure theme on initial load
-document.documentElement.setAttribute('data-theme', 'laramie')
 </script>
 
 <script>
-document.addEventListener('astro:page-load', () => {
-  // announce page changes to screen readers
-  const title = document.title
-  const announcement = document.createElement('div')
-  announcement.setAttribute('role', 'status')
-  announcement.setAttribute('aria-live', 'polite')
-  // Add styles to visually hide the element while keeping it accessible
-  announcement.style.cssText = `
+  document.addEventListener('astro:page-load', () => {
+    // announce page changes to screen readers
+    const title = document.title
+    const announcement = document.createElement('div')
+    announcement.setAttribute('role', 'status')
+    announcement.setAttribute('aria-live', 'polite')
+    // Add styles to visually hide the element while keeping it accessible
+    announcement.style.cssText = `
     position: absolute;
     width: 1px;
     height: 1px;
@@ -314,8 +319,8 @@ document.addEventListener('astro:page-load', () => {
     white-space: nowrap;
     border: 0;
   `
-  announcement.textContent = `Navigated to ${title}`
-  document.body.appendChild(announcement)
-  setTimeout(() => announcement.remove(), 1000)
-})
+    announcement.textContent = `Navigated to ${title}`
+    document.body.appendChild(announcement)
+    setTimeout(() => announcement.remove(), 1000)
+  })
 </script>

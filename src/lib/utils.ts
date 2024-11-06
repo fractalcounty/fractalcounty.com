@@ -10,8 +10,7 @@ export function formatDateForOpenGraph(date: string | Date): string {
 
   if (typeof date === 'string') {
     parsedDate = new Date(date)
-  }
-  else {
+  } else {
     parsedDate = date
   }
 
@@ -48,8 +47,7 @@ export function dateRange(startDate: Date, endDate?: Date | string): string {
     if (typeof endDate === 'string') {
       endMonth = ''
       endYear = endDate
-    }
-    else {
+    } else {
       endMonth = endDate.toLocaleString('default', { month: 'short' })
       endYear = endDate.getFullYear().toString()
     }

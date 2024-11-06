@@ -11,43 +11,43 @@ interface Props {
 const {
   archive = '/images/smpearth-chip-wilbur-msg.png',
   title = 'Discord Conversation',
-} = Astro.props;
+} = Astro.props
 ---
 
 <DiscordFonts />
 
 <section
-  class="discord-conversation bg-neutral outline outline-neutral-content/75 relative"
+  class='discord-conversation relative bg-neutral outline outline-neutral-content/75'
   aria-label={`Discord conversation: ${title}`}
 >
-    <h2 id="conversation-title" class="sr-only">{title}</h2>
-    <Link
-      href={archive}
-      class="menu hover:text-accent text-accent-content/75 tooltip tooltip-primary tooltip-bottom absolute bottom-4 right-4"
-      data-tip="View original source"
-      underline={false}
-      externalInNewTab={true}
-      aria-label="View original source"
-    >
-      <Icon name="solar:link-bold" class="size-4" aria-hidden="true" />
-      <span class="sr-only">View original source</span>
-    </Link>
-    <div role="list" class="discord-messages">
-      <slot />
-    </div>
+  <h2 id='conversation-title' class='sr-only'>{title}</h2>
+  <Link
+    href={archive}
+    class='menu tooltip tooltip-bottom tooltip-primary absolute bottom-4 right-4 text-accent-content/75 hover:text-accent'
+    data-tip='View original source'
+    underline={false}
+    externalInNewTab={true}
+    aria-label='View original source'
+  >
+    <Icon name='solar:link-bold' class='size-4' aria-hidden='true' />
+    <span class='sr-only'>View original source</span>
+  </Link>
+  <div role='list' class='discord-messages'>
+    <slot />
+  </div>
 </section>
 
 <style>
   .tooltip {
-      font-family: 'AlteHaasGrotesk';
-      font-weight: normal;
+    font-family: 'AlteHaasGrotesk';
+    font-weight: normal;
   }
   .discord-conversation {
     border-radius: 16px;
     padding: 1.5rem;
     margin-bottom: 1rem;
     font-family: 'gg-sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    @apply prose text-base-content
+    @apply prose text-base-content;
   }
 
   .discord-conversation :global(.discord-message) {
@@ -57,7 +57,7 @@ const {
   }
 
   .discord-conversation :global(.discord-message:hover) {
-    background-color: oklch(var(--nc)/0.3);
+    background-color: oklch(var(--nc) / 0.3);
   }
 
   .discord-conversation :global(.discord-message:last-child) {
@@ -65,6 +65,6 @@ const {
   }
 
   .menu:hover {
-  color: oklch(var(--p));
-}
+    color: oklch(var(--p));
+  }
 </style>

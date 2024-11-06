@@ -2,7 +2,8 @@ import type { Metadata, Site, Socials } from '@types'
 
 export const ARTWORK: Metadata = {
   TITLE: 'Artwork',
-  DESCRIPTION: 'A collection of my artwork, including illustrations and webcomics.',
+  DESCRIPTION:
+    'A collection of my artwork, including illustrations and webcomics.',
 }
 
 export const SITE: Site = {
@@ -17,7 +18,7 @@ export const SITE: Site = {
 export const HOME: Metadata = {
   TITLE: 'Home',
   DESCRIPTION:
-    'Chip fractalcounty\'s personal blog and portfolio website dedicated to various things and stuff.',
+    "Chip fractalcounty's personal blog and portfolio website dedicated to various things and stuff.",
 }
 
 export const BLOG: Metadata = {
@@ -51,5 +52,6 @@ export const LINKS_FOOTER: Socials = [
 
 export const LICENSE: Metadata = {
   TITLE: 'License',
-  DESCRIPTION: 'This is free and unencumbered software released into the public domain.',
+  DESCRIPTION:
+    'This is free and unencumbered software released into the public domain.',
 }

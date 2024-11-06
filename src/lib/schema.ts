@@ -23,67 +23,67 @@ type SchemaType =
 interface WebPageSchema {
   '@type': 'WebPage'
   '@id': string
-  'url': string
-  'name': string
-  'description'?: string
-  'isPartOf': {
+  url: string
+  name: string
+  description?: string
+  isPartOf: {
     '@id': string
   }
-  'primaryImageOfPage'?: {
+  primaryImageOfPage?: {
     '@id': string
   }
-  'breadcrumb'?: {
+  breadcrumb?: {
     '@id': string
   }
-  'inLanguage'?: string
+  inLanguage?: string
 }
 
 interface ArticleSchema {
   '@type': 'Article'
   '@id': string
-  'headline': string
-  'description': string
-  'datePublished': string
-  'dateModified': string
-  'dateCreated': string
-  'author': {
+  headline: string
+  description: string
+  datePublished: string
+  dateModified: string
+  dateCreated: string
+  author: {
     '@id': string
   }
-  'creator': {
+  creator: {
     '@id': string
   }
-  'publisher': {
+  publisher: {
     '@id': string
   }
-  'keywords'?: string
-  'url': string
-  'isPartOf': {
+  keywords?: string
+  url: string
+  isPartOf: {
     '@id': string
   }
-  'mainEntityOfPage': {
+  mainEntityOfPage: {
     '@type': 'WebPage'
     '@id': string
   }
-  'articleSection': string
-  'inLanguage': string
-  'copyrightHolder': {
+  articleSection: string
+  inLanguage: string
+  copyrightHolder: {
     '@id': string
   }
-  'license': string
-  'image'?: ImageObjectSchema
+  license: string
+  image?: ImageObjectSchema
 }
 
 interface BreadcrumbListSchema {
   '@type': 'BreadcrumbList'
   '@id': string
-  'itemListElement': Array<{
+  itemListElement: Array<{
     '@type': 'ListItem'
-    'position': number
-    'item': {
+    position: number
+    item: {
       '@type': 'WebPage'
       '@id': string
-      'name': string
-      'url': string
+      name: string
+      url: string
     }
   }>
 }
@@ -91,42 +91,42 @@ interface BreadcrumbListSchema {
 interface WebSiteSchema {
   '@type': 'WebSite'
   '@id': string
-  'url': string
-  'name': string
-  'description': string
-  'publisher': {
+  url: string
+  name: string
+  description: string
+  publisher: {
     '@id': string
   }
-  'author': {
+  author: {
     '@id': string
   }
-  'potentialAction': Array<{
+  potentialAction: Array<{
     '@type': 'SearchAction'
-    'target': {
+    target: {
       '@type': 'EntryPoint'
-      'urlTemplate': string
+      urlTemplate: string
     }
     'query-input': string
   }>
-  'inLanguage': string
-  'copyrightYear': number
-  'license': string
+  inLanguage: string
+  copyrightYear: number
+  license: string
 }
 
 interface OrganizationSchema {
   '@type': 'Organization'
   '@id': string
-  'name': string
-  'url': string
-  'logo': ImageObjectSchema
-  'image': {
+  name: string
+  url: string
+  logo: ImageObjectSchema
+  image: {
     '@id': string
   }
-  'sameAs': string[]
-  'founder': {
+  sameAs: string[]
+  founder: {
     '@id': string
   }
-  'member': Array<{
+  member: Array<{
     '@id': string
   }>
 }
@@ -134,14 +134,14 @@ interface OrganizationSchema {
 interface PersonSchema {
   '@type': 'Person'
   '@id': string
-  'name': string
-  'alternateName': string
-  'url': string
-  'email': string
-  'image': ImageObjectSchema
-  'sameAs': string[]
-  'jobTitle': string
-  'worksFor': {
+  name: string
+  alternateName: string
+  url: string
+  email: string
+  image: ImageObjectSchema
+  sameAs: string[]
+  jobTitle: string
+  worksFor: {
     '@id': string
   }
 }
@@ -149,82 +149,82 @@ interface PersonSchema {
 interface ImageObjectSchema {
   '@type': 'ImageObject'
   '@id': string
-  'url': string
-  'width': number
-  'height': number
-  'caption'?: string
-  'encodingFormat'?: string
-  'contentUrl'?: string
+  url: string
+  width: number
+  height: number
+  caption?: string
+  encodingFormat?: string
+  contentUrl?: string
 }
 
 interface ArtworkSchema {
   '@type': string | string[]
   '@id': string
-  'name': string
-  'headline': string
-  'description': string
-  'dateCreated': string
-  'datePublished': string
-  'dateModified': string
-  'url': string
-  'author': {
+  name: string
+  headline: string
+  description: string
+  dateCreated: string
+  datePublished: string
+  dateModified: string
+  url: string
+  author: {
     '@id': string
   }
-  'creator': {
+  creator: {
     '@id': string
   }
-  'publisher': {
+  publisher: {
     '@id': string
   }
-  'isPartOf': {
+  isPartOf: {
     '@id': string
   }
-  'mainEntityOfPage': {
+  mainEntityOfPage: {
     '@type': 'WebPage'
     '@id': string
   }
-  'image': ImageObjectSchema
-  'encodingFormat': string
-  'thumbnailUrl': string
-  'accessMode': string[]
-  'accessibilityFeature': string[]
-  'accessibilityHazard': string[]
-  'copyrightHolder': {
+  image: ImageObjectSchema
+  encodingFormat: string
+  thumbnailUrl: string
+  accessMode: string[]
+  accessibilityFeature: string[]
+  accessibilityHazard: string[]
+  copyrightHolder: {
     '@id': string
   }
-  'license': string
-  'conditionsOfAccess': string
-  'usageInfo': string
-  'numberOfPages'?: number
-  'genre'?: string
-  'artform'?: string
-  'artMedium'?: string
-  'artworkSurface'?: string
+  license: string
+  conditionsOfAccess: string
+  usageInfo: string
+  numberOfPages?: number
+  genre?: string
+  artform?: string
+  artMedium?: string
+  artworkSurface?: string
 }
 
 interface CollectionPageSchema {
   '@type': 'CollectionPage'
   '@id': string
-  'name': string
-  'description': string
-  'url': string
-  'isPartOf': {
+  name: string
+  description: string
+  url: string
+  isPartOf: {
     '@id': string
   }
-  'about': {
+  about: {
     '@type': 'Thing'
-    'name': string
+    name: string
   }
-  'author': {
+  author: {
     '@id': string
   }
-  'publisher': {
+  publisher: {
     '@id': string
   }
-  'inLanguage': string
-  'datePublished': string
-  'dateModified': string
-  'breadcrumb': {
+  inLanguage: string
+  datePublished: string
+  dateModified: string
+  breadcrumb: {
     '@id': string
   }
 }
@@ -245,18 +245,18 @@ export const SCHEMA_IDS: SchemaIds = {
 export const personSchema = {
   '@type': 'Person',
   '@id': SCHEMA_IDS.PERSON,
-  'name': 'Chip',
-  'alternateName': 'fractalcounty',
-  'url': 'https://fractalcounty.com',
-  'email': SITE.EMAIL,
-  'image': {
+  name: 'Chip',
+  alternateName: 'fractalcounty',
+  url: 'https://fractalcounty.com',
+  email: SITE.EMAIL,
+  image: {
     '@type': 'ImageObject',
-    'url': 'https://fractalcounty.com/avatar.jpeg',
-    'width': 400,
-    'height': 400,
-    'encodingFormat': 'image/jpeg',
+    url: 'https://fractalcounty.com/avatar.jpeg',
+    width: 400,
+    height: 400,
+    encodingFormat: 'image/jpeg',
   },
-  'sameAs': [
+  sameAs: [
     'https://twitter.com/fractalcounty',
     'https://x.com/fractalcounty',
     'https://github.com/fractalcounty',
@@ -266,8 +266,8 @@ export const personSchema = {
     'https://fractalcounty.newgrounds.com/',
     'https://bsky.app/profile/fractalcounty.com',
   ],
-  'jobTitle': 'Digital Artist & Developer',
-  'worksFor': {
+  jobTitle: 'Digital Artist & Developer',
+  worksFor: {
     '@id': SCHEMA_IDS.ORGANIZATION,
   },
 }
@@ -276,20 +276,20 @@ export const personSchema = {
 export const organizationSchema = {
   '@type': 'Organization',
   '@id': SCHEMA_IDS.ORGANIZATION,
-  'name': 'FRACTAL COUNTY',
-  'url': 'https://fractalcounty.com',
-  'logo': {
+  name: 'FRACTAL COUNTY',
+  url: 'https://fractalcounty.com',
+  logo: {
     '@type': 'ImageObject',
     '@id': 'https://fractalcounty.com/#logo',
-    'url': 'https://fractalcounty.com/logo.svg',
-    'width': 1200,
-    'height': 442,
-    'caption': 'FRACTAL COUNTY',
+    url: 'https://fractalcounty.com/logo.svg',
+    width: 1200,
+    height: 442,
+    caption: 'FRACTAL COUNTY',
   },
-  'image': {
+  image: {
     '@id': 'https://fractalcounty.com/#logo',
   },
-  'sameAs': [
+  sameAs: [
     'https://twitter.com/fractalcounty',
     'https://github.com/fractalcounty',
     'https://www.instagram.com/fractalcounty/',
@@ -299,10 +299,10 @@ export const organizationSchema = {
     'https://bsky.app/profile/fractalcounty.com',
     'https://x.com/fractalcounty',
   ],
-  'founder': {
+  founder: {
     '@id': SCHEMA_IDS.PERSON,
   },
-  'member': [
+  member: [
     {
       '@id': SCHEMA_IDS.PERSON,
     },
@@ -313,28 +313,28 @@ export const organizationSchema = {
 export const websiteSchema = {
   '@type': 'WebSite',
   '@id': SCHEMA_IDS.WEBSITE,
-  'url': 'https://fractalcounty.com',
-  'name': 'FRACTAL COUNTY',
-  'description': 'Personal blog and portfolio website for chip fractalcounty',
-  'publisher': {
+  url: 'https://fractalcounty.com',
+  name: 'FRACTAL COUNTY',
+  description: 'Personal blog and portfolio website for chip fractalcounty',
+  publisher: {
     '@id': SCHEMA_IDS.ORGANIZATION,
   },
-  'author': {
+  author: {
     '@id': SCHEMA_IDS.PERSON,
   },
-  'potentialAction': [
+  potentialAction: [
     {
       '@type': 'SearchAction',
-      'target': {
+      target: {
         '@type': 'EntryPoint',
-        'urlTemplate': 'https://fractalcounty.com/search?q={search_term_string}',
+        urlTemplate: 'https://fractalcounty.com/search?q={search_term_string}',
       },
       'query-input': 'required name=search_term_string',
     },
   ],
-  'inLanguage': 'en-US',
-  'copyrightYear': new Date().getFullYear(),
-  'license': 'https://fractalcounty.com/unlicense',
+  inLanguage: 'en-US',
+  copyrightYear: new Date().getFullYear(),
+  license: 'https://fractalcounty.com/unlicense',
 }
 
 // Enhanced artwork schema generation
@@ -343,7 +343,7 @@ export function generateArtworkSchema(
   url: URL,
   imageUrl: string,
   imageWidth: number,
-  imageHeight: number,
+  imageHeight: number
 ) {
   if (!imageUrl || !imageWidth || !imageHeight) {
     throw new Error('Image properties are required for artwork schema')
@@ -355,36 +355,36 @@ export function generateArtworkSchema(
   const baseSchema = {
     '@type': type === 'webcomic' ? 'ComicStory' : 'VisualArtwork',
     '@id': url.toString(),
-    'name': title,
-    'headline': title,
-    'description': description,
-    'dateCreated': date.toISOString(),
-    'datePublished': date.toISOString(),
-    'dateModified': date.toISOString(),
-    'url': url.toString(),
-    'author': {
+    name: title,
+    headline: title,
+    description,
+    dateCreated: date.toISOString(),
+    datePublished: date.toISOString(),
+    dateModified: date.toISOString(),
+    url: url.toString(),
+    author: {
       '@id': SCHEMA_IDS.PERSON,
     },
-    'creator': {
+    creator: {
       '@id': SCHEMA_IDS.PERSON,
     },
-    'publisher': {
+    publisher: {
       '@id': SCHEMA_IDS.ORGANIZATION,
     },
-    'isPartOf': {
+    isPartOf: {
       '@id': SCHEMA_IDS.WEBSITE,
     },
-    'mainEntityOfPage': {
+    mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': url.toString(),
     },
-    'image': {
+    image: {
       '@type': 'ImageObject',
       '@id': `${url.toString()}#primaryimage`,
-      'url': imageUrl,
-      'width': imageWidth,
-      'height': imageHeight,
-      'caption': title,
+      url: imageUrl,
+      width: imageWidth,
+      height: imageHeight,
+      caption: title,
     },
   }
 
@@ -393,40 +393,46 @@ export function generateArtworkSchema(
     ? {
         '@type': 'ImageObject',
         '@id': `${url.toString()}#primaryimage`,
-        'url': imageUrl,
-        'width': imageWidth,
-        'height': imageHeight,
-        'caption': title,
+        url: imageUrl,
+        width: imageWidth,
+        height: imageHeight,
+        caption: title,
       }
     : {
         '@type': 'ImageObject',
         '@id': `${url.toString()}#primaryimage`,
-        'url': imageUrl,
-        'width': imageWidth,
-        'height': imageHeight,
-        'caption': title,
+        url: imageUrl,
+        width: imageWidth,
+        height: imageHeight,
+        caption: title,
       }
 
   // base schema with modifications
   const schema = {
     ...baseSchema,
-    '@type': type === 'webcomic' ? ['ComicStory', 'CreativeWork'] : ['VisualArtwork', 'CreativeWork'],
-    'encodingFormat': type === 'video' ? 'video/mp4' : 'image/webp',
-    'thumbnailUrl': typeof entry.data.thumbnail === 'string' ? entry.data.thumbnail : imageUrl,
-    'accessMode': ['visual'],
-    'accessibilityFeature': ['alternativeText'],
-    'accessibilityHazard': ['noFlashingHazard'],
-    'image': imageSchema,
+    '@type':
+      type === 'webcomic'
+        ? ['ComicStory', 'CreativeWork']
+        : ['VisualArtwork', 'CreativeWork'],
+    encodingFormat: type === 'video' ? 'video/mp4' : 'image/webp',
+    thumbnailUrl:
+      typeof entry.data.thumbnail === 'string'
+        ? entry.data.thumbnail
+        : imageUrl,
+    accessMode: ['visual'],
+    accessibilityFeature: ['alternativeText'],
+    accessibilityHazard: ['noFlashingHazard'],
+    image: imageSchema,
     // add associated media for additional images
     ...(Array.isArray(images) && images.length > 1
       ? {
           associatedMedia: images.slice(1).map((img, index) => ({
             '@type': 'ImageObject',
             '@id': `${url.toString()}#image-${index + 1}`,
-            'url': img.src,
-            'width': img.width,
-            'height': img.height,
-            'caption': `${title} - Image ${index + 2}`,
+            url: img.src,
+            width: img.width,
+            height: img.height,
+            caption: `${title} - Image ${index + 2}`,
           })),
         }
       : {}),
@@ -441,12 +447,12 @@ export function generateArtworkSchema(
           artworkSurface: 'Digital Canvas',
           genre: type === 'video' ? 'Animation' : 'Digital Art',
         }),
-    'copyrightHolder': {
+    copyrightHolder: {
       '@id': SCHEMA_IDS.PERSON,
     },
-    'license': 'https://fractalcounty.com/unlicense',
-    'conditionsOfAccess': 'Free to view online',
-    'usageInfo': 'https://fractalcounty.com/unlicense',
+    license: 'https://fractalcounty.com/unlicense',
+    conditionsOfAccess: 'Free to view online',
+    usageInfo: 'https://fractalcounty.com/unlicense',
   }
 
   return schema
@@ -456,54 +462,55 @@ export function generateArtworkSchema(
 export function generateArticleSchema(
   entry: CollectionEntry<'blog'>,
   url: URL,
-  imageUrl?: string,
+  imageUrl?: string
 ) {
   const { title, description, date, tags } = entry.data
 
   // create image schema if we have a valid image url
-  const imageSchema = typeof imageUrl === 'string' && imageUrl.length > 0
-    ? {
-        '@type': 'ImageObject',
-        '@id': `${url.toString()}#primaryimage`,
-        'url': imageUrl,
-        'width': 1200, // opengraph images are always this size
-        'height': 630,
-        'caption': title,
-      }
-    : null
+  const imageSchema =
+    typeof imageUrl === 'string' && imageUrl.length > 0
+      ? {
+          '@type': 'ImageObject',
+          '@id': `${url.toString()}#primaryimage`,
+          url: imageUrl,
+          width: 1200, // opengraph images are always this size
+          height: 630,
+          caption: title,
+        }
+      : null
 
   return {
     '@type': 'Article',
     '@id': url.toString(),
-    'headline': title,
-    'description': description,
-    'datePublished': date.toISOString(),
-    'dateModified': date.toISOString(),
-    'dateCreated': date.toISOString(),
-    'author': {
+    headline: title,
+    description,
+    datePublished: date.toISOString(),
+    dateModified: date.toISOString(),
+    dateCreated: date.toISOString(),
+    author: {
       '@id': SCHEMA_IDS.PERSON,
     },
-    'creator': {
+    creator: {
       '@id': SCHEMA_IDS.PERSON,
     },
-    'publisher': {
+    publisher: {
       '@id': SCHEMA_IDS.ORGANIZATION,
     },
-    'keywords': tags?.join(', '),
-    'url': url.toString(),
-    'isPartOf': {
+    keywords: tags?.join(', '),
+    url: url.toString(),
+    isPartOf: {
       '@id': SCHEMA_IDS.WEBSITE,
     },
-    'mainEntityOfPage': {
+    mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': url.toString(),
     },
-    'articleSection': 'Blog',
-    'inLanguage': 'en-US',
-    'copyrightHolder': {
+    articleSection: 'Blog',
+    inLanguage: 'en-US',
+    copyrightHolder: {
       '@id': SCHEMA_IDS.PERSON,
     },
-    'license': 'https://fractalcounty.com/unlicense',
+    license: 'https://fractalcounty.com/unlicense',
     ...(imageSchema && { image: imageSchema }),
   }
 }
@@ -513,31 +520,31 @@ export function generateCollectionSchema(
   type: 'blog' | 'artwork',
   url: URL,
   title: string,
-  description: string,
+  description: string
 ) {
   return {
     '@type': 'CollectionPage',
     '@id': url.toString(),
-    'name': title,
-    'description': description,
-    'url': url.toString(),
-    'isPartOf': {
+    name: title,
+    description,
+    url: url.toString(),
+    isPartOf: {
       '@id': SCHEMA_IDS.WEBSITE,
     },
-    'about': {
+    about: {
       '@type': 'Thing',
-      'name': 'Blog Posts',
+      name: 'Blog Posts',
     },
-    'author': {
+    author: {
       '@id': SCHEMA_IDS.PERSON,
     },
-    'publisher': {
+    publisher: {
       '@id': SCHEMA_IDS.ORGANIZATION,
     },
-    'inLanguage': 'en-US',
-    'datePublished': '2023-01-01T00:00:00Z', // Add actual date when site launched
-    'dateModified': new Date().toISOString(),
-    'breadcrumb': {
+    inLanguage: 'en-US',
+    datePublished: '2023-01-01T00:00:00Z', // Add actual date when site launched
+    dateModified: new Date().toISOString(),
+    breadcrumb: {
       '@id': `${url.toString()}#breadcrumb`,
     },
   }
@@ -555,16 +562,16 @@ export function generateBreadcrumbSchema(items: BreadcrumbItem[]) {
     const isLastItem = index === items.length - 1
     return {
       '@type': 'ListItem',
-      'position': index + 1,
-      'name': item.name,
+      position: index + 1,
+      name: item.name,
       ...(isLastItem
         ? {}
         : {
             item: {
               '@type': 'WebPage',
               '@id': item.item,
-              'name': item.name,
-              'url': item.item,
+              name: item.name,
+              url: item.item,
             },
           }),
     }
@@ -573,6 +580,6 @@ export function generateBreadcrumbSchema(items: BreadcrumbItem[]) {
   return {
     '@type': 'BreadcrumbList',
     '@id': `${items[items.length - 1].item}#breadcrumb`,
-    'itemListElement': itemListElements,
+    itemListElement: itemListElements,
   }
 }

@@ -31,27 +31,35 @@ export default defineConfig({
       },
     },
   },
-  integrations: [mdx(), sitemap(), tailwind(), icon(), opengraphImages({
-    render: customOgMediaLayout,
-    options: {
-      fonts: [
-        {
-          name: 'AlteHaasGroteskRegular',
-          weight: 400,
-          style: 'normal',
-          data: fs.readFileSync('public/fonts/AlteHaasGroteskRegular.woff'),
-        },
-        {
-          name: 'AlteHaasGroteskBold',
-          weight: 700,
-          style: 'normal',
-          data: fs.readFileSync('public/fonts/AlteHaasGroteskBold.woff'),
-        },
-      ],
-    },
-  }), (await import('@playform/inline')).default({
-    Path: './dist',
-  }), compressor()],
+  integrations: [
+    mdx(),
+    sitemap(),
+    tailwind(),
+    icon(),
+    opengraphImages({
+      render: customOgMediaLayout,
+      options: {
+        fonts: [
+          {
+            name: 'AlteHaasGroteskRegular',
+            weight: 400,
+            style: 'normal',
+            data: fs.readFileSync('public/fonts/AlteHaasGroteskRegular.woff'),
+          },
+          {
+            name: 'AlteHaasGroteskBold',
+            weight: 700,
+            style: 'normal',
+            data: fs.readFileSync('public/fonts/AlteHaasGroteskBold.woff'),
+          },
+        ],
+      },
+    }),
+    (await import('@playform/inline')).default({
+      Path: './dist',
+    }),
+    compressor(),
+  ],
   experimental: {
     contentIntellisense: true,
     contentLayer: true,

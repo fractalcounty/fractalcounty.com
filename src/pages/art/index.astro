@@ -10,12 +10,12 @@ import PageLayout from '@/layouts/PageLayout.astro'
 import { artworkTypes } from '@content/config'
 import { getCollection } from 'astro:content'
 
-
 // optimize artwork data processing
 const artworks = (await getCollection('artwork'))
   .filter((artwork: CollectionEntry<'artwork'>) => !artwork.data.draft)
-  .sort((a: CollectionEntry<'artwork'>, b: CollectionEntry<'artwork'>) =>
-    b.data.date.valueOf() - a.data.date.valueOf(),
+  .sort(
+    (a: CollectionEntry<'artwork'>, b: CollectionEntry<'artwork'>) =>
+      b.data.date.valueOf() - a.data.date.valueOf()
   )
 
 // create an optimized data structure for year-based organization
@@ -40,31 +40,37 @@ const categories = ['all', ...artworkTypes] as const
 
 <PageLayout title={ARTWORK.TITLE} description={ARTWORK.DESCRIPTION}>
   <CollectionPageStructuredData
-    slot="structured-data"
-    type="artwork"
+    slot='structured-data'
+    type='artwork'
     name={ARTWORK.TITLE}
     description={ARTWORK.DESCRIPTION}
   />
-  <ProfilePageStructuredData slot="structured-data" />
-  <Container as="main">
-    <div class="space-y-12 animate">
-      <Subheader title="Art" subtitle="my archived artwork" categories={categories} />
-      <div class="gallery-container">
-        {allYears.map(year => (
-          <div class="year-section" data-year={year}>
-            <div class="divider divider-start text-base-content/75 font-medium my-8 animate">
-              {year}
+  <ProfilePageStructuredData slot='structured-data' />
+  <Container as='main'>
+    <div class='animate space-y-12'>
+      <Subheader
+        title='Art'
+        subtitle='my archived artwork'
+        categories={categories}
+      />
+      <div class='gallery-container'>
+        {
+          allYears.map((year) => (
+            <div class='year-section' data-year={year}>
+              <div class='animate divider divider-start my-8 font-medium text-base-content/75'>
+                {year}
+              </div>
+              <ArtworkGrid artworks={artworkData.byYear.get(year) || []} />
             </div>
-            <ArtworkGrid artworks={artworkData.byYear.get(year) || []} />
-          </div>
-        ))}
+          ))
+        }
       </div>
     </div>
   </Container>
 </PageLayout>
 
 <style>
-.year-section:empty {
-  display: none;
-}
+  .year-section:empty {
+    display: none;
+  }
 </style>

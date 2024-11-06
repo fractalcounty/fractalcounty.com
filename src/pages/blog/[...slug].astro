@@ -9,8 +9,8 @@ import { getCollection, render } from 'astro:content'
 export async function getStaticPaths() {
   const posts = await getCollection('blog')
   return posts
-    .filter(post => !post.data.draft)
-    .map(post => ({
+    .filter((post) => !post.data.draft)
+    .map((post) => ({
       params: {
         slug: post.id,
       },
@@ -24,28 +24,24 @@ const { Content } = await render(post)
 <PageLayout
   title={post.data.title}
   description={post.data.description}
-  type="article"
+  type='article'
   publishedTime={post.data.date}
   tags={post.data.tags}
   isContentPage={true}
 >
-  <PostStructuredData
-    slot="structured-data"
-    entry={post}
-    type="blog"
-  />
-  <Container as="main">
-    <div class="my-10">
+  <PostStructuredData slot='structured-data' entry={post} type='blog' />
+  <Container as='main'>
+    <div class='my-10'>
       <Subheader
         title={post.data.title}
         date={post.data.date}
         readingTime={readingTime(post.body || '')}
-        backUrl="/blog"
-        backLabel="Back"
+        backUrl='/blog'
+        backLabel='Back'
       />
     </div>
 
-    <article class="animate">
+    <article class='animate'>
       <Content />
     </article>
   </Container>

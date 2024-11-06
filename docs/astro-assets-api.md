@@ -7,8 +7,7 @@ Markdown Content:
 
 Astro provides built-in components and helper functions for optimizing and displaying your images. For features and usage examples, [see our image guide](https://5-0-0-beta.docs.astro.build/en/guides/images/).
 
-Imports from `astro:assets`
----------------------------
+## Imports from `astro:assets`
 
 [Section titled Imports from astro:assets](https://5-0-0-beta.docs.astro.build/en/reference/modules/astro-assets/#imports-from-astroassets)
 
@@ -34,23 +33,23 @@ The `<Image />` component accepts all properties accepted by the HTML `<img>` ta
 
 The format of the `src` value of your image file depends on where your image file is located:
 
-*   **Local images in `src/`** - you must **also import the image** using a relative file path or configure and use an [import alias](https://5-0-0-beta.docs.astro.build/en/guides/imports/#aliases). Then use the import name as the `src` value:
+- **Local images in `src/`** - you must **also import the image** using a relative file path or configure and use an [import alias](https://5-0-0-beta.docs.astro.build/en/guides/imports/#aliases). Then use the import name as the `src` value:
 
-    ```
-    ---import { Image } from 'astro:assets';import myImportedImage from '../assets/my-local-image.png';---<Image src={myImportedImage} alt="descriptive text" />
-    ```
+  ```
+  ---import { Image } from 'astro:assets';import myImportedImage from '../assets/my-local-image.png';---<Image src={myImportedImage} alt="descriptive text" />
+  ```
 
-*   **Images in the `public/` folder** - use the image’s **file path relative to the public folder**:
+- **Images in the `public/` folder** - use the image’s **file path relative to the public folder**:
 
-    ```
-    ---import { Image } from 'astro:assets';---<Image  src="/images/my-public-image.png"  alt="descriptive text"  width="200"  height="150"/>
-    ```
+  ```
+  ---import { Image } from 'astro:assets';---<Image  src="/images/my-public-image.png"  alt="descriptive text"  width="200"  height="150"/>
+  ```
 
-*   **Remote images** - use the image’s **full URL** as the property value:
+- **Remote images** - use the image’s **full URL** as the property value:
 
-    ```
-    ---import { Image } from 'astro:assets';---<Image  src="https://example.com/remote-image.jpg"  alt="descriptive text"  width="200"  height="150"/>
-    ```
+  ```
+  ---import { Image } from 'astro:assets';---<Image  src="https://example.com/remote-image.jpg"  alt="descriptive text"  width="200"  height="150"/>
+  ```
 
 **Type:** `string`
 
@@ -118,8 +117,8 @@ By default, the `<Image />` component will produce a `.webp` file.
 
 `quality` is an optional property that can either be:
 
-*   a preset (`low`, `mid`, `high`, `max`) that is automatically normalized between formats.
-*   a number from `0` to `100` (interpreted differently between formats).
+- a preset (`low`, `mid`, `high`, `max`) that is automatically normalized between formats.
+- a number from `0` to `100` (interpreted differently between formats).
 
 **Type:** `boolean`
 

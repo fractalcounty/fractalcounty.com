@@ -8,49 +8,53 @@ import { BLOG } from '@/consts'
 import PageLayout from '@/layouts/PageLayout.astro'
 import { type CollectionEntry, getCollection } from 'astro:content'
 
-const blogPosts = (await getCollection('blog'))
-  .filter(post => !post.data.draft)
+const blogPosts = (await getCollection('blog')).filter(
+  (post) => !post.data.draft
+)
 
-const allPosts = [...blogPosts]
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+const allPosts = [...blogPosts].sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+)
 
 type Acc = {
   [year: string]: CollectionEntry<'blog'>[]
 }
 
 const posts = allPosts.reduce((acc: Acc, post) => {
-    const year = post.data.date.getFullYear().toString()
-    if (!acc[year]) {
-      acc[year] = []
-    }
-    acc[year].push(post)
-    return acc
-  }, {})
+  const year = post.data.date.getFullYear().toString()
+  if (!acc[year]) {
+    acc[year] = []
+  }
+  acc[year].push(post)
+  return acc
+}, {})
 
-const years = Object.keys(posts).sort((a, b) => Number.parseInt(b) - Number.parseInt(a));
+const years = Object.keys(posts).sort(
+  (a, b) => Number.parseInt(b) - Number.parseInt(a)
+)
 ---
 
 <PageLayout title={BLOG.TITLE} description={BLOG.DESCRIPTION}>
   <CollectionPageStructuredData
-    slot="structured-data"
-    type="blog"
+    slot='structured-data'
+    type='blog'
     name={BLOG.TITLE}
     description={BLOG.DESCRIPTION}
   />
-  <ProfilePageStructuredData slot="structured-data" />
-  <Container as="main">
-    <div class="space-y-10">
-      <Subheader title="Blog" subtitle="thoughts and ideas" />
-      <div class="space-y-4">
-        {years.map(year => (
-          <section class="animate">
-            <div class="divider divider-start text-base-content/75 font-medium my-8 animate">
-              {year}
-            </div>
-            <div>
-              <ul class="flex flex-col gap-4">
-                {
-                  posts[year].map(post => (
+  <ProfilePageStructuredData slot='structured-data' />
+  <Container as='main'>
+    <div class='space-y-10'>
+      <Subheader title='Blog' subtitle='thoughts and ideas' />
+      <div class='space-y-4'>
+        {
+          years.map((year) => (
+            <section class='animate'>
+              <div class='animate divider divider-start my-8 font-medium text-base-content/75'>
+                {year}
+              </div>
+              <div>
+                <ul class='flex flex-col gap-4'>
+                  {posts[year].map((post) => (
                     <li>
                       <ArrowCard
                         title={post.data.title}
@@ -59,12 +63,12 @@ const years = Object.keys(posts).sort((a, b) => Number.parseInt(b) - Number.pars
                         href={`/blog/${post.id}`}
                       />
                     </li>
-                  ))
-                }
-              </ul>
-            </div>
-          </section>
-        ))}
+                  ))}
+                </ul>
+              </div>
+            </section>
+          ))
+        }
       </div>
     </div>
   </Container>

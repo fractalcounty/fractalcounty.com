@@ -7,8 +7,7 @@ Markdown Content:
 
 Content collections offer APIs to configure and query your Markdown or MDX documents in `src/content/`. For features and usage examples, [see our content collections guide](https://5-0-0-beta.docs.astro.build/en/guides/content-collections/).
 
-Imports from `astro:content`
-----------------------------
+## Imports from `astro:content`
 
 [Section titled Imports from astro:content](https://5-0-0-beta.docs.astro.build/en/reference/modules/astro-content/#imports-from-astrocontent)
 
@@ -108,9 +107,9 @@ See the `Content Collections` guide for examples of [querying collection entries
 
 A function to compile a given entry for rendering. This returns the following properties:
 
-*   `<Content />` - A component used to render the document’s contents in an Astro file.
-*   `headings` - A generated list of headings, [mirroring Astro’s `getHeadings()` utility](https://5-0-0-beta.docs.astro.build/en/guides/markdown-content/#available-properties) on Markdown and MDX imports.
-*   `remarkPluginFrontmatter ` - The modified frontmatter object after any [remark or rehype plugins have been applied](https://5-0-0-beta.docs.astro.build/en/guides/markdown-content/#modifying-frontmatter-programmatically). Set to type `any`.
+- `<Content />` - A component used to render the document’s contents in an Astro file.
+- `headings` - A generated list of headings, [mirroring Astro’s `getHeadings()` utility](https://5-0-0-beta.docs.astro.build/en/guides/markdown-content/#available-properties) on Markdown and MDX imports.
+- `remarkPluginFrontmatter ` - The modified frontmatter object after any [remark or rehype plugins have been applied](https://5-0-0-beta.docs.astro.build/en/guides/markdown-content/#modifying-frontmatter-programmatically). Set to type `any`.
 
 ```
 ---import { getEntry, render } from 'astro:content';const entry = await getEntry('blog', 'entry-1');const { Content, headings, remarkPluginFrontmatter } = await render(entry);---
@@ -118,8 +117,7 @@ A function to compile a given entry for rendering. This returns the following pr
 
 [See the `Content Collection` guide](https://5-0-0-beta.docs.astro.build/en/guides/content-collections/#rendering-body-content) for example usage.
 
-`astro:content` types
----------------------
+## `astro:content` types
 
 [Section titled astro:content types](https://5-0-0-beta.docs.astro.build/en/reference/modules/astro-content/#astrocontent-types)
 
@@ -169,7 +167,7 @@ The `context` object that `defineCollection` uses for the function shape of `sch
 
 This includes the following property:
 
-*   `image` - The `image()` schema helper that allows you [to use local images in Content Collections](https://5-0-0-beta.docs.astro.build/en/guides/images/#images-in-content-collections)
+- `image` - The `image()` schema helper that allows you [to use local images in Content Collections](https://5-0-0-beta.docs.astro.build/en/guides/images/#images-in-content-collections)
 
 ```
 import type { SchemaContext } from 'astro:content';export const imageSchema = ({ image }: SchemaContext) =>    z.object({        image: image(),        description: z.string().optional(),    });const blog = defineCollection({  loader: /* ... */,  schema: ({ image }) => z.object({    title: z.string(),    permalink: z.string().optional(),    image: imageSchema({ image })  }),});

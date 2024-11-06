@@ -22,7 +22,7 @@ const {
   ...rest
 } = Astro.props
 
-const shouldPrefetch = prefetch && href.startsWith('/');
+const shouldPrefetch = prefetch && href.startsWith('/')
 ---
 
 <AstroLink
@@ -36,7 +36,7 @@ const shouldPrefetch = prefetch && href.startsWith('/');
       ? 'underline decoration-primary/65 underline-offset-2 hover:decoration-primary'
       : 'no-underline',
     'hover:text-primary',
-    className,
+    className
   )}
   {...rest}
 >

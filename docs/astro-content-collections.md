@@ -7,8 +7,7 @@ Markdown Content:
 
 **Content collections** are the best way to manage sets of content in any Astro project. Collections help to organize and query your documents, enable Intellisense and type checking in your editor, and provide automatic TypeScript type-safety for all of your content. Astro v5.0 introduced the Content Layer API for defining and querying content collections. This performant, scalable API provides built-in content loaders for your local collections. For remote content, you can use third-party and community-built loaders or create your own custom loader and pull in your data from any source.
 
-What are Content Collections?
------------------------------
+## What are Content Collections?
 
 [Section titled What are Content Collections?](https://5-0-0-beta.docs.astro.build/en/guides/content-collections/#what-are-content-collections)
 
@@ -16,24 +15,23 @@ You can define a **collection** from a set of data that is structurally similar.
 
 Collections stored locally in your project or on your filesystem can have entries of Markdown, MDX, Markdoc, or JSON files:
 
-*   Directorysrc/
+- Directorysrc/
 
-    *   …
+  - …
 
-*   Directory**newsletter/**
+- Directory**newsletter/**
 
-    *   week-1.md
-    *   week-2.md
-    *   week-3.md
+  - week-1.md
+  - week-2.md
+  - week-3.md
 
-*   Directory**authors/**
+- Directory**authors/**
 
-    *   authors.json
+  - authors.json
 
 With an appropriate collection loader, you can fetch remote data from any external source, such as a CMS, database, or headless payment system.
 
-TypeScript configuration for collections
-----------------------------------------
+## TypeScript configuration for collections
 
 [Section titled TypeScript configuration for collections](https://5-0-0-beta.docs.astro.build/en/guides/content-collections/#typescript-configuration-for-collections)
 
@@ -43,15 +41,14 @@ Content collections rely on TypeScript to provide Zod validation, Intellisense a
 {  // Included with "astro/tsconfigs/strict" or "astro/tsconfigs/strictest"  "extends": "astro/tsconfigs/base",  "compilerOptions": {    "strictNullChecks": true, // add if using `base` template    "allowJs": true // required, and included with all Astro templates  }}
 ```
 
-Defining Collections
---------------------
+## Defining Collections
 
 [Section titled Defining Collections](https://5-0-0-beta.docs.astro.build/en/guides/content-collections/#defining-collections)
 
 Individual collections use `defineCollection()` to configure:
 
-*   a `loader` for a data source (required)
-*   a `schema` for type safety (optional, but highly recommended!)
+- a `loader` for a data source (required)
+- a `schema` for type safety (optional, but highly recommended!)
 
 ### The collection config file
 
@@ -195,15 +192,14 @@ This example blog post specifies the `id`s of related posts and the `id` of the 
 ---title: "Welcome to my blog"author: ben-holmes # references `src/data/authors/ben-holmes.json`relatedPosts:- about-me # references `src/data/blog/about-me.md`- my-year-in-review # references `src/data/blog/my-year-in-review.md`---
 ```
 
-Querying Collections
---------------------
+## Querying Collections
 
 [Section titled Querying Collections](https://5-0-0-beta.docs.astro.build/en/guides/content-collections/#querying-collections)
 
 Astro provides helper functions to query a collection and return one (or more) content entries.
 
-*   [`getCollection()`](https://5-0-0-beta.docs.astro.build/en/reference/modules/astro-content/#getcollection) fetches an entire collection and returns an array of entries.
-*   [`getEntry()`](https://5-0-0-beta.docs.astro.build/en/reference/modules/astro-content/#getentry) fetches a single entry from a collection.
+- [`getCollection()`](https://5-0-0-beta.docs.astro.build/en/reference/modules/astro-content/#getcollection) fetches an entire collection and returns an array of entries.
+- [`getEntry()`](https://5-0-0-beta.docs.astro.build/en/reference/modules/astro-content/#getentry) fetches a single entry from a collection.
 
 These return entries with a unique `id`, a `data` object with all defined properties, and will also return a `body` containing the raw, uncompiled body of a Markdown, MDX, or Markdoc document.
 
@@ -277,8 +273,7 @@ Any [references defined in your schema](https://5-0-0-beta.docs.astro.build/en/g
 ---import { getEntry, getEntries } from 'astro:content';const blogPost = await getEntry('blog', 'welcome');// Resolve a singular referenceconst author = await getEntry(blogPost.data.author);// Resolve an array of referencesconst relatedPosts = await getEntries(blogPost.data.relatedPosts);---<h1>{blogPost.data.title}</h1><p>Author: {author.data.name}</p><!-- ... --><h2>You might also like:</h2>{relatedPosts.map(post => (  <a href={post.id}>{post.data.title}</a>))}
 ```
 
-Generating Routes from Content
-------------------------------
+## Generating Routes from Content
 
 [Section titled Generating Routes from Content](https://5-0-0-beta.docs.astro.build/en/guides/content-collections/#generating-routes-from-content)
 
@@ -312,8 +307,7 @@ If you are building a dynamic website (using Astro’s SSR support), you are not
 ---import { getEntry, render } from "astro:content";// 1. Get the slug from the incoming server requestconst { id } = Astro.params;if (id === undefined) {  return Astro.redirect("/404");}// 2. Query for the entry directly using the request slugconst post = await getEntry("blog", id);// 3. Redirect if the entry does not existif (post === undefined) {  return Astro.redirect("/404");}// 4. Render the entry to HTML in the templateconst { Content } = await render(post);---<h1>{post.data.title}</h1><Content />
 ```
 
-When to create a collection
----------------------------
+## When to create a collection
 
 [Section titled When to create a collection](https://5-0-0-beta.docs.astro.build/en/guides/content-collections/#when-to-create-a-collection)
 
@@ -321,16 +315,16 @@ You can [create a collection](https://5-0-0-beta.docs.astro.build/en/guides/cont
 
 Much of the benefit of using collections comes from:
 
-*   Defining a common data shape to validate that an individual entry is “correct” or “complete”, avoiding errors in production.
-*   Content-focused APIs designed to make querying intuitive (e.g. `getCollection()` instead of `import.meta.glob()`) when importing and rendering content on your pages.
-*   A [Content Loader API](https://5-0-0-beta.docs.astro.build/en/reference/content-loader-reference/) for retrieving your content that provides both built-in loaders and access to the low-level API. There are several third-party and community-built loaders available, and you can build your own custom loader to fetch data from anywhere.
-*   Performance and scalability. The Content Layer API allows data to be cached between builds and is suitable for tens of thousands of content entries.
+- Defining a common data shape to validate that an individual entry is “correct” or “complete”, avoiding errors in production.
+- Content-focused APIs designed to make querying intuitive (e.g. `getCollection()` instead of `import.meta.glob()`) when importing and rendering content on your pages.
+- A [Content Loader API](https://5-0-0-beta.docs.astro.build/en/reference/content-loader-reference/) for retrieving your content that provides both built-in loaders and access to the low-level API. There are several third-party and community-built loaders available, and you can build your own custom loader to fetch data from anywhere.
+- Performance and scalability. The Content Layer API allows data to be cached between builds and is suitable for tens of thousands of content entries.
 
 [Define your data](https://5-0-0-beta.docs.astro.build/en/guides/content-collections/#defining-collections) as a collection when:
 
-*   You have multiple files or data to organize that share the same overall structure (e.g. blog posts written in Markdown which all have the same frontmatter properties).
-*   You have existing content stored remotely, such as in a CMS, and want to take advantage of the collections helper functions and Content Layer API instead of using `fetch()` or SDKs.
-*   You need to fetch (tens of) thousands of related pieces of data, and need a querying and caching method that handles at scale.
+- You have multiple files or data to organize that share the same overall structure (e.g. blog posts written in Markdown which all have the same frontmatter properties).
+- You have existing content stored remotely, such as in a CMS, and want to take advantage of the collections helper functions and Content Layer API instead of using `fetch()` or SDKs.
+- You need to fetch (tens of) thousands of related pieces of data, and need a querying and caching method that handles at scale.
 
 ### When not to create a collection
 
@@ -340,7 +334,7 @@ Collections provide excellent structure, safety, and organization when you have 
 
 Collections **may not be your solution** if:
 
-*   You have only one or a small number of different pages. Consider [making individual page components](https://5-0-0-beta.docs.astro.build/en/basics/astro-pages/) such as `src/pages/about.astro` with your content directly instead.
-*   Your data is not stored in a supported format, such as TOML. Use other methods of [importing files](https://5-0-0-beta.docs.astro.build/en/guides/imports/#import-statements) or [fetching data](https://5-0-0-beta.docs.astro.build/en/guides/data-fetching/) instead.
-*   You are displaying files that are not processed by Astro, such as PDFs. Place these static assets in the [`public/` directory](https://5-0-0-beta.docs.astro.build/en/basics/project-structure/#public) of your project instead.
-*   You are using APIs that need to be updated in real time. Content collections are only updated at build time, so if you need live data you should consider [on-demand rendering](https://5-0-0-beta.docs.astro.build/en/guides/on-demand-rendering/).
+- You have only one or a small number of different pages. Consider [making individual page components](https://5-0-0-beta.docs.astro.build/en/basics/astro-pages/) such as `src/pages/about.astro` with your content directly instead.
+- Your data is not stored in a supported format, such as TOML. Use other methods of [importing files](https://5-0-0-beta.docs.astro.build/en/guides/imports/#import-statements) or [fetching data](https://5-0-0-beta.docs.astro.build/en/guides/data-fetching/) instead.
+- You are displaying files that are not processed by Astro, such as PDFs. Place these static assets in the [`public/` directory](https://5-0-0-beta.docs.astro.build/en/basics/project-structure/#public) of your project instead.
+- You are using APIs that need to be updated in real time. Content collections are only updated at build time, so if you need live data you should consider [on-demand rendering](https://5-0-0-beta.docs.astro.build/en/guides/on-demand-rendering/).
