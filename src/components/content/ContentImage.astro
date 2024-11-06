@@ -117,24 +117,18 @@ const resolvedImages = Array.isArray(src)
   ? await Promise.all(src.map(resolveImage))
   : [await resolveImage(src)]
 
-// update getPublicUrl to handle hashed filenames
+// update getPublicUrl to handle all hash patterns
 const getPublicUrl = (image: ImageMetadata): string => {
-  // extract collection and post id from the current path
   const segments = Astro.url.pathname.split('/').filter(Boolean)
-  const collection = segments[0] // 'art'
-  const post = segments[1] // 'chip-oc-2024'
+  const collection = segments[0]
+  const post = segments[1]
 
-  // get just the base filename without any hash or extension
+  // extract base filename by removing all possible hash patterns
   const filename = image.src
     .split('/')
     .pop()! // get last segment
-    .replace(
-      /\.[a-zA-Z0-9]+_[a-zA-Z0-9]+\.(webp|png|jpg|jpeg|gif|avif)$/,
-      '.$1'
-    ) // remove hash
-    .replace(/\.[a-zA-Z0-9]+\.(webp|png|jpg|jpeg|gif|avif)$/, '.$1') // handle non-hashed
+    .replace(/\.[a-z0-9|-]+(_[a-z0-9|-]+)*\./i, '.') // remove all hash variations
 
-  // construct the public url preserving the collection structure
   return `/images/${collection}/${post}/${filename}`
 }
 

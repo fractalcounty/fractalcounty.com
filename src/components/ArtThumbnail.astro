@@ -30,18 +30,16 @@ if (!image) {
 
 // helper to get public url for full resolution image
 function getFullResUrl(image: ImageMetadata): string {
-  // extract filename without hash
+  // simplify hash removal to match ContentImage approach
   const filename = image.src
     .split('/')
     .pop()!
-    .replace(
-      /\.[a-zA-Z0-9]+_[a-zA-Z0-9]+\.(webp|png|jpg|jpeg|gif|avif)$/,
-      '.$1'
-    )
-    .replace(/\.[a-zA-Z0-9]+\.(webp|png|jpg|jpeg|gif|avif)$/, '.$1')
+    .replace(/\.[a-z0-9|-]+(_[a-z0-9|-]+)*\./i, '.')
 
-  // construct public path preserving collection structure
-  return `/images/art/${art.id}/${filename}`
+  // remove index.mdx from path
+  const cleanId = art.id.replace(/\/index$/, '')
+
+  return `/images/art/${cleanId}/${filename}`
 }
 
 // improve accessibility

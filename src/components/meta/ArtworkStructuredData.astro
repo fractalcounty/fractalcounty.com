@@ -34,7 +34,9 @@ function getPublicPath(src: string, id: string) {
       .split('.')[0]
       .replace(/_[a-z0-9]+$/i, '')
 
-    const relativePath = `/images/art/${id}/${filename}.webp`
+    const cleanId = id.replace(/\/index$/, '')
+
+    const relativePath = `/images/art/${cleanId}/${filename}.webp`
     return new URL(relativePath, Astro.site).toString()
   }
   return src.startsWith('http') ? src : new URL(src, Astro.site).toString()

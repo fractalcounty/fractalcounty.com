@@ -38,19 +38,21 @@ const {
 
 const pageUrl = typeof url === 'string' ? new URL(url) : url
 
-// Simplify path handling
+// Simplify path handling to match ContentImage
 function getPublicPath(src: string, collection?: string, id?: string) {
   if (src.startsWith('/_astro/')) {
     const filename = src
       .split('/')
-      .pop()!
-      .split('.')[0]
-      .replace(/_[a-z0-9]+$/i, '')
+      .pop()! // get last segment
+      .replace(/\.[a-z0-9|-]+(_[a-z0-9|-]+)*\./i, '.') // remove all hash variations
+
+    // Clean the id by removing /index and .mdx
+    const cleanId = id?.replace(/\/index(\.mdx)?$/, '')
 
     const relativePath =
-      collection && id
-        ? `/images/${collection}/${id}/${filename}.webp`
-        : `/images/${filename}.webp`
+      collection && cleanId
+        ? `/images/${collection}/${cleanId}/${filename}`
+        : `/images/${filename}`
 
     return new URL(relativePath, Astro.site).toString()
   }
