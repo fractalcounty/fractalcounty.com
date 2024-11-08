@@ -1,4 +1,5 @@
 ---
+import { Buffer } from 'node:buffer'
 import ArrowCard from '@/components/ArrowCard.astro'
 import ArtCarousel from '@/components/ArtCarousel.astro'
 import GitHubCommits from '@/components/GitHubCommits.astro'
@@ -9,6 +10,7 @@ import ProfilePageStructuredData from '@/components/meta/ProfilePageStructuredDa
 import WebsiteStructuredData from '@/components/meta/WebsiteStructuredData.astro'
 import { HOME, LINKS_FOOTER, SITE } from '@/consts'
 import PageLayout from '@/layouts/PageLayout.astro'
+import { Image } from 'astro:assets'
 import { getCollection } from 'astro:content'
 
 const allPosts = (await getCollection('blog'))
@@ -26,6 +28,77 @@ const recentArts = (await getCollection('art'))
       b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
   )
   .slice(0, SITE.NUM_ART_ON_HOMEPAGE)
+
+const LASTFM_USERNAME = 'fractalcounty'
+const LASTFM_API_KEY = import.meta.env.LASTFM_API_KEY
+const SPOTIFY_CLIENT_ID = import.meta.env.SPOTIFY_CLIENT_ID
+const SPOTIFY_CLIENT_SECRET = import.meta.env.SPOTIFY_CLIENT_SECRET
+
+async function getSpotifyToken() {
+  const basic = Buffer.from(
+    `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
+  ).toString('base64')
+
+  const response = await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: {
+      Authorization: `Basic ${basic}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: 'grant_type=client_credentials',
+  })
+
+  const data = await response.json()
+  return data.access_token
+}
+
+async function fetchTopTracks() {
+  try {
+    const spotifyToken = await getSpotifyToken()
+
+    const response = await fetch(
+      `https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${LASTFM_USERNAME}&api_key=${LASTFM_API_KEY}&period=1month&limit=3&format=json&extended=1`
+    )
+    const data = await response.json()
+
+    const enhancedTracks = await Promise.all(
+      data.toptracks.track.map(async (track: any) => {
+        try {
+          const spotifyResponse = await fetch(
+            `https://api.spotify.com/v1/search?q=${encodeURIComponent(`track:${track.name} artist:${track.artist.name}`)}&type=track&limit=1`,
+            {
+              headers: {
+                Authorization: `Bearer ${spotifyToken}`,
+              },
+            }
+          )
+          const spotifyData = await spotifyResponse.json()
+          return {
+            ...track,
+            image: track.image.map((img: any, i: number) => ({
+              ...img,
+              '#text':
+                i === 2
+                  ? spotifyData.tracks?.items[0]?.album?.images[1]?.url ||
+                    img['#text']
+                  : img['#text'],
+            })),
+          }
+        } catch (error) {
+          console.error(`Error fetching Spotify data for ${track.name}:`, error)
+          return track
+        }
+      })
+    )
+
+    return enhancedTracks
+  } catch (error) {
+    console.error('Error fetching top tracks:', error)
+    return []
+  }
+}
+
+const topTracks = await fetchTopTracks()
 ---
 
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
@@ -86,6 +159,51 @@ const recentArts = (await getCollection('art'))
 
       <section class='animate space-y-6'>
         <GitHubCommits />
+      </section>
+
+      <section class='animate space-y-6'>
+        <div class='flex flex-wrap items-center justify-between gap-y-2'>
+          <h2 class='title font-bold uppercase'>
+            Most Played Songs (this month)
+          </h2>
+          <Link href='/music' title='Music' externalInNewTab={false}>
+            See all music
+          </Link>
+        </div>
+
+        <div class='space-y-3'>
+          {
+            topTracks.map((track: any) => (
+              <Link
+                href={track.url}
+                class='group flex h-[76px] w-full items-center gap-4 rounded-lg border border-base-content/25 bg-transparent p-3 transition-all duration-200 hover:bg-neutral'
+                underline={false}
+                externalInNewTab={true}
+              >
+                <Image
+                  src={
+                    track.image[2]['#text'] ||
+                    '/images/albums/album-placeholder.webp'
+                  }
+                  alt={`${track.name} by ${track.artist.name}`}
+                  width={48}
+                  height={48}
+                  class='size-12 flex-shrink-0 rounded-lg object-cover'
+                  loading='lazy'
+                />
+                <div class='min-w-0 flex-1'>
+                  <h3 class='line-clamp-1 font-medium group-hover:text-primary'>
+                    {track.name}
+                  </h3>
+                  <p class='line-clamp-1 text-sm text-base-content/80'>
+                    {track.artist.name} •{' '}
+                    {Number(track.playcount).toLocaleString()} plays
+                  </p>
+                </div>
+              </Link>
+            ))
+          }
+        </div>
       </section>
 
       <section class='animate space-y-4'>

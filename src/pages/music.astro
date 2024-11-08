@@ -13,10 +13,10 @@ import { Icon } from 'astro-icon/components'
 
 // fetch last.fm data
 const LASTFM_USERNAME = 'fractalcounty'
-const LASTFM_API_KEY = 'a31b66165177e6e17ef9f9e5d19bbab0'
+const LASTFM_API_KEY = import.meta.env.LASTFM_API_KEY
 
-const SPOTIFY_CLIENT_ID = '37fc316dad72479e979d835a0cb2b9af'
-const SPOTIFY_CLIENT_SECRET = '17d3729adfc54961a5a8c46c03495330'
+const SPOTIFY_CLIENT_ID = import.meta.env.SPOTIFY_CLIENT_ID
+const SPOTIFY_CLIENT_SECRET = import.meta.env.SPOTIFY_CLIENT_SECRET
 
 // add spotify auth and api functions
 async function getSpotifyToken() {
