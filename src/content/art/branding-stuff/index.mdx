@@ -1,0 +1,24 @@
+---
+title: 'branding stuff'
+description: 'logo animations and whatnot'
+publishDate: '2023-05-01'
+type: 'illustration'
+images:
+  [
+    './fractalcounty-logo-2.webp',
+    './fractalcounty-logo.webp',
+  ]
+---
+
+import fractalcountyIntro from './fractalcounty-intro.webm'
+import fractalcountyIntroThumb from './fractalcounty-intro-thumb.webp'
+import ContentVideo from '@/components/content/ContentVideo.astro'
+
+<ContentVideo 
+  src={fractalcountyIntro}
+  title="FRACTAL COUNTY intro animation"
+  posterImage={fractalcountyIntroThumb}
+  autoplay
+  loop
+  muted
+/>

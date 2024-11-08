@@ -1,0 +1,75 @@
+---
+import type { VideoMetadata } from '@/types/video'
+import { SCHEMA_IDS } from '@/lib/schema'
+
+interface Props {
+  video: string | VideoMetadata
+  title: string
+  description?: string
+  url: URL | string
+  thumbnail?: string
+  duration?: string
+  uploadDate?: string
+  contentUrl?: string
+  embedUrl?: string
+}
+
+const {
+  video,
+  title,
+  description,
+  url,
+  thumbnail,
+  duration,
+  uploadDate = new Date().toISOString(),
+  contentUrl,
+  embedUrl,
+} = Astro.props
+
+const pageUrl = typeof url === 'string' ? new URL(url) : url
+
+// helper to detect if src is youtube
+const isYouTube = (src: string | VideoMetadata): boolean => {
+  if (typeof src === 'object') return src.format === 'youtube'
+  return (
+    src.includes('youtu.be') ||
+    src.includes('youtube.com') ||
+    /^[\w-]{11}$/.test(src)
+  )
+}
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': isYouTube(video) ? 'VideoObject' : 'Clip',
+  '@id': `${pageUrl.toString()}#video`,
+  name: title,
+  description: description || title,
+  uploadDate,
+  ...(duration && { duration }),
+  thumbnailUrl: thumbnail,
+  contentUrl: contentUrl || (typeof video === 'object' ? video.src : video),
+  embedUrl:
+    embedUrl ||
+    (isYouTube(video)
+      ? `https://www.youtube.com/embed/${typeof video === 'object' ? video.src : video}`
+      : undefined),
+  author: {
+    '@id': SCHEMA_IDS.PERSON,
+  },
+  creator: {
+    '@id': SCHEMA_IDS.PERSON,
+  },
+  copyrightHolder: {
+    '@id': SCHEMA_IDS.PERSON,
+  },
+  license: 'https://fractalcounty.com/unlicense',
+  accessMode: ['visual', 'auditory'],
+  accessibilityFeature: ['captions', 'autoplay', 'controls'],
+  accessibilityHazard: ['noFlashingHazard'],
+  encodingFormat: typeof video === 'object' ? video.format : 'video/mp4',
+  height: typeof video === 'object' ? video.height : undefined,
+  width: typeof video === 'object' ? video.width : undefined,
+}
+---
+
+<script type='application/ld+json' set:html={JSON.stringify(schema)} />

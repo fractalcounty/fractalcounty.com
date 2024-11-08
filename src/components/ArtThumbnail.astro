@@ -10,13 +10,14 @@ interface Props {
   index?: number
 }
 
-const { art, size = 'md', index = 0 } = Astro.props
+const { art, size = 'md', index = 0 }: Props = Astro.props
 
+// define sizes as mutable arrays
 const sizes = {
-  sm: 300,
-  md: 400,
-  lg: 600,
-} as const
+  sm: [200, 300, 400] as number[],
+  md: [300, 400, 600] as number[],
+  lg: [400, 600, 800] as number[],
+} satisfies Record<string, number[]>
 
 // Get the thumbnail or first image
 const image =
@@ -27,29 +28,21 @@ if (!image) {
   throw new Error(`No image found for art: ${art.id}`)
 }
 
-// helper to get public url for full resolution image
-// function getFullResUrl(image: ImageMetadata): string {
-//   // simplify hash removal to match ContentImage approach
-//   const filename = image.src
-//     .split('/')
-//     .pop()!
-//     .replace(/\.[a-z0-9|-]+(_[a-z0-9|-]+)*\./i, '.')
-
-//   // remove index.mdx from path
-//   const cleanId = art.id.replace(/\/index$/, '')
-
-//   return `/images/art/${cleanId}/${filename}`
-// }
-
 // improve accessibility
 const imgTitle = `${art.data.title} - ${art.data.description}`
-const width = sizes[size]
 
-// Update the formats logic to handle animations
+// handle animated images
 const formats =
   art.data.type === 'animation'
-    ? ['webp'] // only use webp for animations
-    : ['avif', 'webp'] // use both for static images
+    ? ['webp'] // important: use webp for animations to not break the thumbnail
+    : ['avif', 'webp'] // use either for static images
+
+// calculate row and column position
+const row = Math.floor(index / 3) // 3 columns
+const isAboveFold = row < 3 // first 3 rows are above fold
+
+// strict loading strategy based on row position
+const loading = isAboveFold ? 'eager' : 'lazy'
 ---
 
 <ImageStructuredData
@@ -69,15 +62,17 @@ const formats =
   src={image as ImageMetadata}
   alt={imgTitle}
   title={imgTitle}
-  formats={formats}
+  formats={formats as ('avif' | 'webp')[]}
   format={art.data.type === 'animation' ? 'webp' : 'png'}
   fallbackFormat={art.data.type === 'animation' ? 'webp' : 'png'}
-  width={width}
-  height={width}
+  widths={sizes[size]}
+  sizes={`
+    (max-width: 640px) ${sizes[size][0]}px,
+    (max-width: 1024px) ${sizes[size][1]}px,
+    ${sizes[size][2]}px
+  `}
   class='h-full w-full object-cover transition-transform duration-500 group-hover:scale-105'
-  loading={index === 0 ? 'eager' : 'lazy'}
-  decoding={index === 0 ? 'sync' : 'async'}
-  fetchpriority={index === 0 ? 'high' : 'auto'}
+  loading={loading as 'eager' | 'lazy'}
   itemprop='image'
   itemscope
   itemtype='http://schema.org/ImageObject'

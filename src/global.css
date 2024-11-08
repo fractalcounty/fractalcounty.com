@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    @apply antialiased;
+  }
+
   body {
     @apply bg-base-100 text-base-content;
   }
@@ -12,9 +16,14 @@
   h3,
   h4,
   h5,
-  h6 {
+  h6,
+  .title {
     @apply text-base-content;
     @apply font-bold;
+  }
+
+  .title {
+    @apply uppercase;
   }
 
   article {
@@ -52,7 +61,7 @@ body {
 }
 
 body {
-  @apply font-sans antialiased;
+  @apply font-sans subpixel-antialiased;
   @apply flex flex-col;
 }
 

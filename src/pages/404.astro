@@ -1,0 +1,63 @@
+---
+import Button from '@/components/Button.astro'
+import Link from '@/components/Link.astro'
+import PageLayout from '@/layouts/PageLayout.astro'
+import { Icon } from 'astro-icon/components'
+
+const ERROR_MESSAGES = ['page not found']
+
+const randomMessage =
+  ERROR_MESSAGES[Math.floor(Math.random() * ERROR_MESSAGES.length)]
+---
+
+<PageLayout
+  title='404 - Page Not Found'
+  description="The page you're looking for doesn't exist"
+>
+  <section
+    class='animate relative flex flex-col items-center justify-center gap-y-8 pt-12 text-center'
+  >
+    <div class='relative flex items-center justify-center'>
+      <p
+        class='title !text-[12rem] !font-bold !text-base-content/25'
+        style='font-size: 12rem !important; line-height: 1 !important; color: oklch(var(--n))'
+      >
+        404
+      </p>
+      <Icon
+        name='octangula'
+        size='10rem'
+        class='error-icon absolute z-10 text-primary'
+      />
+    </div>
+
+    <article>
+      <h1
+        class='title !text-[1rem] !font-bold !tracking-tighter'
+        style='font-size: 2rem !important; line-height: 1 !important;'
+      >
+        {randomMessage}
+      </h1>
+
+      <Link href='/' underline={false} class='z-10 mt-3'>
+        <Button arrow='left'> take me HOME </Button>
+      </Link>
+    </article>
+  </section>
+
+  <style>
+    .error-icon {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%,
+      100% {
+        transform: translateY(10px);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+  </style>
+</PageLayout>

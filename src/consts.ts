@@ -38,6 +38,11 @@ export const LINKS_FOOTER: Socials = [
     HREF: 'https://twitter.com/fractalcounty',
   },
   {
+    LABEL: 'bluesky',
+    ICON: 'bluesky',
+    HREF: 'https://bsky.app/profile/fractalcounty.com',
+  },
+  {
     LABEL: 'GitHub',
     ICON: 'github',
     HREF: 'https://github.com/fractalcounty',

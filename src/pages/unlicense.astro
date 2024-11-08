@@ -1,8 +1,8 @@
 ---
+import ContentVideo from '@/components/content/ContentVideo.astro'
 import Container from '@/components/layout/Container.astro'
 import Subheader from '@/components/layout/Subheader.astro'
 import Link from '@/components/Link.astro'
-import YoutubeCard from '@/components/YoutubeCard.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
 
 const TITLE = 'Unlicense'
@@ -50,10 +50,13 @@ const DESCRIPTION =
         <p class='animate'>
           For more information, please refer to <Link
             href='http://unlicense.org/'>http://unlicense.org/</Link
-          > and the following video:
+          >
         </p>
       </article>
-      <YoutubeCard id='XO9FKQAxWZc' />
+      <ContentVideo
+        src='IeTybKL1pM4'
+        title='"Copying Is Not Theft" by Question Copyright'
+      />
     </div>
   </Container>
 </PageLayout>

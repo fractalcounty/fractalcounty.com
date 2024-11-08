@@ -1,0 +1,185 @@
+---
+import type { VideoMetadata, VideoSize } from '@/types/video'
+import Link from '@/components/Link.astro'
+import VideoStructuredData from '@/components/meta/VideoStructuredData.astro'
+import { cn } from '@/lib/utils'
+import { YouTube } from '@astro-community/astro-embed-youtube'
+
+// preset sizes matching our image component
+const PRESET_SIZES = {
+  sm: { width: 480, scale: 0.33 },
+  md: { width: 720, scale: 0.5 },
+  lg: { width: 1080, scale: 0.75 },
+  auto: { width: undefined, scale: 1 },
+} as const
+
+interface Props {
+  src: string | VideoMetadata // can be youtube id, url, or local video metadata
+  title?: string
+  size?: VideoSize
+  class?: string
+  showShadow?: boolean
+  rounded?: boolean
+  autoplay?: boolean
+  loop?: boolean
+  muted?: boolean
+  controls?: boolean
+  posterImage?: string
+  enableFullResLink?: boolean
+}
+
+const {
+  src,
+  title,
+  size = 'auto',
+  class: className,
+  showShadow = true,
+  rounded = true,
+  autoplay = false,
+  loop = false,
+  muted = true,
+  controls = true,
+  posterImage,
+  enableFullResLink = true,
+} = Astro.props
+
+// helper to detect if src is youtube
+const isYouTube = (src: string | VideoMetadata): boolean => {
+  if (typeof src === 'object') return src.format === 'youtube'
+  return (
+    src.includes('youtu.be') ||
+    src.includes('youtube.com') ||
+    /^[\w-]{11}$/.test(src)
+  )
+}
+
+// extract youtube id from url or return as-is if already an id
+const getYouTubeId = (src: string): string => {
+  if (/^[\w-]{11}$/.test(src)) return src
+  const match = src.match(
+    /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/
+  )
+  return match?.[1] || src
+}
+
+// add helper to get public url for local videos
+const getPublicUrl = (videoSrc: string | VideoMetadata): string | undefined => {
+  // only handle local webm files
+  if (typeof videoSrc === 'object' && videoSrc.format !== 'webm')
+    return undefined
+  if (typeof videoSrc === 'string' && !videoSrc.endsWith('.webm'))
+    return undefined
+
+  const segments = Astro.url.pathname.split('/').filter(Boolean)
+  const collection = segments[0]
+  const post = segments[1]
+
+  // get filename from src
+  const filename =
+    typeof videoSrc === 'object'
+      ? videoSrc.src.split('/').pop()
+      : videoSrc.split('/').pop()
+
+  return `/images/${collection}/${post}/${filename}`
+}
+
+const publicUrl = getPublicUrl(src)
+
+const { width, scale } = PRESET_SIZES[size]
+---
+
+<VideoStructuredData
+  video={src}
+  title={title || 'Video content'}
+  url={Astro.url}
+  thumbnail={posterImage}
+/>
+<div
+  class={cn('video-wrapper w-full pb-6', className)}
+  style={`--scale-factor: ${scale};`}
+>
+  <figure
+    class='not-prose mx-auto'
+    style={width ? `max-width: ${width}px` : undefined}
+  >
+    <div
+      class={cn(
+        'relative w-full bg-base-200',
+        rounded && 'rounded-xl overflow-hidden',
+        showShadow && 'shadow-xl'
+      )}
+    >
+      {
+        isYouTube(src) ? (
+          <div class='aspect-video'>
+            <YouTube
+              id={getYouTubeId(typeof src === 'object' ? src.src : src)}
+              {title}
+              playlabel={title ? `Play: ${title}` : 'Play video'}
+              params='rel=0&modestbranding=1'
+            />
+          </div>
+        ) : (
+          <video
+            src={typeof src === 'object' ? src.src : src}
+            class='h-auto w-full'
+            {title}
+            {controls}
+            {autoplay}
+            {loop}
+            {muted}
+            playsinline
+            poster={
+              posterImage ||
+              (typeof src === 'object' ? src.posterImage : undefined)
+            }
+            aria-label={title || 'Video player'}
+          />
+        )
+      }
+    </div>
+    {
+      title && (
+        <figcaption class='-mb-3 mt-2 text-center text-sm italic text-accent-content/75'>
+          {enableFullResLink && publicUrl ? (
+            <Link
+              href={publicUrl}
+              underline={false}
+              title={`Full resolution video: ${title}`}
+              externalInNewTab={false}
+              prefetch={false}
+              role='link'
+              aria-label={title}
+            >
+              Download original:{' '}
+              {typeof src === 'object'
+                ? src.src.split('/').pop()
+                : src.split('/').pop()}
+            </Link>
+          ) : (
+            title
+          )}
+        </figcaption>
+      )
+    }
+  </figure>
+</div>
+
+<style>
+  .video-wrapper {
+    width: calc(100% * var(--scale-factor));
+    margin: 0 auto;
+  }
+
+  video {
+    @apply rounded-xl;
+  }
+
+  /* ensure play button anchor maintains href */
+  lite-youtube .lty-playbtn[role='button'] {
+    /* override any attempts to remove href */
+    &[href] {
+      text-decoration: none;
+    }
+  }
+</style>

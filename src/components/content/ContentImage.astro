@@ -45,6 +45,7 @@ interface Props {
   captionType?: 'hidden' | 'original' | 'alt'
   style?: boolean
   enableFullResLink?: boolean
+  loading?: 'eager' | 'lazy'
 }
 
 const {
@@ -61,6 +62,7 @@ const {
   captionType = alt ? 'alt' : 'hidden',
   style = true,
   enableFullResLink = true,
+  loading = 'lazy',
 } = Astro.props
 
 // resolve dimensions based on preset or explicit values
@@ -159,27 +161,28 @@ if (!resolvedTitle && resolvedCollection && resolvedId) {
 />
 <figure
   class:list={[
-    'flex w-full flex-col items-center justify-center space-y-4',
+    'flex w-full flex-col items-center justify-center',
     className,
-    captionType !== 'hidden' ? 'mb-4' : 'mb-0',
+    'not-prose',
+    'mb-8 mt-10',
   ]}
   itemscope
   itemtype='http://schema.org/ImageObject'
   aria-labelledby='image-title'
-  style='padding-top: 1rem; padding-bottom: 1rem;'
 >
-  <div class:list={['w-full flex-col', Array.isArray(src) && 'flex']}>
-    {
-      resolvedImages.map((image, index) => (
-        <div class:list={['w-full', index === 0 ? 'mt-0' : '-mt-10']}>
+  {
+    resolvedImages.map((image, index) => (
+      <figure class:list={['w-full', index === 0 ? 'mt-0' : 'mt-2']}>
+        <div>
           {enableFullResLink && getFullResUrl(image) ? (
             <Link
               href={getFullResUrl(image)}
               class='tooltip tooltip-primary block w-full text-center focus-visible:outline-base-content'
-              title={`View full resolution ${resolvedTitle}${resolvedImages.length > 1 ? ` - Image ${index + 1}` : ''}`}
-              aria-label={`View full resolution version of ${resolvedTitle || 'image'}${resolvedImages.length > 1 ? ` - Image ${index + 1}` : ''}`}
+              title={`View full resolution ${resolvedTitle}${resolvedImages.length > 1 ? ` - ${index + 1}` : ''}`}
+              aria-label={`View full resolution version of ${resolvedTitle || 'image'}${resolvedImages.length > 1 ? ` - ${index + 1}` : ''}`}
               data-tip='Click to view original'
               rel='canonical license'
+              prefetch={false}
               itemprop='image'
               itemscope
               itemtype='http://schema.org/ImageObject'
@@ -188,11 +191,11 @@ if (!resolvedTitle && resolvedCollection && resolvedId) {
                 src={image}
                 alt={
                   alt ||
-                  `${resolvedTitle || ''}${resolvedImages.length > 1 ? ` - Image ${index + 1}` : ''}`
+                  `${resolvedTitle || ''}${resolvedImages.length > 1 ? ` - ${index + 1}` : ''}`
                 }
                 formats={type === 'animation' ? ['webp'] : ['avif', 'webp']}
                 fallbackFormat={type === 'animation' ? 'webp' : 'png'}
-                loading={index === 0 ? 'eager' : 'lazy'}
+                loading={index === 0 && loading === 'eager' ? 'eager' : 'lazy'}
                 decoding={index === 0 ? 'sync' : 'async'}
                 {width}
                 {height}
@@ -216,11 +219,11 @@ if (!resolvedTitle && resolvedCollection && resolvedId) {
               src={image}
               alt={
                 alt ||
-                `${resolvedTitle || ''}${resolvedImages.length > 1 ? ` - Image ${index + 1}` : ''}`
+                `${resolvedTitle || ''}${resolvedImages.length > 1 ? ` - ${index + 1}` : ''}`
               }
               formats={type === 'animation' ? ['webp'] : ['avif', 'webp']}
               fallbackFormat={type === 'animation' ? 'webp' : 'png'}
-              loading={index === 0 ? 'eager' : 'lazy'}
+              loading={index === 0 && loading === 'eager' ? 'eager' : 'lazy'}
               decoding={index === 0 ? 'sync' : 'async'}
               {width}
               {height}
@@ -237,59 +240,65 @@ if (!resolvedTitle && resolvedCollection && resolvedId) {
               itemprop='image'
             />
           )}
-          <meta
-            itemprop='name'
-            content={resolvedTitle || `Image ${index + 1}`}
-          />
-          <meta
-            itemprop='description'
-            content={
-              alt ||
-              `${resolvedTitle || ''}${resolvedImages.length > 1 ? ` - Image ${index + 1}` : ''}`
-            }
-          />
-          <meta
-            itemprop='representativeOfPage'
-            content={index === 0 ? 'true' : 'false'}
-          />
-          <div id={`image-desc-${index}`} class='sr-only'>
-            {alt ||
-              `${resolvedTitle || ''}${
-                resolvedImages.length > 1 ? ` - Image ${index + 1}` : ''
-              }`}
-            {type && ` - This is a ${type} image`}
-          </div>
-          <meta itemprop='width' content={image.width.toString()} />
-          <meta itemprop='height' content={image.height.toString()} />
-          <meta itemprop='encodingFormat' content={`image/${image.format}`} />
-          <meta
-            itemprop='license'
-            content='https://fractalcounty.com/unlicense'
-          />
-          {captionType !== 'hidden' &&
-            enableFullResLink &&
-            getFullResUrl(image) && (
-              <figcaption
-                class='-mb-2 -mt-4 text-center text-sm leading-relaxed'
-                itemprop='alt'
-                id={`alt-${index}`}
-              >
-                <Link
-                  href={getFullResUrl(image)}
-                  underline={false}
-                  class='italic text-accent-content/75 hover:underline hover:decoration-2'
-                >
-                  {captionType === 'original'
-                    ? 'View full resolution'
-                    : alt ||
-                      `${resolvedTitle || ''}${
-                        resolvedImages.length > 1 ? ` - Image ${index + 1}` : ''
-                      }`}
-                </Link>
-              </figcaption>
-            )}
         </div>
-      ))
-    }
-  </div>
+
+        <meta itemprop='name' content={resolvedTitle || `Image ${index + 1}`} />
+        <meta
+          itemprop='description'
+          content={
+            alt ||
+            `${resolvedTitle || ''}${resolvedImages.length > 1 ? ` - ${index + 1}` : ''}`
+          }
+        />
+        <meta
+          itemprop='representativeOfPage'
+          content={index === 0 ? 'true' : 'false'}
+        />
+        <div id={`image-desc-${index}`} class='sr-only'>
+          {alt ||
+            `${resolvedTitle || ''}${
+              resolvedImages.length > 1 ? ` - ${index + 1}` : ''
+            }`}
+          {type && ` - This is a ${type}`}
+        </div>
+        <meta itemprop='width' content={image.width.toString()} />
+        <meta itemprop='height' content={image.height.toString()} />
+        <meta itemprop='encodingFormat' content={`image/${image.format}`} />
+        <meta
+          itemprop='license'
+          content='https://fractalcounty.com/unlicense'
+        />
+        <figcaption
+          class='mb-4 mt-4 text-center text-sm leading-relaxed'
+          itemprop='alt'
+          id={`alt-${index}`}
+        >
+          {enableFullResLink && getFullResUrl(image) ? (
+            <Link
+              href={getFullResUrl(image)}
+              underline={false}
+              prefetch={false}
+              class='italic text-accent-content/75 hover:underline hover:decoration-2'
+            >
+              {captionType === 'original'
+                ? 'View full resolution'
+                : alt ||
+                  `${resolvedTitle || ''}${
+                    resolvedImages.length > 1 ? ` - ${index + 1}` : ''
+                  }`}
+            </Link>
+          ) : (
+            <span class='italic text-accent-content/75'>
+              {captionType === 'original'
+                ? 'Full resolution not available'
+                : alt ||
+                  `${resolvedTitle || ''}${
+                    resolvedImages.length > 1 ? ` - ${index + 1}` : ''
+                  }`}
+            </span>
+          )}
+        </figcaption>
+      </figure>
+    ))
+  }
 </figure>

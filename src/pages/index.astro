@@ -1,6 +1,7 @@
 ---
 import ArrowCard from '@/components/ArrowCard.astro'
 import ArtCarousel from '@/components/ArtCarousel.astro'
+import GitHubCommits from '@/components/GitHubCommits.astro'
 import Container from '@/components/layout/Container.astro'
 import Subheader from '@/components/layout/Subheader.astro'
 import Link from '@/components/Link.astro'
@@ -37,17 +38,16 @@ const recentArts = (await getCollection('art'))
               href='https://x.com/fractalcounty'
               title='X'
               externalInNewTab={true}
-            >
-              Twitter
-            </Link>, as well as various projects I'm working on and other
-            miscellaneous things that don't fit elsewhere.
+              >Twitter,
+            </Link> as well as various projects I'm working on and other miscellaneous
+            things that don't fit elsewhere.
           </p>
         </article>
       </section>
 
       <section class='animate space-y-6'>
         <div class='flex flex-wrap items-center justify-between gap-y-2'>
-          <h2 class='font-bold uppercase'>Latest posts</h2>
+          <h2 class='title font-bold uppercase'>Latest posts</h2>
           <Link href='/blog' title='Blog' externalInNewTab={false}>
             See all posts
           </Link>
@@ -60,7 +60,7 @@ const recentArts = (await getCollection('art'))
                   title={post.data.title}
                   description={post.data.description}
                   icon={post.data.icon}
-                  href={`/blog/${post.id.replace(/\/index\.mdx$/, '')}`}
+                  href={`/blog/${post.id.replace(/\/index\.mdx$|\.mdx$/, '')}`}
                 />
               </li>
             ))
@@ -70,7 +70,7 @@ const recentArts = (await getCollection('art'))
 
       <section class='animate space-y-6'>
         <div class='flex flex-wrap items-center justify-between gap-y-2'>
-          <h2 class='font-bold uppercase'>Archived art</h2>
+          <h2 class='title font-bold uppercase'>Archived art</h2>
           <Link href='/art' title='Art' externalInNewTab={false}>
             See all art
           </Link>
@@ -78,8 +78,12 @@ const recentArts = (await getCollection('art'))
         <ArtCarousel arts={recentArts} priority={true} />
       </section>
 
+      <section class='animate space-y-6'>
+        <GitHubCommits />
+      </section>
+
       <section class='animate space-y-4'>
-        <h2 class='font-semibold uppercase'>Contact me</h2>
+        <h2 class='title font-semibold uppercase'>Contact me</h2>
         <article>
           <p>
             If you want to get in touch with me about something or just to say
@@ -103,8 +107,8 @@ const recentArts = (await getCollection('art'))
           }
           <li class='line-clamp-1'>
             <Link
-              href={`mailto:${SITE.EMAIL}`}
-              title={`Email ${SITE.NAME}`}
+              href={`mailto:${encodeURIComponent(SITE.EMAIL)}`}
+              title={`Email ${SITE.AUTHOR}`}
               externalInNewTab={false}
             >
               {SITE.EMAIL}

@@ -41,5 +41,5 @@ export default antfu({
   typescript: {
     tsconfigPath: './tsconfig.json',
   },
-  ignores: ['node_modules/**', '.dev/**', '.astro/**', 'package.json'],
+  ignores: ['node_modules/**', '.dev/**', '.astro/**', 'package.json', 'scripts/*'],
 })

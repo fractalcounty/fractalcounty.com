@@ -41,6 +41,15 @@ const tagsContent = combinedTags.join(', ')
 const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
 ---
 
+<link
+  rel='preload'
+  href='/fonts/AlteHaasGroteskBold.woff2'
+  as='font'
+  type='font/woff2'
+  crossorigin
+  fetchpriority='high'
+/>
+
 <SEO
   canonical={canonicalUrl}
   title={title}
@@ -122,6 +131,10 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
         rel: 'sitemap',
         href: '/sitemap-index.xml',
       },
+      {
+        rel: 'sitemap',
+        href: '/sitemap-0.xml',
+      },
     ],
     meta: [
       {
@@ -180,6 +193,18 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
             },
           ]
         : []),
+      {
+        name: 'robots',
+        content: noindex ? 'noindex,nofollow' : 'index,follow',
+      },
+      {
+        property: 'content-language',
+        content: 'en-US',
+      },
+      {
+        property: 'og:locale',
+        content: 'en_US',
+      },
     ],
   }}
 />
@@ -191,17 +216,31 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
       src: [
         {
           style: 'normal',
-          weight: 'normal',
-          path: './public/fonts/AlteHaasGroteskRegular.woff2',
-        },
-        {
-          style: 'normal',
           weight: 'bold',
           path: './public/fonts/AlteHaasGroteskBold.woff2',
         },
       ],
       preload: true,
       display: 'block',
+      selector: '.title',
+      fallback: 'sans-serif',
+    },
+    {
+      name: 'Inter',
+      src: [
+        {
+          style: 'normal',
+          weight: '100 900',
+          path: './public/fonts/Inter.woff2',
+        },
+        {
+          style: 'italic',
+          weight: '100 900',
+          path: './public/fonts/InterItalic.woff2',
+        },
+      ],
+      preload: true,
+      display: 'swap',
       selector: 'body',
       fallback: 'sans-serif',
     },
@@ -286,21 +325,6 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
 
   document.addEventListener('DOMContentLoaded', () => init())
   document.addEventListener('astro:after-swap', () => init())
-
-  // handle scroll restoration during view transitions
-  document.addEventListener('astro:page-load', () => {
-    // restore scroll position if available
-    const savedScroll = sessionStorage.getItem('scrollPosition')
-    if (savedScroll) {
-      window.scrollTo(0, Number.parseInt(savedScroll))
-      sessionStorage.removeItem('scrollPosition')
-    }
-  })
-
-  document.addEventListener('astro:before-preparation', () => {
-    // save current scroll position before navigation
-    sessionStorage.setItem('scrollPosition', window.scrollY.toString())
-  })
 
   // enforce laramie theme during transitions
   document.addEventListener('astro:before-swap', () => {

@@ -56,12 +56,14 @@ const years = Object.keys(posts).sort(
                 <ul class='flex flex-col gap-4'>
                   {posts[year].map((post) => (
                     <li>
-                      <ArrowCard
-                        title={post.data.title}
-                        description={post.data.description}
-                        icon={post.data.icon}
-                        href={`/blog/${post.id.replace(/\/index\.mdx$/, '')}`}
-                      />
+                      <article class='post-preview'>
+                        <ArrowCard
+                          title={post.data.title}
+                          description={post.data.description}
+                          icon={post.data.icon}
+                          href={`/blog/${post.id.replace(/\/index\.mdx$|\.mdx$/, '')}`}
+                        />
+                      </article>
                     </li>
                   ))}
                 </ul>

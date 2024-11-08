@@ -23,14 +23,15 @@ import { SITE } from '@/consts'
         title={`${SITE.NAME} - Return to homepage`}
         externalInNewTab={false}
         underline={false}
-        class='font-bold'
+        class='text-lg font-black subpixel-antialiased'
         aria-label={`${SITE.NAME} - Return to homepage`}
       >
-        <div
-          class='font-bold uppercase transition-transform duration-500 ease-out hover:scale-105'
+        <h1
+          class='title preload-text font-bold uppercase subpixel-antialiased transition-all duration-150 hover:scale-105 hover:text-primary'
+          style='font-family: AlteHaasGrotesk, sans-serif; font-display: swap;'
         >
           {SITE.NAME}
-        </div>
+        </h1>
       </Link>
       <nav role='navigation' aria-label='Main navigation'>
         <ul class='m-0 flex list-none gap-1 p-0'>

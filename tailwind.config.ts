@@ -9,8 +9,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['AlteHaasGrotesk', ...defaultTheme.fontFamily.sans],
-        serif: ['AlteHaasGrotesk', ...defaultTheme.fontFamily.serif],
+        sans: ['Inter', ...defaultTheme.fontFamily.sans],
+        serif: ['Inter', ...defaultTheme.fontFamily.serif],
         mono: ['CommitMono', ...defaultTheme.fontFamily.mono],
       },
     },

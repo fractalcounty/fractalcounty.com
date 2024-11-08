@@ -56,7 +56,8 @@ const { Content } = await render(post)
             style={post.data.thumbnailStyle ?? true}
             alt={post.data.thumbnailCaption}
             captionType={post.data.thumbnailCaptionType ?? 'alt'}
-            class='-mt-12'
+            class=''
+            loading='eager'
           />
         )
       }

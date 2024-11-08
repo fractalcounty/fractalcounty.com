@@ -19,8 +19,11 @@ const {
   truncated = true,
 } = Astro.props
 
-// get current path to determine if we're on homepage
+// check if we're on the homepage by checking if pathname is just '/'
 const isHomePage = Astro.url.pathname === '/'
+
+// get current path segments for aria labels
+const pathSegments = Astro.url.pathname.split('/').filter(Boolean)
 ---
 
 <div class:list={[isHomePage && 'sr-only']}>
@@ -31,6 +34,20 @@ const isHomePage = Astro.url.pathname === '/'
     truncated={truncated}
     ariaLabel={ariaLabel}
     schemaJsonScript={true}
+    customizeLinks={[
+      {
+        text: 'Home',
+        ariaLabel: 'Navigate to homepage',
+      },
+      // dynamically generate aria labels for all path segments
+      ...pathSegments.map((segment) => ({
+        text: segment,
+        ariaLabel: `Navigate to ${segment.replace(/-/g, ' ')}`,
+      })),
+    ]}
+    customizeNav={{
+      'aria-label': ariaLabel,
+    }}
   >
     <Icon
       slot='separator'
@@ -39,13 +56,15 @@ const isHomePage = Astro.url.pathname === '/'
       aria-hidden='true'
       size='1.25rem'
     />
-    <Icon
-      slot='index'
-      name='solar:home-2-outline'
-      class='stroke-[5] text-base-content decoration-primary/50 transition-all duration-200 hover:text-primary hover:underline hover:decoration-2'
-      size='0.85rem'
-      aria-label='Home'
-    />
+    <span slot='index' class='inline-flex items-center'>
+      <Icon
+        name='solar:home-2-outline'
+        class='stroke-[5] text-base-content decoration-primary/50 transition-all duration-200 hover:text-primary hover:underline hover:decoration-2'
+        size='0.85rem'
+        aria-hidden='true'
+      />
+      <span class='sr-only'>Home</span>
+    </span>
   </AstroBreadcrumbs>
 </div>
 

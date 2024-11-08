@@ -2,11 +2,27 @@
 title: 'pipca shitposts'
 description: 'pipca shitpost art'
 publishDate: '2023-05-01'
-type: 'illustration'
+type: 'animation'
 images:
   [
     './pipca-shitpost-1.webp',
     './pipca-shitpost-2.webp',
     './pipca-shitpost-3.webp',
+    './pipca-shitpost-4.webp',
+    './pipca-shitpost-5.webp',
   ]
+thumbnail: './braphog-dance.webp'
 ---
+
+import braphogDanceThumb from './braphog-dance.webp'
+import ContentVideo from '@/components/content/ContentVideo.astro'
+import braphogDance from './braphog-dance.webm'
+
+<ContentVideo
+  src={braphogDance}
+  title='braphog dance'
+  autoplay
+  loop
+  muted
+  posterImage={braphogDanceThumb}
+/>

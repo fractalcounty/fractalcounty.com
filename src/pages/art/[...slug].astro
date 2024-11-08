@@ -4,7 +4,6 @@ import Container from '@/components/layout/Container.astro'
 import Subheader from '@/components/layout/Subheader.astro'
 import ArtworkStructuredData from '@/components/meta/ArtworkStructuredData.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
-import { readingTime } from '@/lib/utils'
 import { getCollection, render } from 'astro:content'
 
 export async function getStaticPaths() {
@@ -37,7 +36,6 @@ const { Content } = await render(post)
       title={post.data.title}
       publishDate={post.data.publishDate}
       updatedDate={post.data.updatedDate}
-      readingTime={readingTime(post.body || '')}
       backUrl='/art'
       backLabel='Back'
       isPost={true}
@@ -53,7 +51,8 @@ const { Content } = await render(post)
         style={post.data.thumbnailStyle ?? true}
         alt={post.data.thumbnailCaption}
         captionType={post.data.thumbnailCaptionType ?? 'original'}
-        class='-mt-12'
+        class=''
+        loading='eager'
       />
       <Content />
     </article>

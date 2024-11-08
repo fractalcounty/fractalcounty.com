@@ -45,9 +45,23 @@ const updatedDateString = updatedDate?.toISOString()
       updatedDate={updatedDateString}
       tags={tags}
     />
+    <link
+      rel='preload'
+      href='/fonts/AlteHaasGroteskBold.woff2'
+      as='font'
+      type='font/woff2'
+      crossorigin
+    />
     <slot name='structured-data' />
-    <ViewTransitions fallback='swap' handleForms />
+    <ViewTransitions fallback='swap' transition:persist='theme,scroll' />
     <style is:global>
+      /* optimize text rendering */
+      .preload-text {
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        font-display: swap;
+      }
+
       /* webcomic page header styles */
       html.is-webcomic-page header {
         position: absolute;
