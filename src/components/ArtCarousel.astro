@@ -44,7 +44,7 @@ const carouselDescription = 'Scroll horizontally to view more artwork'
       {
         carouselItems.map(({ art, isMultiImage, imageCount }, index) => (
           <li
-            class='carousel-item w-[calc(66.666%-0.75rem)] sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.75rem)]'
+            class='carousel-item w-[calc(50%-0.5rem)] sm:w-[calc(33.333%-0.75rem)]'
             role='group'
             aria-roledescription='slide'
             aria-label={`Artwork ${index + 1} of ${carouselItems.length}: ${art.data.title}`}

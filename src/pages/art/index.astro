@@ -7,7 +7,7 @@ import CollectionPageStructuredData from '@/components/meta/CollectionPageStruct
 import ProfilePageStructuredData from '@/components/meta/ProfilePageStructuredData.astro'
 import { ART } from '@/consts'
 import PageLayout from '@/layouts/PageLayout.astro'
-import { artTypes } from '@content/config'
+// import { artTypes } from '@content/config'
 import { getCollection } from 'astro:content'
 
 // optimize art data processing
@@ -35,7 +35,7 @@ arts.forEach((art: CollectionEntry<'art'>) => {
 })
 
 const allYears = [...artData.years].sort((a, b) => b - a)
-const categories = ['all', ...artTypes] as const
+// const categories = ['all', ...artTypes] as const
 ---
 
 <PageLayout title={ART.TITLE} description={ART.DESCRIPTION}>
@@ -50,8 +50,7 @@ const categories = ['all', ...artTypes] as const
     <div class='animate space-y-12'>
       <Subheader
         title='Art'
-        subtitle='my archived art'
-        categories={categories}
+        subtitle='archive of my artwork and other creations'
       />
       <div class='gallery-container'>
         {

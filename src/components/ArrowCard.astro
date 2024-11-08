@@ -8,14 +8,22 @@ type Props = {
   icon?: string
   href: string
   externalInNewTab?: boolean
+  class?: string
 }
 
-const { title, description, icon, href, externalInNewTab = true } = Astro.props
+const {
+  title,
+  description,
+  icon,
+  href,
+  externalInNewTab = true,
+  class: className,
+} = Astro.props
 ---
 
 <Link
   href={href || `/`}
-  class='group relative flex flex-nowrap items-center rounded-lg border border-base-content/25 bg-transparent px-4 py-3 pr-10 text-base-content duration-200 ease-in-out hover:bg-neutral'
+  class={`animate group relative flex flex-nowrap items-center rounded-lg border border-base-content/25 bg-transparent px-4 py-3 pr-10 text-base-content duration-200 ease-in-out hover:bg-neutral ${className}`}
   underline={false}
   externalInNewTab={externalInNewTab}
 >

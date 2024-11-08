@@ -46,7 +46,7 @@ const { Content } = await render(post)
       links={post.data.links}
     />
 
-    <article class='animate' id='main-content'>
+    <article id='main-content'>
       {
         post.data.thumbnail && (
           <ContentImage
@@ -56,12 +56,14 @@ const { Content } = await render(post)
             style={post.data.thumbnailStyle ?? true}
             alt={post.data.thumbnailCaption}
             captionType={post.data.thumbnailCaptionType ?? 'alt'}
-            class=''
+            class='animate'
             loading='eager'
           />
         )
       }
-      <Content components={{ a: Link, img: ContentImage }} />
+      <div class='animate'>
+        <Content components={{ a: Link, img: ContentImage }} />
+      </div>
     </article>
   </Container>
 </PageLayout>
