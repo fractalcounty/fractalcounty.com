@@ -1,5 +1,4 @@
 import type { AstroUserConfig } from 'astro/config'
-import type { Buffer } from 'node:buffer'
 import fs from 'node:fs'
 import mdx from '@astrojs/mdx'
 import sitemap from '@astrojs/sitemap'
@@ -8,8 +7,6 @@ import { defineConfig } from 'astro/config'
 import compressor from 'astro-compressor'
 import icon from 'astro-icon'
 import opengraphImages from 'astro-opengraph-images'
-
-import sharp from 'sharp'
 
 import { customOgMediaLayout } from './src/ogRenderer'
 
@@ -30,18 +27,6 @@ export default defineConfig({
             effort: 6,
           }
         },
-        transform: (input: Buffer, options: { src: { format: string } }) => {
-          if (options.src.format === 'webp') {
-            const isAnimated = input[12] === 0x41 && input[13] === 0x4E && input[14] === 0x49 && input[15] === 0x4D
-            if (isAnimated) {
-              return {
-                data: input,
-                format: 'webp',
-              }
-            }
-          }
-          return sharp(input).rotate()
-        }
       },
     },
   },

@@ -21,10 +21,13 @@ const {
 } = Astro.props
 
 const baseStyles =
-  'relative group w-fit flex px-3 py-1.5 flex-nowrap rounded-lg border border-base-content/25 bg-transparent hover:bg-neutral text-base-content duration-200 ease-in-out'
+  'relative group flex items-center justify-center rounded-lg border border-base-content/25 bg-transparent hover:bg-neutral text-base-content duration-200 ease-in-out'
 
-// Add padding for arrow if present
-const paddingClass = arrow !== 'none' ? 'pl-7' : ''
+// modify padding logic to be responsive
+const paddingClass =
+  arrow !== 'none'
+    ? 'md:pl-7 md:pr-3 md:py-1.5 size-9 md:size-auto' // square on mobile, normal on desktop
+    : 'px-3 py-1.5'
 
 // add type for arrow directions
 type ArrowDirection = 'left' | 'right' | 'up' | 'none'
