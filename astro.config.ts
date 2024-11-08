@@ -14,6 +14,11 @@ export default defineConfig({
   site: 'https://fractalcounty.com',
   markdown: {},
   image: {
+    domains: ['i.scdn.co', 'lastfm.freetls.fastly.net'],
+    remotePatterns: [
+      { protocol: 'https', hostname: '*.scdn.co' },
+      { protocol: 'https', hostname: '*.lastfm.freetls.fastly.net' }
+    ],
     service: {
       entrypoint: 'astro/assets/services/sharp',
       config: {

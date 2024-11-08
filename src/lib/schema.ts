@@ -18,6 +18,9 @@ type SchemaType =
   | ImageObjectSchema
   | ArtSchema
   | CollectionPageSchema
+  | MusicPlaylistSchema
+  | MusicRecordingSchema
+  | MusicAlbumSchema
 
 // Schema type definitions
 interface WebPageSchema {
@@ -225,6 +228,41 @@ interface CollectionPageSchema {
   breadcrumb: {
     '@id': string
   }
+}
+
+interface MusicPlaylistSchema {
+  '@type': 'MusicPlaylist'
+  '@id': string
+  name: string
+  numTracks: number
+  track: MusicRecordingSchema[]
+}
+
+interface MusicRecordingSchema {
+  '@type': 'MusicRecording'
+  '@id': string
+  name: string
+  byArtist: MusicGroupSchema | PersonSchema
+  duration?: string
+  url: string
+  image?: ImageObjectSchema
+}
+
+interface MusicGroupSchema {
+  '@type': 'MusicGroup'
+  name: string
+  url?: string
+}
+
+interface MusicAlbumSchema {
+  '@type': 'MusicAlbum'
+  '@id': string
+  name: string
+  byArtist: { '@id': string }
+  datePublished: string
+  url: string
+  image: ImageObjectSchema
+  description?: string
 }
 
 export interface SchemaIds {

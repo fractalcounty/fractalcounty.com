@@ -39,6 +39,7 @@ import { SITE } from '@/consts'
             [
               { href: '/blog', label: 'Blog', text: 'blog' },
               { href: '/art', label: 'Art', text: 'art' },
+              { href: '/music', label: 'Music', text: 'music' },
               {
                 href: 'https://links.fractalcounty.com/',
                 label: 'Links',
@@ -52,6 +53,7 @@ import { SITE } from '@/consts'
                     href={item.href}
                     title={`View ${item.label.toLowerCase()}`}
                     externalInNewTab={item.external}
+                    prefetch={true}
                     underline={true}
                     aria-current={
                       Astro.url.pathname === item.href ? 'page' : undefined
@@ -60,7 +62,7 @@ import { SITE } from '@/consts'
                     {item.text}
                   </Link>
                 </li>
-                {index < 2 && (
+                {index < 3 && (
                   <li aria-hidden='true'>
                     <span>/</span>
                   </li>

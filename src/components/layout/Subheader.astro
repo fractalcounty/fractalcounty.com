@@ -15,6 +15,13 @@ interface Props {
   links?: Array<{ label: string; url: string }>
   backUrl?: string
   backLabel?: string
+  class?: string
+  metadata?: Array<{
+    label: string
+    value: string | number
+    url?: string
+  }>
+  metadataPosition?: 'top' | 'bottom'
 }
 
 const {
@@ -29,93 +36,124 @@ const {
   links = [],
   backUrl,
   backLabel,
+  metadata = [],
+  metadataPosition = 'top',
+  class: classProp,
 } = Astro.props
 ---
 
-<header class='animate space-y-2'>
-  <!-- row 1: metadata (dates, reading time, etc) -->
+<header class:list={['animate space-y-2', classProp]}>
+  <!-- move metadata section into a component for reuse -->
   {
-    isPost && publishDate && (
-      <div class='flex items-center gap-1.5 text-sm text-base-content/70'>
-        <time datetime={publishDate.toISOString()}>
-          <FormattedDate date={publishDate} />
-        </time>
-
-        {updatedDate && (
-          <>
-            <span aria-hidden='true'>&bull;</span>
-            <time datetime={updatedDate.toISOString()}>
-              updated <FormattedDate date={updatedDate} format='relative' />
+    (() => {
+      const metadataContent =
+        isPost && publishDate ? (
+          <div class='flex items-center gap-1.5 text-sm text-base-content/70'>
+            <time datetime={publishDate.toISOString()}>
+              <FormattedDate date={publishDate} />
             </time>
-          </>
-        )}
 
-        {readingTime && (
-          <>
-            <span aria-hidden='true'>&bull;</span>
-            <span>{readingTime}</span>
-          </>
-        )}
+            {updatedDate && (
+              <>
+                <span aria-hidden='true'>&bull;</span>
+                <time datetime={updatedDate.toISOString()}>
+                  updated <FormattedDate date={updatedDate} format='relative' />
+                </time>
+              </>
+            )}
 
-        {pages && (
-          <>
-            <span aria-hidden='true'>&bull;</span>
-            <span>
-              {pages} {pages === 1 ? 'page' : 'pages'}
-            </span>
-          </>
-        )}
-      </div>
-    )
-  }
+            {readingTime && (
+              <>
+                <span aria-hidden='true'>&bull;</span>
+                <span>{readingTime}</span>
+              </>
+            )}
 
-  <!-- row 2: main title with optional back button -->
-  <div class='flex items-center justify-between gap-4'>
-    <div class='flex-1'>
-      <h1
-        class:list={[
-          'title font-semibold text-base-content',
-          isPost ? 'text-xl' : 'text-base uppercase',
-        ]}
-      >
-        {title}
-      </h1>
-    </div>
+            {pages && (
+              <>
+                <span aria-hidden='true'>&bull;</span>
+                <span>
+                  {pages} {pages === 1 ? 'page' : 'pages'}
+                </span>
+              </>
+            )}
+          </div>
+        ) : metadata.length > 0 ? (
+          <div class='flex flex-wrap items-center gap-3 text-sm text-base-content/70'>
+            {metadata.map((item, i) => (
+              <>
+                {i > 0 && (
+                  <span aria-hidden='true' class='select-none'>
+                    &bull;
+                  </span>
+                )}
+                <div class='flex items-center gap-1.5'>
+                  <span class='opacity-70'>{item.label}:</span>
+                  {item.url ? (
+                    <Link
+                      href={item.url}
+                      class='hover:text-primary'
+                      underline={false}
+                    >
+                      {item.value}
+                    </Link>
+                  ) : (
+                    <span>{item.value}</span>
+                  )}
+                </div>
+              </>
+            ))}
+          </div>
+        ) : null
 
-    {
-      backUrl && (
-        <Button as='a' href={backUrl} arrow='left'>
-          {backLabel}
-        </Button>
+      return (
+        <>
+          {metadataPosition === 'top' && metadataContent}
+
+          <div class='flex items-center justify-between gap-4'>
+            <div class='flex-1'>
+              <h1
+                class:list={[
+                  'title font-semibold text-base-content',
+                  isPost ? 'text-xl' : 'text-base uppercase',
+                ]}
+              >
+                {title}
+              </h1>
+            </div>
+
+            {backUrl && (
+              <Button as='a' href={backUrl} arrow='left'>
+                {backLabel}
+              </Button>
+            )}
+
+            {categories && (
+              <nav aria-label='categories' class='flex flex-wrap gap-2'>
+                {categories.map((category) => (
+                  <Button href={`#${category}`} data-category={category}>
+                    {category}
+                  </Button>
+                ))}
+              </nav>
+            )}
+          </div>
+
+          {subtitle && <p class='text-sm text-base-content/70'>{subtitle}</p>}
+
+          {metadataPosition === 'bottom' && metadataContent}
+
+          {links.length > 0 && (
+            <nav aria-label='related links' class='flex flex-wrap gap-4'>
+              {links.map((link) => (
+                <Link href={link.url} underline={true}>
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          )}
+        </>
       )
-    }
-
-    {
-      categories && (
-        <nav aria-label='categories' class='flex flex-wrap gap-2'>
-          {categories.map((category) => (
-            <Button href={`#${category}`} data-category={category}>
-              {category}
-            </Button>
-          ))}
-        </nav>
-      )
-    }
-  </div>
-
-  <!-- row 3: subtitle -->
-  {subtitle && <p class='text-sm text-base-content/70'>{subtitle}</p>}
-
-  <!-- row 4: related links -->
-  {
-    links.length > 0 && (
-      <nav aria-label='related links' class='flex flex-wrap gap-4'>
-        {links.map((link) => (
-          <Link href={link.url} underline={true}>
-            {link.label}
-          </Link>
-        ))}
-      </nav>
-    )
+    })()
   }
 </header>

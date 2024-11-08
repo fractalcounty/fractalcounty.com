@@ -1,0 +1,118 @@
+---
+import { SCHEMA_IDS } from '@/lib/schema'
+
+interface Props {
+  lastFmData: {
+    artists: any[]
+    albums: any[]
+    userInfo: any
+    topTracks: any[]
+  }
+  bandcampAlbums: any[]
+  playlist?: any
+}
+
+const { lastFmData, bandcampAlbums, playlist } = Astro.props
+const pageUrl = new URL(Astro.url.pathname, Astro.site)
+
+// create structured data for music profile
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    // music profile
+    {
+      '@type': 'MusicPlaylist',
+      '@id': `${pageUrl.toString()}#playlist`,
+      name: 'Top Tracks',
+      numTracks: lastFmData.topTracks.length,
+      track: lastFmData.topTracks.map((track: any) => ({
+        '@type': 'MusicRecording',
+        '@id': `${track.url}#recording`,
+        name: track.name,
+        byArtist: {
+          '@type': 'MusicGroup',
+          name: track.artist.name,
+          url: track.artist.url,
+        },
+        duration: track.duration,
+        url: track.url,
+        ...(track.albumArt && {
+          image: {
+            '@type': 'ImageObject',
+            url: track.albumArt,
+          },
+        }),
+      })),
+    },
+    // bandcamp releases
+    ...bandcampAlbums.map((album: any) => ({
+      '@type': 'MusicAlbum',
+      '@id': `${album.data.url}#album`,
+      name: album.data.title,
+      byArtist: {
+        '@id': SCHEMA_IDS.PERSON,
+      },
+      datePublished: album.data.releaseDate,
+      url: album.data.url,
+      image: {
+        '@type': 'ImageObject',
+        url: new URL(album.data.coverArt, Astro.site).toString(),
+      },
+      ...(album.data.description && { description: album.data.description }),
+    })),
+    // spotify playlist if available
+    ...(playlist
+      ? [
+          {
+            '@type': 'MusicPlaylist',
+            '@id': `${pageUrl.toString()}#spotify-playlist`,
+            name: playlist.name,
+            description: playlist.description,
+            numTracks: playlist.tracks.length,
+            url: `https://open.spotify.com/playlist/${playlist.id}`,
+            track: playlist.tracks.map((track: any) => ({
+              '@type': 'MusicRecording',
+              name: track.name,
+              byArtist: {
+                '@type': 'MusicGroup',
+                name: track.artist,
+              },
+              duration: `PT${Math.floor(track.duration / 60000)}M${Math.floor(
+                (track.duration % 60000) / 1000
+              )}S`,
+              url: track.external_url,
+              ...(track.image && {
+                image: {
+                  '@type': 'ImageObject',
+                  url: track.image,
+                },
+              }),
+            })),
+          },
+        ]
+      : []),
+    // lastfm profile
+    {
+      '@type': 'ProfilePage',
+      '@id': pageUrl.toString(),
+      name: 'Music Profile',
+      description: `Music listening stats and history for ${lastFmData.userInfo.name}`,
+      mainEntity: {
+        '@type': 'Person',
+        '@id': SCHEMA_IDS.PERSON,
+      },
+      about: {
+        '@type': 'Thing',
+        name: 'Music Listening History',
+        description: `Last.fm statistics showing ${Number(
+          lastFmData.userInfo.playcount
+        ).toLocaleString()} total plays since ${new Date(
+          lastFmData.userInfo.registered.unixtime * 1000
+        ).getFullYear()}`,
+      },
+    },
+  ],
+}
+---
+
+<script type='application/ld+json' set:html={JSON.stringify(schema)} />

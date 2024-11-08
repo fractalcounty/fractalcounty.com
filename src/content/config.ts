@@ -1,5 +1,5 @@
 import type { SchemaContext } from 'astro:content'
-import { glob } from 'astro/loaders'
+import { file , glob } from 'astro/loaders'
 import { defineCollection, z } from 'astro:content'
 
 const baseSchema = ({ image }: SchemaContext) =>
@@ -49,6 +49,18 @@ const art = defineCollection({
     }),
 })
 
-export const collections = { blog, art } as const
+const bandcamp = defineCollection({
+  loader: file('src/data/bandcamp.json'),
+  schema: z.object({
+    id: z.string(),
+    title: z.string(),
+    url: z.string().url(),
+    releaseDate: z.coerce.date(),
+    coverArt: z.string(), // path to cover art in public/
+    description: z.string().optional(),
+  }),
+})
+
+export const collections = { blog, art, bandcamp } as const
 export const artTypes = ['illustration', 'webcomic', 'animation'] as const
 export type ArtType = (typeof artTypes)[number]
