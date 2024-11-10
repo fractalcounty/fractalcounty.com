@@ -1,5 +1,4 @@
 ---
-import { Buffer } from 'node:buffer'
 import Container from '@/components/layout/Container.astro'
 import Subheader from '@/components/layout/Subheader.astro'
 import Link from '@/components/Link.astro'
@@ -7,258 +6,30 @@ import CollectionPageStructuredData from '@/components/meta/CollectionPageStruct
 import MusicPageStructuredData from '@/components/meta/MusicPageStructuredData.astro'
 import ProfilePageStructuredData from '@/components/meta/ProfilePageStructuredData.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
-import { DevCache } from '@/lib/cache'
 import { Image } from 'astro:assets'
 import { getCollection } from 'astro:content'
 import { Icon } from 'astro-icon/components'
 
-// fetch last.fm data
+// replace the spotify and lastfm functions with imports
+import { fetchLastFmData } from '@/lib/lastfm'
+import { getPlaylistDetails, getSpotifyToken } from '@/lib/spotify'
+
 const LASTFM_USERNAME = 'fractalcounty'
 const LASTFM_API_KEY = import.meta.env.LASTFM_API_KEY
-
 const SPOTIFY_CLIENT_ID = import.meta.env.SPOTIFY_CLIENT_ID
 const SPOTIFY_CLIENT_SECRET = import.meta.env.SPOTIFY_CLIENT_SECRET
-
-// add spotify auth and api functions
-async function getSpotifyToken() {
-  const basic = Buffer.from(
-    `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
-  ).toString('base64')
-
-  const response = await fetch('https://accounts.spotify.com/api/token', {
-    method: 'POST',
-    headers: {
-      Authorization: `Basic ${basic}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: 'grant_type=client_credentials',
-  })
-
-  const data = await response.json()
-  return data.access_token
-}
-
-async function getSpotifyArtistImage(artistName: string, token: string) {
-  try {
-    const response = await fetch(
-      `https://api.spotify.com/v1/search?q=${encodeURIComponent(artistName)}&type=artist&limit=1`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-    const data = await response.json()
-    return data.artists?.items[0]?.images[0]?.url
-  } catch (error) {
-    console.error(`Error fetching Spotify image for ${artistName}:`, error)
-    return null
-  }
-}
-
-async function getSpotifyTrackInfo(
-  trackName: string,
-  artistName: string,
-  token: string
-) {
-  try {
-    const response = await fetch(
-      `https://api.spotify.com/v1/search?q=${encodeURIComponent(`track:${trackName} artist:${artistName}`)}&type=track&limit=1`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-    const data = await response.json()
-    return {
-      albumArt: data.tracks?.items[0]?.album?.images[0]?.url,
-      previewUrl: data.tracks?.items[0]?.preview_url,
-    }
-  } catch (error) {
-    console.error(`error fetching spotify info for ${trackName}:`, error)
-    return { albumArt: null, previewUrl: null }
-  }
-}
-
-async function getSpotifyAlbumInfo(
-  albumName: string,
-  artistName: string,
-  token: string
-) {
-  try {
-    const response = await fetch(
-      `https://api.spotify.com/v1/search?q=${encodeURIComponent(`album:${albumName} artist:${artistName}`)}&type=album&limit=1`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-    const data = await response.json()
-    return data.albums?.items[0]?.images[0]?.url
-  } catch (error) {
-    console.error(`error fetching spotify album art for ${albumName}:`, error)
-    return null
-  }
-}
-
-// Add these functions after your existing Spotify API functions
-
-async function getPlaylistDetails(playlistId: string, token: string) {
-  try {
-    const response = await fetch(
-      `https://api.spotify.com/v1/playlists/${playlistId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-    const data = await response.json()
-    return {
-      name: data.name,
-      description: data.description,
-      image: data.images[0]?.url,
-      tracks: data.tracks.items.map((item: any) => ({
-        name: item.track.name,
-        artist: item.track.artists[0].name,
-        album: item.track.album.name,
-        duration: item.track.duration_ms,
-        preview_url: item.track.preview_url,
-        image: item.track.album.images[0]?.url,
-        external_url: item.track.external_urls.spotify,
-      })),
-    }
-  } catch (error) {
-    console.error('error fetching playlist:', error)
-    return null
-  }
-}
-
-// modify fetchLastFmData to include spotify images
-async function fetchLastFmData() {
-  try {
-    const [topArtists, topAlbums, userInfo, topTracks] = await Promise.all([
-      // get top artists with better image quality
-      fetch(
-        `https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=${LASTFM_USERNAME}&api_key=${LASTFM_API_KEY}&period=overall&limit=5&format=json&extended=1`
-      ).then((res) => res.json()),
-      // get top albums
-      fetch(
-        `https://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=${LASTFM_USERNAME}&api_key=${LASTFM_API_KEY}&period=overall&limit=5&format=json`
-      ).then((res) => res.json()),
-      // get user info
-      fetch(
-        `https://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=${LASTFM_USERNAME}&api_key=${LASTFM_API_KEY}&format=json`
-      ).then((res) => res.json()),
-      // increase limit to 12 to ensure we have enough tracks after filtering
-      fetch(
-        `https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${LASTFM_USERNAME}&api_key=${LASTFM_API_KEY}&limit=12&extended=1&format=json`
-      ).then((res) => res.json()),
-    ])
-
-    // Fetch additional track info to get album art
-    const tracksWithAlbumArt = await Promise.all(
-      topTracks.toptracks.track.map(async (track: any) => {
-        const trackInfo = await fetch(
-          `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&user=${LASTFM_USERNAME}&api_key=${LASTFM_API_KEY}&artist=${encodeURIComponent(track.artist.name)}&track=${encodeURIComponent(track.name)}&format=json`
-        ).then((res) => res.json())
-
-        return {
-          ...track,
-          albumArt: trackInfo?.track?.album?.image?.[3]?.['#text'] || null,
-        }
-      })
-    )
-
-    // get spotify token first
-    const spotifyToken = await getSpotifyToken()
-
-    // filter and enhance tracks with spotify data
-    const uniqueArtistTracks = await Promise.all(
-      tracksWithAlbumArt
-        .reduce((acc: any[], track: any) => {
-          if (acc.length >= 6) return acc
-          const artistExists = acc.some(
-            (t) => t.artist.name === track.artist.name
-          )
-          if (!artistExists) {
-            acc.push(track)
-          }
-          return acc
-        }, [])
-        .map(async (track: any) => {
-          const spotifyInfo = await getSpotifyTrackInfo(
-            track.name,
-            track.artist.name,
-            spotifyToken
-          )
-          return {
-            ...track,
-            albumArt:
-              spotifyInfo.albumArt ||
-              track.albumArt ||
-              '/images/albums/album-placeholder.webp',
-            previewUrl: spotifyInfo.previewUrl,
-          }
-        })
-    )
-
-    // enhance artists with spotify images
-    const enhancedArtists = await Promise.all(
-      topArtists.topartists.artist.map(async (artist: any) => {
-        const spotifyImage = await getSpotifyArtistImage(
-          artist.name,
-          spotifyToken
-        )
-        return {
-          ...artist,
-          // fallback to lastfm image if spotify fails
-          image: artist.image.map((img: any, i: number) => ({
-            ...img,
-            '#text': i === 3 ? spotifyImage || img['#text'] : img['#text'],
-          })),
-        }
-      })
-    )
-
-    // enhance albums with spotify images
-    const enhancedAlbums = await Promise.all(
-      topAlbums.topalbums.album.map(async (album: any) => {
-        const spotifyAlbumArt = await getSpotifyAlbumInfo(
-          album.name,
-          album.artist.name,
-          spotifyToken
-        )
-        return {
-          ...album,
-          image: album.image.map((img: any, i: number) => ({
-            ...img,
-            '#text': i === 3 ? spotifyAlbumArt || img['#text'] : img['#text'],
-          })),
-        }
-      })
-    )
-
-    return {
-      artists: enhancedArtists,
-      albums: enhancedAlbums,
-      userInfo: userInfo.user,
-      topTracks: uniqueArtistTracks,
-    }
-  } catch (error) {
-    console.error('Error fetching data:', error)
-    return { artists: [], albums: [], userInfo: null, topTracks: [] }
-  }
-}
-
 const PLAYLIST_ID = '6mcNUOZBJVOl38rvUS5suh'
-const lastFmData = await DevCache.get('lastfm', fetchLastFmData)
-const spotifyToken = await DevCache.get('spotify-token', getSpotifyToken)
-const playlistData = await DevCache.get('spotify-playlist', () =>
-  getPlaylistDetails(PLAYLIST_ID, spotifyToken)
+
+const spotifyToken = await getSpotifyToken(
+  SPOTIFY_CLIENT_ID,
+  SPOTIFY_CLIENT_SECRET
 )
+const lastFmData = await fetchLastFmData(
+  LASTFM_USERNAME,
+  LASTFM_API_KEY,
+  spotifyToken
+)
+const playlistData = await getPlaylistDetails(PLAYLIST_ID, spotifyToken)
 
 const { artists, albums, userInfo, topTracks } = lastFmData
 const playlist = playlistData
@@ -287,7 +58,7 @@ const bandcampAlbums = await getCollection('bandcamp')
   <Container as='section'>
     <div class='mb-12'>
       <Subheader
-        class='animate space-y-12'
+        class='animate mb-12 space-y-12'
         title='My Music'
         subtitle='albums i have released'
         link={{
