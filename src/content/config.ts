@@ -1,5 +1,5 @@
 import type { SchemaContext } from 'astro:content'
-import { file , glob } from 'astro/loaders'
+import { file, glob } from 'astro/loaders'
 import { defineCollection, z } from 'astro:content'
 
 const baseSchema = ({ image }: SchemaContext) =>
@@ -56,7 +56,7 @@ const bandcamp = defineCollection({
     title: z.string(),
     url: z.string().url(),
     releaseDate: z.coerce.date(),
-    coverArt: z.string(), // path to cover art in public/
+    coverArt: z.string(),
     description: z.string().optional(),
   }),
 })

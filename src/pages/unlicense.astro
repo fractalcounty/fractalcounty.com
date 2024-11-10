@@ -4,16 +4,15 @@ import Container from '@/components/layout/Container.astro'
 import Subheader from '@/components/layout/Subheader.astro'
 import Link from '@/components/Link.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
-
-const TITLE = 'Unlicense'
-const DESCRIPTION =
-  'This is free and unencumbered software released into the public domain.'
 ---
 
-<PageLayout title={TITLE} description={DESCRIPTION}>
+<PageLayout
+  title='Unlicense'
+  description="Chip fractalcounty's license page for his personal website and other software (free and unencumbered software released into the public domain)"
+>
   <Container as='section'>
     <div class='space-y-8'>
-      <Subheader title={TITLE} />
+      <Subheader title='Unlicense' />
       <article class='animate'>
         <p class='animate'>
           This is free and unencumbered software released into the public

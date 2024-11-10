@@ -16,19 +16,16 @@ function debouncedProcess() {
 
 export function watchMedia() {
   void processMedia(true, true)
-  
+
   console.log('watching content directories for media changes...')
 
   WATCH_DIRS.forEach((dir) => {
     watch(dir, { recursive: true }, (_, filename) => {
-      if (filename === null || filename === undefined || filename === '') 
-        return
+      if (filename === null || filename === undefined || filename === '') return
 
-      if (MEDIA_FILE_REGEX.test(filename))
-        debouncedProcess()
+      if (MEDIA_FILE_REGEX.test(filename)) debouncedProcess()
     })
   })
 }
 
-if (import.meta.url === `file://${process.argv[1]}`)
-  void watchMedia() 
+if (import.meta.url === `file://${process.argv[1]}`) void watchMedia()

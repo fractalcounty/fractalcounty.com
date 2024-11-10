@@ -5,6 +5,7 @@ bun.lockb
 node_modules/
 .astro/
 .output/
+.dev/
 
 # environment variables
 **/*.env*
@@ -22,4 +23,3 @@ node_modules/
 # user-specific files
 **/.cursorignore
 **/.cursorrules
-**/.dev/

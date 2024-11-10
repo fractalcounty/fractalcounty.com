@@ -38,7 +38,10 @@ const allYears = [...artData.years].sort((a, b) => b - a)
 // const categories = ['all', ...artTypes] as const
 ---
 
-<PageLayout title={ART.TITLE} description={ART.DESCRIPTION}>
+<PageLayout
+  title='Art'
+  description="chip fractalcounty's archive of his artwork, media, and other creative endeavors"
+>
   <CollectionPageStructuredData
     slot='structured-data'
     type='art'

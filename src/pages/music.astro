@@ -7,6 +7,7 @@ import CollectionPageStructuredData from '@/components/meta/CollectionPageStruct
 import MusicPageStructuredData from '@/components/meta/MusicPageStructuredData.astro'
 import ProfilePageStructuredData from '@/components/meta/ProfilePageStructuredData.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
+import { DevCache } from '@/lib/cache'
 import { Image } from 'astro:assets'
 import { getCollection } from 'astro:content'
 import { Icon } from 'astro-icon/components'
@@ -253,11 +254,11 @@ async function fetchLastFmData() {
 }
 
 const PLAYLIST_ID = '6mcNUOZBJVOl38rvUS5suh'
-const spotifyToken = await getSpotifyToken()
-const [lastFmData, playlistData] = await Promise.all([
-  fetchLastFmData(),
-  getPlaylistDetails(PLAYLIST_ID, spotifyToken),
-])
+const lastFmData = await DevCache.get('lastfm', fetchLastFmData)
+const spotifyToken = await DevCache.get('spotify-token', getSpotifyToken)
+const playlistData = await DevCache.get('spotify-playlist', () =>
+  getPlaylistDetails(PLAYLIST_ID, spotifyToken)
+)
 
 const { artists, albums, userInfo, topTracks } = lastFmData
 const playlist = playlistData
@@ -265,7 +266,10 @@ const playlist = playlistData
 const bandcampAlbums = await getCollection('bandcamp')
 ---
 
-<PageLayout title='Music' description='My music listening stats from Last.fm'>
+<PageLayout
+  title='Music'
+  description="chip fractalcounty's library of albums on bandcamp, Spotify playlists and Last.fm listening stats"
+>
   <MusicPageStructuredData
     slot='structured-data'
     lastFmData={lastFmData}
@@ -281,18 +285,16 @@ const bandcampAlbums = await getCollection('bandcamp')
   <ProfilePageStructuredData slot='structured-data' />
 
   <Container as='section'>
-    <div class='animate mb-12 space-y-12'>
+    <div class='mb-12'>
       <Subheader
+        class='animate space-y-12'
         title='My Music'
         subtitle='albums i have released'
-        metadataPosition='bottom'
-        metadata={[
-          {
-            label: 'bandcamp',
-            value: '@fractalcounty',
-            url: 'https://fractalcounty.bandcamp.com',
-          },
-        ]}
+        link={{
+          text: 'Open in Bandcamp',
+          href: 'https://fractalcounty.bandcamp.com',
+          icon: 'fluent:open-24-filled',
+        }}
       />
 
       <div class='grid grid-cols-2 gap-6 md:grid-cols-3'>
@@ -300,7 +302,7 @@ const bandcampAlbums = await getCollection('bandcamp')
           bandcampAlbums.map((album: any, index: number) => (
             <Link
               href={album.data.url}
-              class={`group relative aspect-square overflow-hidden rounded-xl bg-base-300 shadow-md transition-all duration-150 hover:shadow-lg ${index >= 2 ? 'hidden md:block' : ''}`}
+              class={`animate group relative aspect-square overflow-hidden rounded-xl bg-base-300 shadow-md transition-all duration-150 hover:shadow-lg ${index >= 2 ? 'hidden md:block' : ''}`}
               underline={false}
               externalInNewTab={true}
             >
@@ -335,7 +337,7 @@ const bandcampAlbums = await getCollection('bandcamp')
       </div>
     </div>
 
-    <div class='animate space-y-12'>
+    <div class='space-y-12'>
       <Subheader
         title='last.fm'
         subtitle='my listening stats from last.fm'
@@ -359,8 +361,9 @@ const bandcampAlbums = await getCollection('bandcamp')
 
       <!-- top tracks grid -->
       <div class='space-y-4'>
-        <div class='flex items-center justify-between'>
-          <h2 class='title font-bold uppercase'>Top Tracks</h2>
+        <div class='animate flex items-center gap-4'>
+          <h2 class='font-semibold uppercase'>Top Tracks</h2>
+          <div class='h-[1px] flex-1 bg-base-content/20'></div>
           <Link
             href={`https://www.last.fm/user/${LASTFM_USERNAME}/library/tracks`}
             class='text-sm hover:text-primary'
@@ -410,12 +413,13 @@ const bandcampAlbums = await getCollection('bandcamp')
         </div>
       </div>
 
-      <!-- top artists and albums grid -->
+      <!-- top artists and albums columns -->
       <div class='grid w-full grid-cols-1 gap-6 md:grid-cols-2'>
         <!-- top artists -->
         <div class='w-full space-y-4'>
-          <div class='flex items-center justify-between'>
+          <div class='animate flex items-center gap-4'>
             <h2 class='title font-bold uppercase'>Top Artists</h2>
+            <div class='h-[1px] flex-1 bg-base-content/20'></div>
             <Link
               href={`https://www.last.fm/user/${LASTFM_USERNAME}/library/artists`}
               class='text-sm hover:text-primary'
@@ -425,7 +429,7 @@ const bandcampAlbums = await getCollection('bandcamp')
             </Link>
           </div>
 
-          <div class='space-y-3'>
+          <div class='animate space-y-3'>
             {
               artists.map((artist: any) => (
                 <Link
@@ -462,8 +466,9 @@ const bandcampAlbums = await getCollection('bandcamp')
 
         <!-- top albums -->
         <div class='mb-12 w-full space-y-4'>
-          <div class='flex items-center justify-between'>
+          <div class='animate flex items-center gap-4'>
             <h2 class='title font-bold uppercase'>Top Albums</h2>
+            <div class='h-[1px] flex-1 bg-base-content/20'></div>
             <Link
               href={`https://www.last.fm/user/${LASTFM_USERNAME}/library/albums`}
               class='text-sm hover:text-primary'
@@ -473,7 +478,7 @@ const bandcampAlbums = await getCollection('bandcamp')
             </Link>
           </div>
 
-          <div class='space-y-3'>
+          <div class='animate space-y-3'>
             {
               albums.map((album: any) => (
                 <Link
@@ -543,88 +548,82 @@ const bandcampAlbums = await getCollection('bandcamp')
         })
       </script>
     </div>
+
     <!-- spotify section -->
-    <div class='animate space-y-12'>
-      <Subheader
-        title='Spotify'
-        subtitle='my songs and playlists from Spotify'
-      />
-      <div class='space-y-4'>
-        <div class='flex items-center justify-between'>
-          <h2 class='title font-bold uppercase'>Featured Playlist</h2>
-
-          <Link
-            href={`https://open.spotify.com/playlist/${PLAYLIST_ID}`}
-            class='inline-flex items-center gap-2 text-sm'
-            externalInNewTab={true}
-          >
-            <!-- spotify logo -->
-            Open in Spotify
-            <Icon name='fluent:open-24-filled' class='size-4' />
-          </Link>
-        </div>
-
-        <div
-          id='customView'
-          class='rounded-xl border border-base-content/25 p-4'
+    <section class='animate space-y-12 pb-12'>
+      <div class='flex items-center justify-between'>
+        <Subheader
+          title='Featured Playlist'
+          subtitle='my favorite music on Spotify'
+        />
+        <Link
+          href={`https://open.spotify.com/playlist/${PLAYLIST_ID}`}
+          class='inline-flex items-center gap-2 text-sm'
+          externalInNewTab={true}
         >
-          {
-            playlist && (
-              <div class='space-y-4'>
-                <div class='flex gap-6'>
-                  <Image
-                    src={playlist.image}
-                    alt={playlist.name}
-                    class='size-32 rounded-lg border border-base-content/15 object-cover shadow-md'
-                    loading='lazy'
-                    inferSize
-                  />
-                  <div class='flex flex-col justify-center'>
-                    <h3 class='text-xl font-bold'>{playlist.name}</h3>
-                    <p class='text-base-content/75'>{playlist.description}</p>
-                  </div>
-                </div>
+          Open in Spotify
+          <Icon name='fluent:open-24-filled' class='size-4' />
+        </Link>
+      </div>
 
-                <div class='divider my-2' />
-
-                <div class='h-[240px] space-y-2 overflow-y-auto pr-2'>
-                  {playlist.tracks.map((track: any) => (
-                    <Link
-                      href={track.external_url}
-                      class='group flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-base-300'
-                      underline={false}
-                      externalInNewTab={true}
-                    >
-                      <Image
-                        src={track.image}
-                        alt={track.name}
-                        class='size-12 rounded border border-base-content/25 object-cover shadow-sm'
-                        loading='lazy'
-                        inferSize
-                        width={64}
-                        height={64}
-                      />
-                      <div class='min-w-0 flex-1'>
-                        <h4 class='line-clamp-1 font-medium group-hover:text-primary'>
-                          {track.name}
-                        </h4>
-                        <p class='line-clamp-1 text-sm text-base-content/80'>
-                          {track.artist}
-                        </p>
-                      </div>
-                      <span class='text-sm text-base-content/60'>
-                        {`${Math.floor(track.duration / 60000)}:${String(
-                          Math.floor((track.duration % 60000) / 1000)
-                        ).padStart(2, '0')}`}
-                      </span>
-                    </Link>
-                  ))}
+      <div
+        id='customView'
+        class='space-y-4 rounded-xl border border-base-content/25 p-4'
+      >
+        {
+          playlist && (
+            <div class='animate space-y-4'>
+              <div class='flex gap-6'>
+                <Image
+                  src={playlist.image}
+                  alt={playlist.name}
+                  class='size-32 rounded-lg border border-base-content/15 object-cover shadow-md'
+                  loading='lazy'
+                  inferSize
+                />
+                <div class='flex flex-col justify-center'>
+                  <h3 class='text-xl font-bold'>{playlist.name}</h3>
+                  <p class='text-base-content/75'>{playlist.description}</p>
                 </div>
               </div>
-            )
-          }
-        </div>
+
+              <div class='h-[200px] space-y-2 overflow-y-auto pr-2'>
+                {playlist.tracks.map((track: any) => (
+                  <Link
+                    href={track.external_url}
+                    class='group flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-base-300'
+                    underline={false}
+                    externalInNewTab={true}
+                  >
+                    <Image
+                      src={track.image}
+                      alt={track.name}
+                      class='size-12 rounded border border-base-content/25 object-cover shadow-sm'
+                      loading='lazy'
+                      inferSize
+                      width={64}
+                      height={64}
+                    />
+                    <div class='min-w-0 flex-1'>
+                      <h4 class='line-clamp-1 font-medium group-hover:text-primary'>
+                        {track.name}
+                      </h4>
+                      <p class='line-clamp-1 text-sm text-base-content/80'>
+                        {track.artist}
+                      </p>
+                    </div>
+                    <span class='text-sm text-base-content/60'>
+                      {`${Math.floor(track.duration / 60000)}:${String(
+                        Math.floor((track.duration % 60000) / 1000)
+                      ).padStart(2, '0')}`}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )
+        }
       </div>
-    </div>
+    </section>
   </Container>
 </PageLayout>

@@ -2,6 +2,7 @@
 import Button from '@/components/Button.astro'
 import FormattedDate from '@/components/FormattedDate.astro'
 import Link from '@/components/Link.astro'
+import { Icon } from 'astro-icon/components'
 
 interface Props {
   title: string
@@ -22,6 +23,11 @@ interface Props {
     url?: string
   }>
   metadataPosition?: 'top' | 'bottom'
+  link?: {
+    text: string
+    href: string
+    icon?: string
+  }
 }
 
 const {
@@ -39,6 +45,7 @@ const {
   metadata = [],
   metadataPosition = 'top',
   class: classProp,
+  link,
 } = Astro.props
 ---
 
@@ -111,7 +118,7 @@ const {
           {metadataPosition === 'top' && metadataContent}
 
           <div class='flex items-center justify-between gap-4'>
-            <div class='flex-1'>
+            <div class='flex flex-1 items-center justify-between'>
               <h1
                 class:list={[
                   'title font-semibold text-base-content',
@@ -120,6 +127,17 @@ const {
               >
                 {title}
               </h1>
+
+              {link && (
+                <Link
+                  href={link.href}
+                  class='inline-flex items-center gap-2 text-sm'
+                  externalInNewTab={true}
+                >
+                  {link.text}
+                  {link.icon && <Icon name={link.icon} class='size-4' />}
+                </Link>
+              )}
             </div>
 
             {backUrl && (

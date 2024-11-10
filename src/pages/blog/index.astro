@@ -34,7 +34,10 @@ const years = Object.keys(posts).sort(
 )
 ---
 
-<PageLayout title={BLOG.TITLE} description={BLOG.DESCRIPTION}>
+<PageLayout
+  title='Blog'
+  description="An index of chip fractalcounty's thoughts and writings on various topics I think are neat, as well as other projects I've worked on."
+>
   <CollectionPageStructuredData
     slot='structured-data'
     type='blog'

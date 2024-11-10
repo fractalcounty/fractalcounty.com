@@ -16,7 +16,8 @@ const CONTENT_DIR = 'src/content'
 const PUBLIC_DIR = 'public/images'
 
 // check for --force/-f flag
-const forceMode = process.argv.includes('--force') || process.argv.includes('-f')
+const forceMode =
+  process.argv.includes('--force') || process.argv.includes('-f')
 
 interface ProcessStats {
   converted: number
@@ -32,8 +33,7 @@ interface MediaAction {
 
 // helper to truncate paths
 function formatPath(filePath: string, maxLength = 40): string {
-  if (filePath.length <= maxLength)
-    return filePath
+  if (filePath.length <= maxLength) return filePath
 
   const parts = filePath.split('/')
   const fileName = parts.pop() ?? ''
@@ -57,25 +57,25 @@ async function getMediaActions(): Promise<MediaAction[]> {
 
   // add conversion actions
   actions.push(
-    ...imagesToConvert.map(file => ({
+    ...imagesToConvert.map((file) => ({
       type: 'convert' as const,
       source: file,
-      destination: file.replace(/\.[^.]+$/, '.webp')
+      destination: file.replace(/\.[^.]+$/, '.webp'),
     }))
   )
 
   // find media to sync
-  const mediaToSync = await glob(`${CONTENT_DIR}/**/*.{webp,webm}`, { 
+  const mediaToSync = await glob(`${CONTENT_DIR}/**/*.{webp,webm}`, {
     nodir: true,
-    absolute: true 
+    absolute: true,
   })
 
   // add sync actions
   actions.push(
-    ...mediaToSync.map(file => ({
+    ...mediaToSync.map((file) => ({
       type: 'sync' as const,
       source: file,
-      destination: path.join(PUBLIC_DIR, path.relative(CONTENT_DIR, file))
+      destination: path.join(PUBLIC_DIR, path.relative(CONTENT_DIR, file)),
     }))
   )
 
@@ -83,8 +83,8 @@ async function getMediaActions(): Promise<MediaAction[]> {
 }
 
 async function displayActions(actions: MediaAction[], spinner: Ora) {
-  const conversions = actions.filter(a => a.type === 'convert')
-  const syncs = actions.filter(a => a.type === 'sync')
+  const conversions = actions.filter((a) => a.type === 'convert')
+  const syncs = actions.filter((a) => a.type === 'sync')
 
   if (conversions.length > 0) {
     spinner.info(kleur.cyan(`\nwill convert ${conversions.length} images:\n`))
@@ -92,10 +92,10 @@ async function displayActions(actions: MediaAction[], spinner: Ora) {
       const sourceName = formatPath(path.basename(source))
       const destName = formatPath(path.basename(destination))
       console.log(
-        kleur.yellow('• ') + 
-        kleur.white(sourceName) +
-        kleur.dim(' → ') + 
-        kleur.green(destName)
+        kleur.yellow('• ') +
+          kleur.white(sourceName) +
+          kleur.dim(' → ') +
+          kleur.green(destName)
       )
     })
     if (conversions.length > 3)
@@ -108,10 +108,10 @@ async function displayActions(actions: MediaAction[], spinner: Ora) {
       const sourcePath = formatPath(path.relative(CONTENT_DIR, source))
       const destPath = formatPath(path.relative(PUBLIC_DIR, destination))
       console.log(
-        kleur.yellow('• ') + 
-        kleur.white(sourcePath) +
-        kleur.dim(' → ') + 
-        kleur.green(destPath)
+        kleur.yellow('• ') +
+          kleur.white(sourcePath) +
+          kleur.dim(' → ') +
+          kleur.green(destPath)
       )
     })
     if (syncs.length > 3)
@@ -121,21 +121,21 @@ async function displayActions(actions: MediaAction[], spinner: Ora) {
 
 // modify executeActions to accept force parameter
 async function executeActions(
-  actions: MediaAction[], 
+  actions: MediaAction[],
   spinner: Ora | SilentSpinner,
   force = false
 ): Promise<ProcessStats> {
   const stats: ProcessStats = { converted: 0, skipped: 0, synced: 0 }
-  
+
   // only prompt if not in force mode
   if (!force) {
-    const response = await prompts({
+    const response = (await prompts({
       type: 'confirm',
       name: 'confirm',
       message: 'proceed with these changes?',
-      initial: true
-    }) as { confirm: boolean }
-    
+      initial: true,
+    })) as { confirm: boolean }
+
     if (!response.confirm) {
       spinner.info('operation cancelled')
       process.exit(0)
@@ -143,10 +143,10 @@ async function executeActions(
   }
 
   // handle conversions first
-  const conversions = actions.filter(a => a.type === 'convert')
+  const conversions = actions.filter((a) => a.type === 'convert')
   if (conversions.length > 0) {
     spinner.start(kleur.blue(`converting ${conversions.length} images...`))
-    
+
     for (const [index, action] of conversions.entries()) {
       try {
         await sharp(action.source)
@@ -159,21 +159,26 @@ async function executeActions(
         await fs.unlink(action.source)
         stats.converted++
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'unknown error'
-        spinner.warn(kleur.yellow(`failed to convert ${action.source}: ${errorMessage}`))
+        const errorMessage =
+          error instanceof Error ? error.message : 'unknown error'
+        spinner.warn(
+          kleur.yellow(`failed to convert ${action.source}: ${errorMessage}`)
+        )
       }
 
       if ((index + 1) % 10 === 0 || index === conversions.length - 1) {
-        spinner.text = kleur.blue(`converting... ${index + 1}/${conversions.length}`)
+        spinner.text = kleur.blue(
+          `converting... ${index + 1}/${conversions.length}`
+        )
       }
     }
   }
 
   // handle syncs
-  const syncs = actions.filter(a => a.type === 'sync')
+  const syncs = actions.filter((a) => a.type === 'sync')
   if (syncs.length > 0) {
     spinner.start(kleur.blue(`syncing ${syncs.length} files...`))
-    
+
     for (const [index, action] of syncs.entries()) {
       try {
         await fs.access(action.destination)
@@ -204,28 +209,28 @@ interface SilentSpinner {
 }
 
 export async function processMedia(silent = false, force = false) {
-  const spinner: Ora | SilentSpinner = silent ? {
-    start: () => {},
-    info: () => {},
-    succeed: () => {},
-    fail: () => {},
-    warn: () => {},
-    text: '',
-  } : ora()
+  const spinner: Ora | SilentSpinner = silent
+    ? {
+        start: () => {},
+        info: () => {},
+        succeed: () => {},
+        fail: () => {},
+        warn: () => {},
+        text: '',
+      }
+    : ora()
 
   try {
     spinner.start('analyzing media files...')
     const actions = await getMediaActions()
 
     if (actions.length === 0) {
-      if (!silent) 
-        spinner.info(kleur.yellow('no media files to process'))
+      if (!silent) spinner.info(kleur.yellow('no media files to process'))
       return
     }
 
     // only show actions if not silent
-    if (!silent)
-      await displayActions(actions, spinner as Ora)
+    if (!silent) await displayActions(actions, spinner as Ora)
 
     // pass force parameter to executeActions
     const stats = await executeActions(actions, spinner, force)
@@ -235,9 +240,7 @@ export async function processMedia(silent = false, force = false) {
         kleur.green(
           `✨ done! ${
             stats.converted > 0 ? `converted ${stats.converted} images ` : ''
-          }${
-            stats.synced > 0 ? `synced ${stats.synced} new files ` : ''
-          }${
+          }${stats.synced > 0 ? `synced ${stats.synced} new files ` : ''}${
             stats.skipped > 0 ? `skipped ${stats.skipped} existing files` : ''
           }`
         )
@@ -246,7 +249,9 @@ export async function processMedia(silent = false, force = false) {
   } catch (err) {
     if (!silent) {
       spinner.fail(kleur.red('error processing media:'))
-      console.error(kleur.red(err instanceof Error ? err.message : 'unknown error'))
+      console.error(
+        kleur.red(err instanceof Error ? err.message : 'unknown error')
+      )
     }
     process.exit(1)
   }
@@ -254,6 +259,7 @@ export async function processMedia(silent = false, force = false) {
 
 // check for force flag when running directly
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const forceMode = process.argv.includes('--force') || process.argv.includes('-f')
+  const forceMode =
+    process.argv.includes('--force') || process.argv.includes('-f')
   void processMedia(false, forceMode)
 }

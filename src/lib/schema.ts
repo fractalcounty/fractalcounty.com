@@ -374,30 +374,34 @@ export const websiteSchema = {
 }
 
 // Simplify the path transformation
-function getPublicImagePath(imageSrc: string, collection?: string, id?: string): string {
+function getPublicImagePath(
+  imageSrc: string,
+  collection?: string,
+  id?: string
+): string {
   if (imageSrc.startsWith('/_astro/')) {
     const filename = imageSrc
       .split('/')
       .pop()!
       .split('.')[0]
       .replace(/_[a-z0-9]+$/i, '') // remove hash
-    
+
     // explicitly handle nullish/empty cases for collection and id
-    const relativePath = (collection ?? '') && (id ?? '')
-      ? `/images/${collection}/${id}/${filename}.webp`
-      : `/images/${filename}.webp`
-      
+    const relativePath =
+      (collection ?? '') && (id ?? '')
+        ? `/images/${collection}/${id}/${filename}.webp`
+        : `/images/${filename}.webp`
+
     // make url absolute
     return new URL(relativePath, 'https://fractalcounty.com').toString()
   }
-  return imageSrc.startsWith('http') ? imageSrc : new URL(imageSrc, 'https://fractalcounty.com').toString()
+  return imageSrc.startsWith('http')
+    ? imageSrc
+    : new URL(imageSrc, 'https://fractalcounty.com').toString()
 }
 
 // Enhanced art schema generation with automatic image metadata handling
-export function generateArtSchema(
-  entry: CollectionEntry<'art'>,
-  url: URL
-) {
+export function generateArtSchema(entry: CollectionEntry<'art'>, url: URL) {
   const { title, description, publishDate, updatedDate, type } = entry.data
 
   // get the primary image from the entry
@@ -656,14 +660,15 @@ export function generateImageSchema({
     representativeOfPage: isRepresentative,
     license: 'https://fractalcounty.com/unlicense',
     copyrightHolder: {
-      '@id': SCHEMA_IDS.PERSON
+      '@id': SCHEMA_IDS.PERSON,
     },
-    contentLocation: contentLocation != null && contentLocation.length > 0
-      ? {
-          '@type': 'Place',
-          name: contentLocation,
-        }
-      : undefined,
+    contentLocation:
+      contentLocation != null && contentLocation.length > 0
+        ? {
+            '@type': 'Place',
+            name: contentLocation,
+          }
+        : undefined,
     keywords: keywords?.join(', '),
     datePublished,
     accessibilityHazard: ['noFlashingHazard'],

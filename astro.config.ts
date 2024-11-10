@@ -17,7 +17,7 @@ export default defineConfig({
     domains: ['i.scdn.co', 'lastfm.freetls.fastly.net'],
     remotePatterns: [
       { protocol: 'https', hostname: '*.scdn.co' },
-      { protocol: 'https', hostname: '*.lastfm.freetls.fastly.net' }
+      { protocol: 'https', hostname: '*.lastfm.freetls.fastly.net' },
     ],
     service: {
       entrypoint: 'astro/assets/services/sharp',
@@ -30,7 +30,7 @@ export default defineConfig({
           avif: {
             quality: 75,
             effort: 6,
-          }
+          },
         },
       },
     },
@@ -56,10 +56,10 @@ export default defineConfig({
             img: [
               {
                 url: `${item.url.replace('/blog/', '/images/blog/')}`,
-                title: 'Blog post content images'
-              }
+                title: 'Blog post content images',
+              },
             ],
-            lastmod: new Date().toISOString()
+            lastmod: new Date().toISOString(),
           }
         }
 
@@ -70,15 +70,15 @@ export default defineConfig({
             img: [
               {
                 url: `${item.url.replace('/art/', '/images/art/')}`,
-                title: 'Artwork'
-              }
+                title: 'Artwork',
+              },
             ],
-            lastmod: new Date().toISOString()
+            lastmod: new Date().toISOString(),
           }
         }
 
         return item
-      }
+      },
     }),
     tailwind(),
     icon(),
