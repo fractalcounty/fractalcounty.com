@@ -21,6 +21,9 @@ site:
         url: https://github.com/fractalcounty
       - name: Instagram
         url: https://www.instagram.com/fractalcounty/
+      - name: YouTube
+        url: https://www.youtube.com/@fractalcounty
+        showInContact: false
   pages:
     home:
       path: /

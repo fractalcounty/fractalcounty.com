@@ -226,11 +226,13 @@ export async function fetchLastFmData(
 export async function fetchTopTracks(
   username: string,
   apiKey: string,
-  spotifyToken: string
+  spotifyToken: string,
+  uniqueArtists: boolean = false
 ): Promise<LastFmTrack[]> {
   try {
+    // increase limit to ensure we have enough tracks after filtering
     const response = await fetch(
-      `https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${username}&api_key=${apiKey}&period=1month&limit=3&format=json&extended=1`
+      `https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${username}&api_key=${apiKey}&period=1month&limit=16&format=json&extended=1`
     )
 
     // handle potential json parse error
@@ -243,19 +245,31 @@ export async function fetchTopTracks(
     }
 
     // validate response shape
-    if (
-      typeof data?.toptracks === 'undefined' ||
-      data.toptracks === null ||
-      typeof data.toptracks.track === 'undefined' ||
-      data.toptracks.track === null ||
-      data.toptracks.track.length === 0
-    ) {
+    if (!data?.toptracks?.track) {
       console.error('Invalid LastFM response shape')
       return []
     }
 
+    const allTracks = data.toptracks.track
+
+    // filter for unique artists if requested
+    let processedTracks = allTracks
+    if (uniqueArtists) {
+      const seen = new Set<string>()
+      processedTracks = allTracks.reduce((acc: LastFmTrack[], track) => {
+        if (acc.length >= 4) return acc
+        if (!seen.has(track.artist.name)) {
+          seen.add(track.artist.name)
+          acc.push(track)
+        }
+        return acc
+      }, [])
+    } else {
+      processedTracks = allTracks.slice(0, 4)
+    }
+
     const enhancedTracks = await Promise.all(
-      data.toptracks.track.map(async (track: LastFmTrack) => {
+      processedTracks.map(async (track: LastFmTrack) => {
         try {
           const spotifyInfo = await getSpotifyTrackInfo(
             track.name,

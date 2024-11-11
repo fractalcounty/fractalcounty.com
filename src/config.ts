@@ -6,6 +6,7 @@ import { z } from 'zod'
 const socialSchema = z.object({
   name: z.string(),
   url: z.string().url(),
+  showInContact: z.boolean().default(true),
 })
 
 // schema for page metadata

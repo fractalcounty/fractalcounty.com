@@ -37,6 +37,37 @@
   #main-content {
     @apply mt-12;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* disable all animations/transitions by default */
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    /* disable view transition animations */
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      animation: none !important;
+    }
+
+    /* completely disable animate classes */
+    .animate,
+    .animate-fast {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+
+    /* ensure elements are immediately visible */
+    .animate:not(.show),
+    .animate-fast:not(.show) {
+      opacity: 1 !important;
+    }
+  }
 }
 
 .sr-only {
@@ -72,9 +103,8 @@ footer {
 .animate {
   opacity: 0;
   transform: translateY(10px);
-  transition:
-    opacity 0.3s ease-out,
-    transform 0.3s ease-out;
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+  will-change: opacity, transform;
 }
 
 .animate.show {
@@ -85,9 +115,7 @@ footer {
 .animate-fast {
   opacity: 0;
   transform: translateY(10px);
-  transition:
-    opacity 0.2s ease-out,
-    transform 0.2s ease-out;
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
 }
 
 .animate-fast.show {
@@ -121,4 +149,19 @@ button[data-category]:active {
   @apply flex items-center gap-1;
   @apply transition-all duration-300 ease-in-out;
   @apply min-w-[2.1rem];
+}
+
+/* optimize view transitions */
+::view-transition-old(*),
+::view-transition-new(*) {
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+  will-change: transform, opacity;
+}
+
+/* ensure smooth transitions between pages */
+::view-transition-group(root) {
+  animation: none;
+  mix-blend-mode: normal;
+  min-height: 100vh; /* prevent layout shifts */
 }

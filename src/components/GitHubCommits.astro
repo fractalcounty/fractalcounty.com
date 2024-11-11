@@ -61,8 +61,8 @@ async function getLatestCommits(username: string, limit = 3) {
 const commits = await getLatestCommits('fractalcounty')
 ---
 
-<div class='space-y-4'>
-  <div class='flex flex-wrap items-center justify-between gap-y-2'>
+<div class='space-y-6'>
+  <div class='flex flex-wrap items-center justify-between'>
     <h2 class='title font-bold uppercase'>Recent commits</h2>
     <Link
       href='https://github.com/fractalcounty'
@@ -73,7 +73,7 @@ const commits = await getLatestCommits('fractalcounty')
     </Link>
   </div>
 
-  <ul class='flex flex-col gap-3'>
+  <ul class='flex flex-col gap-4'>
     {
       commits.length > 0 ? (
         commits.map((commit) => (

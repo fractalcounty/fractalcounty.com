@@ -142,7 +142,8 @@ const {
 
             {backUrl && (
               <Button as='a' href={backUrl} arrow='left'>
-                {backLabel}
+                <span class='hidden md:inline'>{backLabel}</span>
+                <span class='inline md:hidden' aria-label={backLabel} />
               </Button>
             )}
 

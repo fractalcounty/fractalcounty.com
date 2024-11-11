@@ -14,7 +14,7 @@ import { Image } from 'astro:assets'
 import { getCollection } from 'astro:content'
 
 const NUM_POSTS_ON_HOMEPAGE = 3
-const NUM_ART_ON_HOMEPAGE = 6
+const NUM_ART_ON_HOMEPAGE = 8
 
 const allPosts = (await getCollection('blog'))
   .filter((post: any) => !post.data.draft)
@@ -38,7 +38,8 @@ const spotifyToken = await getSpotifyToken()
 const topTracks = await fetchTopTracks(
   LASTFM_USERNAME,
   import.meta.env.LASTFM_API_KEY,
-  spotifyToken
+  spotifyToken,
+  true
 )
 ---
 
@@ -49,8 +50,8 @@ const topTracks = await fetchTopTracks(
   <WebsiteStructuredData slot='structured-data' />
   <ProfilePageStructuredData slot='structured-data' />
   <Container as='section'>
-    <Subheader title="Hello, I'm Chip" />
-    <div class='space-y-16'>
+    <Subheader title="Hello, I'm Chip" transition:name='header' />
+    <div class='space-y-12' transition:name='content'>
       <section>
         <article class='main-content space-y-4'>
           <p class='animate'>
@@ -102,25 +103,19 @@ const topTracks = await fetchTopTracks(
       </section>
 
       <section class='animate space-y-6'>
-        <GitHubCommits />
-      </section>
-
-      <section class='animate space-y-6'>
         <div class='flex flex-wrap items-center justify-between gap-y-2'>
-          <h2 class='title font-bold uppercase'>
-            Most Played Songs (this month)
-          </h2>
+          <h2 class='title font-bold uppercase'>Loved songs (this month)</h2>
           <Link href='/music' title='Music' externalInNewTab={false}>
             See all music
           </Link>
         </div>
 
-        <div class='space-y-3'>
+        <div class='grid grid-cols-1 gap-4 sm:grid-cols-2'>
           {
             topTracks.map((track: any) => (
               <Link
                 href={track.url}
-                class='group flex h-[76px] w-full items-center gap-4 rounded-lg border border-base-content/25 bg-transparent p-3 transition-all duration-200 hover:bg-neutral'
+                class='group flex h-auto w-full items-center gap-4 rounded-lg border border-base-content/25 bg-transparent p-3 transition-all duration-200 hover:bg-neutral'
                 underline={false}
                 externalInNewTab={true}
               >
@@ -130,9 +125,8 @@ const topTracks = await fetchTopTracks(
                     '/images/music/album-placeholder.webp'
                   }
                   alt={`${track.name} by ${track.artist.name}`}
-                  width={48}
-                  height={48}
-                  class='size-12 flex-shrink-0 rounded-lg object-cover'
+                  inferSize
+                  class='size-16 rounded-lg border border-base-content/15 object-cover shadow-md'
                   loading='lazy'
                 />
                 <div class='min-w-0 flex-1'>
@@ -150,6 +144,10 @@ const topTracks = await fetchTopTracks(
         </div>
       </section>
 
+      <section class='animate space-y-6'>
+        <GitHubCommits />
+      </section>
+
       <section class='animate space-y-4'>
         <h2 class='title font-semibold uppercase'>Contact me</h2>
         <article>
@@ -160,35 +158,20 @@ const topTracks = await fetchTopTracks(
         </article>
         <ul class='flex flex-wrap gap-2'>
           {
-            [
-              {
-                href: 'https://twitter.com/fractalcounty',
-                label: 'Twitter',
-              },
-              {
-                href: 'https://bsky.app/profile/fractalcounty.com',
-                label: 'Bluesky',
-              },
-              {
-                href: 'https://github.com/fractalcounty',
-                label: 'GitHub',
-              },
-              {
-                href: 'https://www.instagram.com/fractalcounty/',
-                label: 'Instagram',
-              },
-            ].map(({ href, label }) => (
-              <li class='flex gap-x-2 text-nowrap lowercase'>
-                <Link
-                  href={href}
-                  title={`${site.name} on ${label}`}
-                  externalInNewTab={true}
-                >
-                  {label}
-                </Link>
-                /
-              </li>
-            ))
+            site.author.socials
+              ?.filter((social) => social.showInContact)
+              .map(({ url, name }) => (
+                <li class='flex gap-x-2 text-nowrap lowercase'>
+                  <Link
+                    href={url}
+                    title={`${site.author.username} on ${name}`}
+                    externalInNewTab={true}
+                  >
+                    {name}
+                  </Link>
+                  /
+                </li>
+              ))
           }
           <li class='line-clamp-1'>
             <Link

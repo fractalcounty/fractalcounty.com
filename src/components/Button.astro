@@ -8,6 +8,7 @@ export interface Props {
   'data-category'?: string
   arrow?: 'left' | 'right' | 'up' | 'none'
   arrowClass?: string
+  responsive?: boolean
 }
 
 const {
@@ -16,6 +17,7 @@ const {
   class: className,
   arrow = 'none',
   arrowClass,
+  responsive = true,
   'data-category': dataCategory,
   ...props
 } = Astro.props
@@ -23,10 +25,12 @@ const {
 const baseStyles =
   'relative group flex items-center justify-center rounded-lg border border-base-content/25 bg-transparent hover:bg-neutral text-base-content duration-200 ease-in-out'
 
-// modify padding logic to be responsive
+// modify padding logic to consider responsive prop
 const paddingClass =
   arrow !== 'none'
-    ? 'md:pl-7 md:pr-3 md:py-1.5 size-9 md:size-auto' // square on mobile, normal on desktop
+    ? responsive
+      ? 'md:pl-7 md:pr-3 md:py-1.5 size-9 md:size-auto' // responsive version
+      : 'pl-7 pr-3 py-1.5' // non-responsive version
     : 'px-3 py-1.5'
 
 // add type for arrow directions

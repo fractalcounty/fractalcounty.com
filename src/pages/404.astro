@@ -3,31 +3,6 @@ import Button from '@/components/Button.astro'
 import Link from '@/components/Link.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
 import { Icon } from 'astro-icon/components'
-
-const ERROR_MESSAGES = [
-  // generic
-  'page not found',
-  'there is nothing here',
-  'this path leads nowhere',
-  'where have you gone',
-  'dead end',
-  'something is missing',
-  "this isn't right",
-  'abandon all hope',
-
-  // deltarune
-  'but nobody came',
-
-  // hawaii part ii
-  'blinding, shining star, no page here so far',
-  'alone at the edge of the universe',
-  'but none were there',
-  'you fell into a hole you cannot see',
-  'calming if you look at it right',
-]
-
-const randomMessage =
-  ERROR_MESSAGES[Math.floor(Math.random() * ERROR_MESSAGES.length)]
 ---
 
 <PageLayout
@@ -52,18 +27,56 @@ const randomMessage =
     </div>
 
     <article>
-      <h1
-        class='title !text-[1rem] !font-bold !tracking-tighter'
-        style='font-size: 2rem !important; line-height: 1 !important;'
-      >
-        {randomMessage}
-      </h1>
+      <error-message>
+        <h1
+          class='title !text-[1rem] !font-bold !tracking-tighter'
+          style='font-size: 2rem !important; line-height: 1 !important;'
+        >
+          page not found
+        </h1>
+      </error-message>
 
-      <Link href='/' underline={false} class='z-10 mt-3'>
-        <Button arrow='left'> take me HOME </Button>
+      <Link href='/' underline={false} class='z-10 mt-3' prefetch={true}>
+        <Button arrow='left' responsive={false}> take me HOME </Button>
       </Link>
     </article>
   </section>
+
+  <script>
+    // define error messages array
+    const ERROR_MESSAGES = [
+      'page not found',
+      'there is nothing here',
+      'this path leads nowhere',
+      'where have you gone',
+      'dead end',
+      'something is missing',
+      "this isn't right",
+      'abandon all hope',
+      'but nobody came',
+      'blinding, shining star, no page here so far',
+      'alone at the edge of the universe',
+      'but none were there',
+      'you fell into a hole you cannot see',
+      'calming if you look at it right',
+    ]
+
+    // create custom element for client-side message randomization
+    class ErrorMessage extends HTMLElement {
+      connectedCallback() {
+        const h1 = this.querySelector('h1')
+        if (!h1) return
+
+        // set random message
+        const randomMessage =
+          ERROR_MESSAGES[Math.floor(Math.random() * ERROR_MESSAGES.length)]
+        h1.textContent = randomMessage
+      }
+    }
+
+    // register custom element
+    customElements.define('error-message', ErrorMessage)
+  </script>
 
   <style>
     .error-icon {

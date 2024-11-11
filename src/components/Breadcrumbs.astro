@@ -24,18 +24,6 @@ const isHomePage = Astro.url.pathname === '/'
 
 // get current path segments first
 const pathSegments = Astro.url.pathname.split('/').filter(Boolean)
-
-// then use it in the is404 check
-const is404 = (() => {
-  const isStaticRoute = Object.values(site.pages).some(
-    (page) => page.path === Astro.url.pathname && !page.external
-  )
-  if (isStaticRoute) return false
-
-  const firstSegment = pathSegments[0]
-  const validCollections = ['blog', 'art']
-  return !validCollections.includes(firstSegment)
-})()
 ---
 
 <div class:list={[isHomePage && 'sr-only']}>
@@ -54,10 +42,7 @@ const is404 = (() => {
       // dynamically generate aria labels for all path segments
       ...pathSegments.map((segment) => ({
         text: segment,
-        ariaLabel: is404
-          ? `Invalid page: ${segment.replace(/-/g, ' ')}`
-          : `Navigate to ${segment.replace(/-/g, ' ')}`,
-        class: is404 ? 'text-error' : undefined,
+        ariaLabel: `Navigate to ${segment.replace(/-/g, ' ')}`,
       })),
     ]}
     customizeNav={{
@@ -127,19 +112,5 @@ const is404 = (() => {
 
   :global(.c-breadcrumbs__truncated-button) {
     @apply transition-colors duration-200 hover:text-primary;
-  }
-
-  /* error state styling using CSS custom properties */
-  :global(.c-breadcrumbs__link.text-error) {
-    color: hsl(var(--er));
-    text-decoration-color: hsl(var(--er) / 0.5);
-  }
-
-  :global(.c-breadcrumbs__link.text-error:hover) {
-    color: hsl(var(--er) / 0.8);
-  }
-
-  :global(.c-breadcrumbs__link.text-error:hover::after) {
-    background-color: hsl(var(--er));
   }
 </style>

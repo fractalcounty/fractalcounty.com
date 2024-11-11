@@ -2,7 +2,6 @@
 import Footer from '@/components/layout/Footer.astro'
 import Header from '@/components/layout/Header.astro'
 import Head from '@/components/meta/Head.astro'
-import { ClientRouter } from 'astro:transitions'
 
 type Props = {
   title: string
@@ -11,7 +10,6 @@ type Props = {
   publishDate?: Date
   updatedDate?: Date
   tags?: string[]
-  isWebcomic?: boolean
   isContentPage?: boolean
 }
 
@@ -22,7 +20,6 @@ const {
   publishDate,
   updatedDate,
   tags = [],
-  isWebcomic = false,
 } = Astro.props
 
 const publishDateString = publishDate?.toISOString()
@@ -30,12 +27,7 @@ const updatedDateString = updatedDate?.toISOString()
 ---
 
 <!doctype html>
-<html
-  lang='en'
-  class:list={[isWebcomic && 'is-webcomic-page']}
-  data-theme='laramie'
-  transition:persist='theme'
->
+<html lang='en' data-theme='laramie' transition:persist='theme'>
   <head>
     <Head
       title={title}
@@ -53,23 +45,11 @@ const updatedDateString = updatedDate?.toISOString()
       crossorigin
     />
     <slot name='structured-data' />
-    <ClientRouter fallback='swap' transition:persist='theme,scroll' />
     <style is:global>
-      /* optimize text rendering */
       .preload-text {
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;
         font-display: swap;
-      }
-
-      /* webcomic page header styles */
-      html.is-webcomic-page header {
-        position: absolute;
-      }
-
-      /* base background color for webcomic pages */
-      html.is-webcomic-page body {
-        background-color: hsl(var(--b2));
       }
     </style>
   </head>

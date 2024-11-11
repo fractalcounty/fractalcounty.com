@@ -245,7 +245,29 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
   ]}
 />
 
-<ClientRouter />
+<ClientRouter
+  fallback='swap'
+  transition:persist='theme,scroll'
+  transition:animate={// respect reduced motion preference
+  typeof window !== 'undefined' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ? 'none'
+    : 'fade'}
+/>
+
+<style is:global>
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  /* ensure background colors persist during transitions */
+  html::view-transition-group(root) {
+    animation: none;
+  }
+</style>
+
 <script>
   import type { TransitionBeforeSwapEvent } from 'astro:transitions/client'
 
@@ -261,7 +283,18 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
 <script is:inline>
   function init() {
     onScroll()
-    animate()
+
+    // Only run animations if reduced motion is not preferred
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      animate()
+    } else {
+      // For reduced motion users, immediately show all animated elements
+      document
+        .querySelectorAll('.animate, .animate-fast')
+        .forEach((element) => {
+          element.classList.add('show')
+        })
+    }
 
     const backToTop = document.getElementById('back-to-top')
     backToTop?.addEventListener('click', (event) => scrollToTop(event))
@@ -315,9 +348,12 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
 
   function scrollToTop(event) {
     event.preventDefault()
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches
     window.scrollTo({
       top: 0,
-      behavior: 'smooth',
+      behavior: prefersReducedMotion ? 'instant' : 'smooth',
     })
   }
 
@@ -359,5 +395,22 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
     announcement.textContent = `Navigated to ${title}`
     document.body.appendChild(announcement)
     setTimeout(() => announcement.remove(), 1000)
+  })
+</script>
+
+<script>
+  // handle scroll restoration
+  if (history.scrollRestoration) {
+    history.scrollRestoration = 'manual'
+  }
+
+  // reset scroll position on page transitions
+  document.addEventListener('astro:before-swap', () => {
+    window.scrollTo(0, 0)
+  })
+
+  // ensure theme persistence
+  document.addEventListener('astro:after-swap', () => {
+    document.documentElement.setAttribute('data-theme', 'laramie')
   })
 </script>
