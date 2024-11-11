@@ -37,27 +37,13 @@ const updatedDateString = updatedDate?.toISOString()
       updatedDate={updatedDateString}
       tags={tags}
     />
-    <link
-      rel='preload'
-      href='/fonts/AlteHaasGroteskBold.woff2'
-      as='font'
-      type='font/woff2'
-      crossorigin
-    />
     <slot name='structured-data' />
-    <style is:global>
-      .preload-text {
-        text-rendering: optimizeLegibility;
-        -webkit-font-smoothing: antialiased;
-        font-display: swap;
-      }
-    </style>
   </head>
-  <body class='flex min-h-screen flex-col'>
-    <Header role='banner' />
-    <main id='main' class='mt-24'>
+  <body class='relative mx-auto max-w-[42rem] px-5'>
+    <Header />
+    <main id='main' class='mt-24 space-y-12'>
       <slot />
     </main>
-    <Footer role='contentinfo' />
+    <Footer />
   </body>
 </html>

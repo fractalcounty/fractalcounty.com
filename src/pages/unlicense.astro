@@ -1,6 +1,5 @@
 ---
 import ContentVideo from '@/components/content/ContentVideo.astro'
-import Container from '@/components/layout/Container.astro'
 import Subheader from '@/components/layout/Subheader.astro'
 import Link from '@/components/Link.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
@@ -10,7 +9,7 @@ import PageLayout from '@/layouts/PageLayout.astro'
   title={site.pages.unlicense.title}
   description={site.pages.unlicense.description}
 >
-  <Container as='section'>
+  <section>
     <div class='space-y-8'>
       <Subheader title='Unlicense' />
       <article class='animate'>
@@ -58,5 +57,5 @@ import PageLayout from '@/layouts/PageLayout.astro'
         title='"Copying Is Not Theft" by Question Copyright'
       />
     </div>
-  </Container>
+  </section>
 </PageLayout>

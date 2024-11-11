@@ -2,7 +2,6 @@
 import ArrowCard from '@/components/ArrowCard.astro'
 import ArtCarousel from '@/components/ArtCarousel.astro'
 import GitHubCommits from '@/components/GitHubCommits.astro'
-import Container from '@/components/layout/Container.astro'
 import Subheader from '@/components/layout/Subheader.astro'
 import Link from '@/components/Link.astro'
 import ProfilePageStructuredData from '@/components/meta/ProfilePageStructuredData.astro'
@@ -49,141 +48,145 @@ const topTracks = await fetchTopTracks(
 >
   <WebsiteStructuredData slot='structured-data' />
   <ProfilePageStructuredData slot='structured-data' />
-  <Container as='section'>
-    <Subheader title="Hello, I'm Chip" transition:name='header' />
-    <div class='space-y-12' transition:name='content'>
-      <section>
-        <article class='main-content space-y-4'>
-          <p class='animate'>
-            I make things on the internet— usually silly things, but
-            occasionally normal things as well. This is my personal dumping
-            grounds for my thoughts on art, games, and software that I couldn't
-            fit on my <Link
-              href='https://x.com/fractalcounty'
-              title='X'
-              externalInNewTab={true}
-              >Twitter,
-            </Link> as well as my artwork, webcomics, music, and other creative endeavors
-            from over the years.
-          </p>
-        </article>
-      </section>
 
-      <section class='animate space-y-6'>
-        <div class='flex flex-wrap items-center justify-between gap-y-2'>
-          <h2 class='title font-bold uppercase'>Latest posts</h2>
-          <Link href='/blog' title='Blog' externalInNewTab={false}>
-            See all posts
+  <article class='main-content space-y-4'>
+    <Subheader title="Hello, I'm Chip" />
+    <p class='animate'>
+      I make things on the internet— usually silly things, but occasionally
+      normal things as well. This is my personal dumping grounds for my thoughts
+      on art, games, and software that I couldn't fit on my <Link
+        href='https://x.com/fractalcounty'
+        title='X'
+        externalInNewTab={true}
+        >Twitter,
+      </Link> as well as my artwork, webcomics, music, and other creative endeavors
+      from over the years.
+    </p>
+  </article>
+
+  <section class='animate space-y-6'>
+    <div class='flex flex-wrap items-center justify-between gap-y-2'>
+      <h2 class='title font-bold uppercase'>Latest posts</h2>
+      <Link href='/blog' title='Blog' externalInNewTab={false}>
+        See all posts
+      </Link>
+    </div>
+    <ul class='grid grid-cols-1 gap-4'>
+      {
+        allPosts.map((post: any) => (
+          <li class='flex-1'>
+            <ArrowCard
+              title={post.data.title}
+              description={post.data.description}
+              icon={post.data.icon}
+              date={post.data.publishDate}
+              href={`/blog/${post.id.replace(/\/index\.mdx$|\.mdx$/, '')}`}
+              class='h-full'
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class='animate space-y-6'>
+    <Subheader
+      title='Archived art'
+      headingLevel='h2'
+      link={{ text: 'See all art', href: '/art' }}
+    />
+    <ArtCarousel arts={recentArts} priority={true} />
+  </section>
+
+  <section class='animate space-y-6'>
+    <Subheader
+      title='Loved songs (this month)'
+      headingLevel='h2'
+      link={{ text: 'See all music', href: '/music' }}
+    />
+
+    <div class='grid grid-cols-2 gap-4 sm:grid-cols-2'>
+      {
+        topTracks.map((track: any) => (
+          <Link
+            href={track.url}
+            class='group flex h-auto w-full items-center gap-4 rounded-lg border border-base-content/25 bg-transparent p-3 shadow-md transition-all duration-200 hover:bg-neutral hover:shadow-lg'
+            underline={false}
+            externalInNewTab={true}
+          >
+            <Image
+              src={
+                track.image[2]['#text'] ||
+                '/images/music/album-placeholder.webp'
+              }
+              alt={`${track.name} by ${track.artist.name}`}
+              inferSize
+              class='size-16 rounded-lg border border-base-content/15 object-cover shadow-md'
+              loading='lazy'
+            />
+            <div class='min-w-0 flex-1'>
+              <h3 class='line-clamp-1 font-medium group-hover:text-primary'>
+                {track.name}
+              </h3>
+              <p class='line-clamp-1 text-sm text-base-content/80'>
+                {track.artist.name} • {Number(track.playcount).toLocaleString()}{' '}
+                plays
+              </p>
+            </div>
           </Link>
-        </div>
-        <ul class='flex flex-col gap-4'>
-          {
-            allPosts.map((post: any) => (
-              <li>
-                <ArrowCard
-                  title={post.data.title}
-                  description={post.data.description}
-                  icon={post.data.icon}
-                  href={`/blog/${post.id.replace(/\/index\.mdx$|\.mdx$/, '')}`}
-                />
-              </li>
-            ))
-          }
-        </ul>
-      </section>
+        ))
+      }
+    </div>
+  </section>
 
-      <section class='animate space-y-6'>
-        <div class='flex flex-wrap items-center justify-between gap-y-2'>
-          <h2 class='title font-bold uppercase'>Archived art</h2>
-          <Link href='/art' title='Art' externalInNewTab={false}>
-            See all art
-          </Link>
-        </div>
-        <ArtCarousel arts={recentArts} priority={true} />
-      </section>
+  <section class='animate space-y-6'>
+    <Subheader
+      title='Recent commits'
+      headingLevel='h2'
+      link={{
+        text: 'See all activity',
+        href: 'https://github.com/fractalcounty',
+        icon: 'lucide:external-link',
+        externalInNewTab: true,
+      }}
+    />
+    <GitHubCommits />
+  </section>
 
-      <section class='animate space-y-6'>
-        <div class='flex flex-wrap items-center justify-between gap-y-2'>
-          <h2 class='title font-bold uppercase'>Loved songs (this month)</h2>
-          <Link href='/music' title='Music' externalInNewTab={false}>
-            See all music
-          </Link>
-        </div>
-
-        <div class='grid grid-cols-1 gap-4 sm:grid-cols-2'>
-          {
-            topTracks.map((track: any) => (
+  <section class='animate space-y-4'>
+    <Subheader title='Contact me' headingLevel='h2' />
+    <article>
+      <p>
+        If you want to get in touch with me about something or just to say hi,
+        reach out on social media or send me an email.
+      </p>
+    </article>
+    <ul class='flex flex-wrap gap-2'>
+      {
+        site.author.socials
+          ?.filter((social) => social.showInContact)
+          .map(({ url, name }) => (
+            <li class='flex gap-x-2 text-nowrap lowercase'>
               <Link
-                href={track.url}
-                class='group flex h-auto w-full items-center gap-4 rounded-lg border border-base-content/25 bg-transparent p-3 transition-all duration-200 hover:bg-neutral'
-                underline={false}
+                href={url}
+                title={`${site.author.username} on ${name}`}
                 externalInNewTab={true}
               >
-                <Image
-                  src={
-                    track.image[2]['#text'] ||
-                    '/images/music/album-placeholder.webp'
-                  }
-                  alt={`${track.name} by ${track.artist.name}`}
-                  inferSize
-                  class='size-16 rounded-lg border border-base-content/15 object-cover shadow-md'
-                  loading='lazy'
-                />
-                <div class='min-w-0 flex-1'>
-                  <h3 class='line-clamp-1 font-medium group-hover:text-primary'>
-                    {track.name}
-                  </h3>
-                  <p class='line-clamp-1 text-sm text-base-content/80'>
-                    {track.artist.name} •{' '}
-                    {Number(track.playcount).toLocaleString()} plays
-                  </p>
-                </div>
+                {name}
               </Link>
-            ))
-          }
-        </div>
-      </section>
-
-      <section class='animate space-y-6'>
-        <GitHubCommits />
-      </section>
-
-      <section class='animate space-y-4'>
-        <h2 class='title font-semibold uppercase'>Contact me</h2>
-        <article>
-          <p>
-            If you want to get in touch with me about something or just to say
-            hi, reach out on social media or send me an email.
-          </p>
-        </article>
-        <ul class='flex flex-wrap gap-2'>
-          {
-            site.author.socials
-              ?.filter((social) => social.showInContact)
-              .map(({ url, name }) => (
-                <li class='flex gap-x-2 text-nowrap lowercase'>
-                  <Link
-                    href={url}
-                    title={`${site.author.username} on ${name}`}
-                    externalInNewTab={true}
-                  >
-                    {name}
-                  </Link>
-                  /
-                </li>
-              ))
-          }
-          <li class='line-clamp-1'>
-            <Link
-              href={`mailto:${encodeURIComponent(site.author.email)}`}
-              title={`Email ${site.author.name}`}
-              externalInNewTab={false}
-            >
-              {site.author.email}
-            </Link>
-          </li>
-        </ul>
-      </section>
-    </div>
-  </Container>
+              /
+            </li>
+          ))
+      }
+      <li class='line-clamp-1'>
+        <Link
+          href={`mailto:${encodeURIComponent(site.author.email)}`}
+          title={`Email ${site.author.name}`}
+          externalInNewTab={false}
+        >
+          {site.author.email}
+        </Link>
+      </li>
+    </ul>
+  </section>
 </PageLayout>

@@ -2,13 +2,12 @@
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
 import Button from '@/components/Button.astro'
 // import ColorModeButton from '@/components/ColorModeButton.astro'
-import Container from '@/components/layout/Container.astro'
 import Link from '@/components/Link.astro'
 import { Icon } from 'astro-icon/components'
 ---
 
-<footer class='animate mt-auto py-6'>
-  <Container as='section'>
+<footer class='animate mt-auto py-6' role='contentinfo'>
+  <section>
     <div class='flex flex-col'>
       <nav aria-label='Breadcrumb' class='h-6'>
         <Breadcrumbs />
@@ -49,5 +48,5 @@ import { Icon } from 'astro-icon/components'
         </div>
       </div>
     </div>
-  </Container>
+  </section>
 </footer>

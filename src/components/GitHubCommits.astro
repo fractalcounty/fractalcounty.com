@@ -61,49 +61,36 @@ async function getLatestCommits(username: string, limit = 3) {
 const commits = await getLatestCommits('fractalcounty')
 ---
 
-<div class='space-y-6'>
-  <div class='flex flex-wrap items-center justify-between'>
-    <h2 class='title font-bold uppercase'>Recent commits</h2>
-    <Link
-      href='https://github.com/fractalcounty'
-      title='GitHub Profile'
-      externalInNewTab={true}
-    >
-      See all activity
-    </Link>
-  </div>
-
-  <ul class='flex flex-col gap-4'>
-    {
-      commits.length > 0 ? (
-        commits.map((commit) => (
-          <li class='animate'>
-            <Link
-              href={commit.html_url}
-              class='hover:bg-neutral-focus group flex flex-col gap-1 rounded-lg border border-base-content/25 bg-transparent p-3 transition-all duration-200 hover:bg-neutral'
-              externalInNewTab={true}
-              underline={false}
-            >
-              <div class='flex items-center gap-2 text-sm text-accent-content'>
-                <Icon name='lucide:code' size='1rem' />
-                <span class='font-medium'>
-                  {commit.repository.name.split('/')[1]} •
-                  <span class='font-normal opacity-75'>
-                    {new Date(commit.date).toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric',
-                    })}
-                  </span>
+<ul class='flex flex-col gap-4'>
+  {
+    commits.length > 0 ? (
+      commits.map((commit) => (
+        <li class='animate'>
+          <Link
+            href={commit.html_url}
+            class='hover:bg-neutral-focus group flex flex-col gap-1 rounded-lg border border-base-content/25 bg-transparent p-3 shadow-md transition-all duration-200 hover:bg-neutral hover:shadow-lg'
+            externalInNewTab={true}
+            underline={false}
+          >
+            <div class='flex items-center gap-2 text-sm text-accent-content'>
+              <Icon name='lucide:code' size='1rem' />
+              <span class='font-medium'>
+                {commit.repository.name.split('/')[1]} •
+                <span class='font-normal opacity-75'>
+                  {new Date(commit.date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                  })}
                 </span>
-              </div>
-              <p class='line-clamp-2 text-sm'>{commit.message}</p>
-            </Link>
-          </li>
-        ))
-      ) : (
-        <li class='text-sm text-accent-content'>No recent commits found</li>
-      )
-    }
-  </ul>
-</div>
+              </span>
+            </div>
+            <p class='line-clamp-2 text-sm'>{commit.message}</p>
+          </Link>
+        </li>
+      ))
+    ) : (
+      <li class='text-sm text-accent-content'>No recent commits found</li>
+    )
+  }
+</ul>

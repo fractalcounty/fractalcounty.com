@@ -1,6 +1,5 @@
 ---
 import ArrowCard from '@/components/ArrowCard.astro'
-import Container from '@/components/layout/Container.astro'
 import Subheader from '@/components/layout/Subheader.astro'
 import CollectionPageStructuredData from '@/components/meta/CollectionPageStructuredData.astro'
 import ProfilePageStructuredData from '@/components/meta/ProfilePageStructuredData.astro'
@@ -44,7 +43,7 @@ const years = Object.keys(posts).sort(
     description={site.pages.blog.description}
   />
   <ProfilePageStructuredData slot='structured-data' />
-  <Container as='section'>
+  <section>
     <div class='space-y-10'>
       <Subheader title='Blog' subtitle='thoughts and ideas' />
       <div class='space-y-4'>
@@ -64,6 +63,7 @@ const years = Object.keys(posts).sort(
                           description={post.data.description}
                           icon={post.data.icon}
                           href={`/blog/${post.id.replace(/\/index\.mdx$|\.mdx$/, '')}`}
+                          date={post.data.publishDate}
                         />
                       </article>
                     </li>
@@ -75,5 +75,5 @@ const years = Object.keys(posts).sort(
         }
       </div>
     </div>
-  </Container>
+  </section>
 </PageLayout>

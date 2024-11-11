@@ -1,7 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content'
 import ArtGrid from '@/components/ArtGrid.astro'
-import Container from '@/components/layout/Container.astro'
 import Subheader from '@/components/layout/Subheader.astro'
 import CollectionPageStructuredData from '@/components/meta/CollectionPageStructuredData.astro'
 import ProfilePageStructuredData from '@/components/meta/ProfilePageStructuredData.astro'
@@ -48,7 +47,7 @@ const allYears = [...artData.years].sort((a, b) => b - a)
     description={site.pages.art.description}
   />
   <ProfilePageStructuredData slot='structured-data' />
-  <Container as='section'>
+  <section>
     <div class='animate space-y-12'>
       <Subheader
         title='Art'
@@ -67,7 +66,7 @@ const allYears = [...artData.years].sort((a, b) => b - a)
         }
       </div>
     </div>
-  </Container>
+  </section>
 </PageLayout>
 
 <style>

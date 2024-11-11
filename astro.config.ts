@@ -7,6 +7,7 @@ import sitemap from '@astrojs/sitemap'
 import tailwind from '@astrojs/tailwind'
 import { defineConfig, envField } from 'astro/config'
 import compressor from 'astro-compressor'
+import astroBreakpoints from "astro-devtool-breakpoints";
 import icon from 'astro-icon'
 import opengraphImages from 'astro-opengraph-images'
 import AutoImport from 'unplugin-auto-import/astro'
@@ -110,6 +111,7 @@ export default defineConfig({
         globalsPropValue: true,
       },
     }),
+    astroBreakpoints(),
     mdx(),
     sitemap({
       changefreq: 'weekly',
@@ -121,7 +123,6 @@ export default defineConfig({
           en: 'en-US',
         },
       },
-      customPages: [`${config.site.url}`],
       serialize(item) {
         if (item.url.includes('/blog/')) {
           const slug = item.url.split('/blog/')[1].replace(/\/$/, '')

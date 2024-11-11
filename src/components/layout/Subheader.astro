@@ -5,6 +5,7 @@ import Link from '@/components/Link.astro'
 import { Icon } from 'astro-icon/components'
 
 interface Props {
+  headingLevel?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
   title: string
   subtitle?: string
   categories?: readonly string[]
@@ -27,10 +28,12 @@ interface Props {
     text: string
     href: string
     icon?: string
+    externalInNewTab?: boolean
   }
 }
 
 const {
+  headingLevel = 'h1',
   title,
   subtitle,
   categories,
@@ -119,20 +122,25 @@ const {
 
           <div class='flex items-center justify-between gap-4'>
             <div class='flex flex-1 items-center justify-between'>
-              <h1
-                class:list={[
-                  'title font-semibold text-base-content',
-                  isPost ? 'text-xl normal-case' : 'text-base uppercase',
-                ]}
-              >
-                {title}
-              </h1>
+              {(() => {
+                const Heading = headingLevel
+                return (
+                  <Heading
+                    class:list={[
+                      'title font-semibold text-base-content',
+                      isPost ? 'text-xl normal-case' : 'text-base uppercase',
+                    ]}
+                  >
+                    {title}
+                  </Heading>
+                )
+              })()}
 
               {link && (
                 <Link
                   href={link.href}
-                  class='inline-flex items-center gap-2 text-sm'
-                  externalInNewTab={true}
+                  class='inline-flex items-center gap-2 text-base'
+                  externalInNewTab={link.externalInNewTab}
                 >
                   {link.text}
                   {link.icon && <Icon name={link.icon} class='size-4' />}

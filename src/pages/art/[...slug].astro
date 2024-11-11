@@ -1,6 +1,5 @@
 ---
 import ContentImage from '@/components/content/ContentImage.astro'
-import Container from '@/components/layout/Container.astro'
 import Subheader from '@/components/layout/Subheader.astro'
 import ArtworkStructuredData from '@/components/meta/ArtworkStructuredData.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
@@ -31,7 +30,7 @@ const { Content } = await render(post)
   isContentPage={true}
 >
   <ArtworkStructuredData slot='structured-data' art={post} />
-  <Container as='section'>
+  <section>
     <Subheader
       title={post.data.title}
       publishDate={post.data.publishDate}
@@ -56,5 +55,5 @@ const { Content } = await render(post)
       />
       <Content />
     </article>
-  </Container>
+  </section>
 </PageLayout>
