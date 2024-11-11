@@ -1,4 +1,7 @@
-import fs from 'node:fs'
+import type { CollectionEntry } from 'astro:content'
+import fs, { readFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import mdx from '@astrojs/mdx'
 import sitemap from '@astrojs/sitemap'
 import tailwind from '@astrojs/tailwind'
@@ -7,9 +10,38 @@ import compressor from 'astro-compressor'
 import icon from 'astro-icon'
 import opengraphImages from 'astro-opengraph-images'
 import AutoImport from 'unplugin-auto-import/astro'
-
 import config from './src/config'
 import { customOgMediaLayout } from './src/ogRenderer'
+
+// helper to get content path
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const contentPath = join(__dirname, 'src/content')
+const publicPath = join(__dirname, 'public/images')
+
+// helper to get entry by slug (prefix with _ to satisfy unused var rule)
+const _getEntryBySlug = <T extends 'art' | 'blog'>(
+  collection: T,
+  slug: string
+): CollectionEntry<T> | undefined => {
+  try {
+    const path = join(contentPath, collection, slug, 'index.mdx')
+    const content = JSON.parse(readFileSync(path, 'utf-8')) as CollectionEntry<T>
+    return content
+  } catch {
+    return undefined
+  }
+}
+
+// helper to get images for a slug
+const getImagesForSlug = (collection: string, slug: string): string[] => {
+  try {
+    const path = join(publicPath, collection, slug)
+    return fs.readdirSync(path)
+      .filter(file => /\.jpe?g|png|gif|webp|avif$/i.test(file))
+  } catch {
+    return []
+  }
+}
 
 export default defineConfig({
   site: config.site.url,
@@ -92,35 +124,43 @@ export default defineConfig({
       customPages: [`${config.site.url}`],
       serialize(item) {
         if (item.url.includes('/blog/')) {
+          const slug = item.url.split('/blog/')[1].replace(/\/$/, '')
+          const images = getImagesForSlug('blog', slug)
+          
+          if (!images.length) return item
+
           return {
             url: item.url,
             priority: 0.9,
-            img: [
-              {
-                url: `${item.url.replace('/blog/', '/images/blog/')}`,
-                title: 'Blog post content images',
-              },
-            ],
+            img: images.map(image => ({
+              url: `${config.site.url}/images/blog/${slug}/${image}`,
+              title: `Blog post image: ${slug}`,
+              caption: `Image from blog post: ${slug}`
+            })),
             lastmod: new Date().toISOString(),
           }
         }
 
         if (item.url.includes('/art/')) {
+          const slug = item.url.split('/art/')[1].replace(/\/$/, '')
+          const images = getImagesForSlug('art', slug)
+          
+          if (!images.length) return item
+
           return {
             url: item.url,
             priority: 0.9,
-            img: [
-              {
-                url: `${item.url.replace('/art/', '/images/art/')}`,
-                title: 'Artwork',
-              },
-            ],
+            img: images.map((image, index) => ({
+              url: `${config.site.url}/images/art/${slug}/${image}`,
+              title: `Artwork${images.length > 1 ? ` (${index + 1}/${images.length})` : ''}: ${slug}`,
+              caption: `Artwork from gallery: ${slug}`
+            })),
             lastmod: new Date().toISOString(),
           }
         }
 
         return item
-      },
+      }
     }),
     tailwind(),
     icon({
