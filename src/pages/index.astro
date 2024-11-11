@@ -105,7 +105,7 @@ const topTracks = await fetchTopTracks(
       link={{ text: 'See all music', href: '/music' }}
     />
 
-    <div class='grid grid-cols-2 gap-4 sm:grid-cols-2'>
+    <div class='grid grid-cols-1 gap-4 sm:grid-cols-2'>
       {
         topTracks.map((track: any) => (
           <Link

@@ -10,7 +10,7 @@ export async function customOgMediaLayout({
     <div
       style={{
         ...twj('h-full w-full flex items-center'),
-        backgroundImage: 'url("https://fractalcounty.com/grain.png")',
+        backgroundImage: 'url("https://fractalcounty.com/images/grain.png")',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
