@@ -51,13 +51,27 @@ function formatDate(dateString: string) {
         )
       }
     </div>
-    {
-      content.map((item, index) => (
-        <div class={`content ${index > 0 ? 'follow-up' : ''}`}>
-          {typeof item === 'string' ? item : <Fragment set:html={item} />}
-        </div>
-      ))
-    }
+    <div class='message-blocks'>
+      {
+        content.map((item) => (
+          <div class='content'>
+            {typeof item === 'string' ? (
+              item
+                .split(/(@\w+)/)
+                .map((part) =>
+                  part.match(/^@\w+/) ? (
+                    <span class='mention'>{part}</span>
+                  ) : (
+                    part
+                  )
+                )
+            ) : (
+              <Fragment set:html={item} />
+            )}
+          </div>
+        ))
+      }
+    </div>
   </div>
 </div>
 
@@ -110,12 +124,24 @@ function formatDate(dateString: string) {
     font-size: 0.75rem;
     font-weight: 500;
   }
+  .message-blocks {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem; /* tighter spacing between consecutive messages */
+  }
   .content {
     font-size: 1rem;
     line-height: 1.375rem;
-    margin-bottom: 0.25rem;
+    min-height: 1.375rem; /* ensures empty messages take space */
   }
-  .content.follow-up {
-    margin-top: 0.25rem;
+  .mention {
+    background-color: oklch(var(--p) / 0.2);
+    color: oklch(var(--p));
+    border-radius: 3px;
+    padding: 0 2px;
+    font-weight: 500;
+  }
+  .discord-message:hover .mention {
+    background-color: oklch(var(--p) / 0.3);
   }
 </style>

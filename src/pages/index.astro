@@ -7,12 +7,14 @@ import Subheader from '@/components/layout/Subheader.astro'
 import Link from '@/components/Link.astro'
 import ProfilePageStructuredData from '@/components/meta/ProfilePageStructuredData.astro'
 import WebsiteStructuredData from '@/components/meta/WebsiteStructuredData.astro'
-import { LINKS_FOOTER, SITE } from '@/consts'
 import PageLayout from '@/layouts/PageLayout.astro'
 import { fetchTopTracks } from '@/lib/lastfm'
 import { getSpotifyToken } from '@/lib/spotify'
 import { Image } from 'astro:assets'
 import { getCollection } from 'astro:content'
+
+const NUM_POSTS_ON_HOMEPAGE = 3
+const NUM_ART_ON_HOMEPAGE = 6
 
 const allPosts = (await getCollection('blog'))
   .filter((post: any) => !post.data.draft)
@@ -20,7 +22,7 @@ const allPosts = (await getCollection('blog'))
     (a: any, b: any) =>
       b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
   )
-  .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE)
+  .slice(0, NUM_POSTS_ON_HOMEPAGE)
 
 const recentArts = (await getCollection('art'))
   .filter((art: any) => !art.data.draft)
@@ -28,27 +30,21 @@ const recentArts = (await getCollection('art'))
     (a: any, b: any) =>
       b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
   )
-  .slice(0, SITE.NUM_ART_ON_HOMEPAGE)
+  .slice(0, NUM_ART_ON_HOMEPAGE)
 
 const LASTFM_USERNAME = 'fractalcounty'
-const LASTFM_API_KEY = import.meta.env.LASTFM_API_KEY
-const SPOTIFY_CLIENT_ID = import.meta.env.SPOTIFY_CLIENT_ID
-const SPOTIFY_CLIENT_SECRET = import.meta.env.SPOTIFY_CLIENT_SECRET
 
-const spotifyToken = await getSpotifyToken(
-  SPOTIFY_CLIENT_ID,
-  SPOTIFY_CLIENT_SECRET
-)
+const spotifyToken = await getSpotifyToken()
 const topTracks = await fetchTopTracks(
   LASTFM_USERNAME,
-  LASTFM_API_KEY,
+  import.meta.env.LASTFM_API_KEY,
   spotifyToken
 )
 ---
 
 <PageLayout
-  title='Home'
-  description="chip fractalcounty's personal blog and portfolio website dedicated to various things and stuff."
+  title={site.pages.home.title}
+  description={site.pages.home.description}
 >
   <WebsiteStructuredData slot='structured-data' />
   <ProfilePageStructuredData slot='structured-data' />
@@ -58,16 +54,16 @@ const topTracks = await fetchTopTracks(
       <section>
         <article class='main-content space-y-4'>
           <p class='animate'>
-            I make stuff on the internet. Usually silly stuff, sometimes
-            artistic stuff, and very rarely useful stuff. This is my website
-            where I dump thoughts and blog posts that can't fit on my
-            <Link
+            I make things on the internet— usually silly things, but
+            occasionally normal things as well. This is my personal dumping
+            grounds for my thoughts on art, games, and software that I couldn't
+            fit on my <Link
               href='https://x.com/fractalcounty'
               title='X'
               externalInNewTab={true}
               >Twitter,
-            </Link> as well as various projects I'm working on and other miscellaneous
-            things that don't fit elsewhere.
+            </Link> as well as my artwork, webcomics, music, and other creative endeavors
+            from over the years.
           </p>
         </article>
       </section>
@@ -131,7 +127,7 @@ const topTracks = await fetchTopTracks(
                 <Image
                   src={
                     track.image[2]['#text'] ||
-                    '/images/albums/album-placeholder.webp'
+                    '/images/music/album-placeholder.webp'
                   }
                   alt={`${track.name} by ${track.artist.name}`}
                   width={48}
@@ -164,14 +160,31 @@ const topTracks = await fetchTopTracks(
         </article>
         <ul class='flex flex-wrap gap-2'>
           {
-            LINKS_FOOTER.map((SOCIAL) => (
-              <li class='flex gap-x-2 text-nowrap'>
+            [
+              {
+                href: 'https://twitter.com/fractalcounty',
+                label: 'Twitter',
+              },
+              {
+                href: 'https://bsky.app/profile/fractalcounty.com',
+                label: 'Bluesky',
+              },
+              {
+                href: 'https://github.com/fractalcounty',
+                label: 'GitHub',
+              },
+              {
+                href: 'https://www.instagram.com/fractalcounty/',
+                label: 'Instagram',
+              },
+            ].map(({ href, label }) => (
+              <li class='flex gap-x-2 text-nowrap lowercase'>
                 <Link
-                  href={SOCIAL.HREF}
-                  title={`${SITE.NAME} on ${SOCIAL.ICON}`}
+                  href={href}
+                  title={`${site.name} on ${label}`}
                   externalInNewTab={true}
                 >
-                  {SOCIAL.ICON}
+                  {label}
                 </Link>
                 /
               </li>
@@ -179,11 +192,11 @@ const topTracks = await fetchTopTracks(
           }
           <li class='line-clamp-1'>
             <Link
-              href={`mailto:${encodeURIComponent(SITE.EMAIL)}`}
-              title={`Email ${SITE.AUTHOR}`}
+              href={`mailto:${encodeURIComponent(site.author.email)}`}
+              title={`Email ${site.author.name}`}
               externalInNewTab={false}
             >
-              {SITE.EMAIL}
+              {site.author.email}
             </Link>
           </li>
         </ul>

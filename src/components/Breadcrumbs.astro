@@ -22,8 +22,20 @@ const {
 // check if we're on the homepage by checking if pathname is just '/'
 const isHomePage = Astro.url.pathname === '/'
 
-// get current path segments for aria labels
+// get current path segments first
 const pathSegments = Astro.url.pathname.split('/').filter(Boolean)
+
+// then use it in the is404 check
+const is404 = (() => {
+  const isStaticRoute = Object.values(site.pages).some(
+    (page) => page.path === Astro.url.pathname && !page.external
+  )
+  if (isStaticRoute) return false
+
+  const firstSegment = pathSegments[0]
+  const validCollections = ['blog', 'art']
+  return !validCollections.includes(firstSegment)
+})()
 ---
 
 <div class:list={[isHomePage && 'sr-only']}>
@@ -42,7 +54,10 @@ const pathSegments = Astro.url.pathname.split('/').filter(Boolean)
       // dynamically generate aria labels for all path segments
       ...pathSegments.map((segment) => ({
         text: segment,
-        ariaLabel: `Navigate to ${segment.replace(/-/g, ' ')}`,
+        ariaLabel: is404
+          ? `Invalid page: ${segment.replace(/-/g, ' ')}`
+          : `Navigate to ${segment.replace(/-/g, ' ')}`,
+        class: is404 ? 'text-error' : undefined,
       })),
     ]}
     customizeNav={{
@@ -51,14 +66,14 @@ const pathSegments = Astro.url.pathname.split('/').filter(Boolean)
   >
     <Icon
       slot='separator'
-      name='solar:forward-linear'
+      name='lucide:forward'
       class='text-base-content transition-all duration-200'
       aria-hidden='true'
       size='1.25rem'
     />
     <span slot='index' class='inline-flex items-center'>
       <Icon
-        name='solar:home-2-outline'
+        name='lucide:house'
         class='stroke-[5] text-base-content decoration-primary/50 transition-all duration-200 hover:text-primary hover:underline hover:decoration-2'
         size='0.85rem'
         aria-hidden='true'
@@ -112,5 +127,19 @@ const pathSegments = Astro.url.pathname.split('/').filter(Boolean)
 
   :global(.c-breadcrumbs__truncated-button) {
     @apply transition-colors duration-200 hover:text-primary;
+  }
+
+  /* error state styling using CSS custom properties */
+  :global(.c-breadcrumbs__link.text-error) {
+    color: hsl(var(--er));
+    text-decoration-color: hsl(var(--er) / 0.5);
+  }
+
+  :global(.c-breadcrumbs__link.text-error:hover) {
+    color: hsl(var(--er) / 0.8);
+  }
+
+  :global(.c-breadcrumbs__link.text-error:hover::after) {
+    background-color: hsl(var(--er));
   }
 </style>

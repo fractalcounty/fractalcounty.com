@@ -26,7 +26,7 @@ const { arts }: Props = Astro.props
 
       return (
         <Link
-          href={`/art/${art.slug}`}
+          href={`/art/${art.id}`}
           class='group relative aspect-square overflow-hidden rounded-xl bg-base-300 transition-all duration-150 hover:shadow-md'
           underline={false}
           data-index={index}
@@ -38,11 +38,11 @@ const { arts }: Props = Astro.props
                 {isMultiImage && (
                   <span class='inline-flex items-center gap-x-1 text-xs font-semibold text-primary'>
                     {art.data.type === 'webcomic' ? (
-                      <Icon name='solar:document-outline' size={'1rem'} />
+                      <Icon name='lucide:file-text' size={'1rem'} />
                     ) : art.data.type === 'animation' ? (
-                      <Icon name='solar:video-library-outline' size={'1rem'} />
+                      <Icon name='lucide:image-play' size={'1rem'} />
                     ) : (
-                      <Icon name='mynaui:image' size={'1rem'} />
+                      <Icon name='lucide:image' size={'1rem'} />
                     )}
                     {imageCount}{' '}
                     {art.data.type === 'webcomic'

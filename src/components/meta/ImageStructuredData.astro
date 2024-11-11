@@ -1,6 +1,5 @@
 ---
 import type { ImageMetadata } from 'astro'
-import { SITE } from '@/consts'
 import { SCHEMA_IDS } from '@/lib/schema'
 
 interface Props {
@@ -31,7 +30,7 @@ const {
   keywords,
   datePublished,
   dateModified,
-  license = 'https://fractalcounty.com/unlicense',
+  license = `${site.url}/unlicense`,
   collection,
   id,
 } = Astro.props
@@ -94,13 +93,17 @@ const schema = {
   accessibilityHazard: ['noFlashingHazard'],
   accessibilityFeature: ['alternativeText', 'highContrast'],
   acquireLicensePage: license,
-  creditText: SITE.AUTHOR,
+  creditText: site.author.name,
   creator: {
     '@type': 'Person',
     '@id': SCHEMA_IDS.PERSON,
   },
-  copyrightNotice: `Unlicensed. ${new Date().getFullYear()} ${SITE.AUTHOR}`,
+  copyrightNotice: `Unlicensed. ${new Date().getFullYear()} ${site.author.name}`,
 }
 ---
 
-<script type='application/ld+json' set:html={JSON.stringify(schema)} />
+<script
+  type='application/ld+json'
+  set:html={JSON.stringify(schema)}
+  is:inline
+/>

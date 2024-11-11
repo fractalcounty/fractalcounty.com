@@ -1,17 +1,34 @@
-import type { AstroUserConfig } from 'astro/config'
 import fs from 'node:fs'
 import mdx from '@astrojs/mdx'
 import sitemap from '@astrojs/sitemap'
 import tailwind from '@astrojs/tailwind'
-import { defineConfig } from 'astro/config'
+import { defineConfig, envField } from 'astro/config'
 import compressor from 'astro-compressor'
 import icon from 'astro-icon'
 import opengraphImages from 'astro-opengraph-images'
+import AutoImport from 'unplugin-auto-import/astro'
 
+import config from './src/config'
 import { customOgMediaLayout } from './src/ogRenderer'
 
 export default defineConfig({
-  site: 'https://fractalcounty.com',
+  site: config.site.url,
+  env: {
+    schema: {
+      LASTFM_API_KEY: envField.string({
+        context: 'server',
+        access: 'secret',
+      }),
+      SPOTIFY_CLIENT_ID: envField.string({
+        context: 'server',
+        access: 'secret',
+      }),
+      SPOTIFY_CLIENT_SECRET: envField.string({
+        context: 'server',
+        access: 'secret',
+      }),
+    },
+  },
   markdown: {},
   image: {
     domains: ['i.scdn.co', 'lastfm.freetls.fastly.net'],
@@ -35,7 +52,32 @@ export default defineConfig({
       },
     },
   },
+  vite: {
+    resolve: {
+      alias: {
+        '@config': '/src/config.ts',
+        '@': '/src',
+      },
+    },
+  },
   integrations: [
+    AutoImport({
+      imports: [
+        {
+          '@/config': [
+            'config', // default import
+            'site', // named import
+          ],
+        },
+      ],
+      include: [/\.astro$/],
+      dts: './src/auto-imports.d.ts',
+      eslintrc: {
+        enabled: true,
+        filepath: './.astro/.eslintrc-auto-import.json',
+        globalsPropValue: true,
+      },
+    }),
     mdx(),
     sitemap({
       changefreq: 'weekly',
@@ -47,7 +89,7 @@ export default defineConfig({
           en: 'en-US',
         },
       },
-      customPages: ['https://links.fractalcounty.com'],
+      customPages: [`${config.site.url}`],
       serialize(item) {
         if (item.url.includes('/blog/')) {
           return {
@@ -81,7 +123,9 @@ export default defineConfig({
       },
     }),
     tailwind(),
-    icon(),
+    icon({
+      iconDir: 'public/icons',
+    }),
     opengraphImages({
       render: customOgMediaLayout,
       options: {
@@ -106,8 +150,4 @@ export default defineConfig({
     }),
     compressor(),
   ],
-  experimental: {
-    contentIntellisense: true,
-    contentLayer: true,
-  },
-}) satisfies AstroUserConfig
+})

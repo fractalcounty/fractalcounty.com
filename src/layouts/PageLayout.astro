@@ -2,7 +2,7 @@
 import Footer from '@/components/layout/Footer.astro'
 import Header from '@/components/layout/Header.astro'
 import Head from '@/components/meta/Head.astro'
-import { ViewTransitions } from 'astro:transitions'
+import { ClientRouter } from 'astro:transitions'
 
 type Props = {
   title: string
@@ -53,7 +53,7 @@ const updatedDateString = updatedDate?.toISOString()
       crossorigin
     />
     <slot name='structured-data' />
-    <ViewTransitions fallback='swap' transition:persist='theme,scroll' />
+    <ClientRouter fallback='swap' transition:persist='theme,scroll' />
     <style is:global>
       /* optimize text rendering */
       .preload-text {

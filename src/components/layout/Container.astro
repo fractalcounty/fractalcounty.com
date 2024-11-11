@@ -1,9 +1,9 @@
 ---
-interface Props {
+const { as: Element = 'section' } = Astro.props
+
+export type Props = {
   as?: 'main' | 'section'
 }
-
-const { as: Element = 'section' } = Astro.props
 ---
 
 <Element class='mx-auto max-w-screen-sm px-5'>

@@ -1,5 +1,5 @@
 import type { CollectionEntry } from 'astro:content'
-import { SITE } from '@consts'
+import { site } from '@config'
 
 // Add type definitions for all schemas
 export interface BaseSchema {
@@ -272,37 +272,28 @@ export interface SchemaIds {
 }
 
 export const SCHEMA_IDS: SchemaIds = {
-  PERSON: 'https://fractalcounty.com/#person',
-  ORGANIZATION: 'https://fractalcounty.com/#organization',
-  WEBSITE: 'https://fractalcounty.com/#website',
+  PERSON: `${site.url}/#person`,
+  ORGANIZATION: `${site.url}/#organization`,
+  WEBSITE: `${site.url}/#website`,
 }
 
 // Base person schema with expanded details
 export const personSchema = {
   '@type': 'Person',
   '@id': SCHEMA_IDS.PERSON,
-  name: 'Chip',
-  alternateName: 'fractalcounty',
-  url: 'https://fractalcounty.com',
-  email: SITE.EMAIL,
+  name: site.author.name,
+  alternateName: site.author.username,
+  url: site.url,
+  email: site.author.email,
   image: {
     '@type': 'ImageObject',
-    url: 'https://fractalcounty.com/avatar.jpeg',
+    url: `${site.url}/images/avatar.jpg`,
     width: 400,
     height: 400,
     encodingFormat: 'image/jpeg',
   },
-  sameAs: [
-    'https://twitter.com/fractalcounty',
-    'https://x.com/fractalcounty',
-    'https://github.com/fractalcounty',
-    'https://www.instagram.com/fractalcounty/',
-    'https://www.youtube.com/@fractalcounty',
-    'https://fractalcounty.bandcamp.com',
-    'https://fractalcounty.newgrounds.com/',
-    'https://bsky.app/profile/fractalcounty.com',
-  ],
-  jobTitle: 'Digital Artist & Developer',
+  sameAs: site.author.socials?.map((social) => social.url) ?? [],
+  jobTitle: site.author.bio,
   worksFor: {
     '@id': SCHEMA_IDS.ORGANIZATION,
   },
@@ -312,29 +303,20 @@ export const personSchema = {
 export const organizationSchema = {
   '@type': 'Organization',
   '@id': SCHEMA_IDS.ORGANIZATION,
-  name: 'FRACTAL COUNTY',
-  url: 'https://fractalcounty.com',
+  name: site.name,
+  url: site.url,
   logo: {
     '@type': 'ImageObject',
-    '@id': 'https://fractalcounty.com/#logo',
-    url: 'https://fractalcounty.com/logo.svg',
+    '@id': `${site.url}/#logo`,
+    url: `${site.url}/icons/logo.svg`,
     width: 1200,
     height: 442,
-    caption: 'FRACTAL COUNTY',
+    caption: site.name,
   },
   image: {
-    '@id': 'https://fractalcounty.com/#logo',
+    '@id': `${site.url}/#logo`,
   },
-  sameAs: [
-    'https://twitter.com/fractalcounty',
-    'https://github.com/fractalcounty',
-    'https://www.instagram.com/fractalcounty/',
-    'https://www.youtube.com/@fractalcounty',
-    'https://fractalcounty.bandcamp.com',
-    'https://fractalcounty.newgrounds.com/',
-    'https://bsky.app/profile/fractalcounty.com',
-    'https://x.com/fractalcounty',
-  ],
+  sameAs: site.author.socials?.map((social) => social.url) ?? [],
   founder: {
     '@id': SCHEMA_IDS.PERSON,
   },
@@ -349,9 +331,9 @@ export const organizationSchema = {
 export const websiteSchema = {
   '@type': 'WebSite',
   '@id': SCHEMA_IDS.WEBSITE,
-  url: 'https://fractalcounty.com',
-  name: 'FRACTAL COUNTY',
-  description: 'Personal blog and portfolio website for chip fractalcounty',
+  url: site.url,
+  name: site.name,
+  description: site.pages.home.description,
   publisher: {
     '@id': SCHEMA_IDS.ORGANIZATION,
   },
@@ -363,14 +345,14 @@ export const websiteSchema = {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: 'https://fractalcounty.com/search?q={search_term_string}',
+        urlTemplate: `${site.url}/search?q={search_term_string}`,
       },
       'query-input': 'required name=search_term_string',
     },
   ],
   inLanguage: 'en-US',
   copyrightYear: new Date().getFullYear(),
-  license: 'https://fractalcounty.com/unlicense',
+  license: `${site.url}/unlicense`,
 }
 
 // Simplify the path transformation
@@ -393,11 +375,11 @@ function getPublicImagePath(
         : `/images/${filename}.webp`
 
     // make url absolute
-    return new URL(relativePath, 'https://fractalcounty.com').toString()
+    return new URL(relativePath, site.url).toString()
   }
   return imageSrc.startsWith('http')
     ? imageSrc
-    : new URL(imageSrc, 'https://fractalcounty.com').toString()
+    : new URL(imageSrc, site.url).toString()
 }
 
 // Enhanced art schema generation with automatic image metadata handling
@@ -468,14 +450,16 @@ export function generateArtSchema(entry: CollectionEntry<'art'>, url: URL) {
     // add associated media for additional images
     ...(Array.isArray(entry.data.images) && entry.data.images.length > 1
       ? {
-          associatedMedia: entry.data.images.slice(1).map((img, index) => ({
-            '@type': 'ImageObject',
-            '@id': `${url.toString()}#image-${index + 1}`,
-            url: img.src,
-            width: img.width,
-            height: img.height,
-            caption: `${title} - Image ${index + 2}`,
-          })),
+          associatedMedia: entry.data.images
+            .slice(1)
+            .map((img: ImageMetadata, index: number) => ({
+              '@type': 'ImageObject',
+              '@id': `${url.toString()}#image-${index + 1}`,
+              url: img.src,
+              width: img.width,
+              height: img.height,
+              caption: `${title} - Image ${index + 2}`,
+            })),
         }
       : {}),
     ...(type === 'webcomic'
@@ -494,9 +478,9 @@ export function generateArtSchema(entry: CollectionEntry<'art'>, url: URL) {
     copyrightHolder: {
       '@id': SCHEMA_IDS.PERSON,
     },
-    license: 'https://fractalcounty.com/unlicense',
+    license: `${site.url}/unlicense`,
     conditionsOfAccess: 'Free to view online',
-    usageInfo: 'https://fractalcounty.com/unlicense',
+    usageInfo: `${site.url}/unlicense`,
   }
 
   return schema
@@ -553,7 +537,7 @@ export function generateArticleSchema(
     copyrightHolder: {
       '@id': SCHEMA_IDS.PERSON,
     },
-    license: 'https://fractalcounty.com/unlicense',
+    license: `${site.url}/unlicense`,
     ...(imageSchema && { image: imageSchema }),
   }
 }
@@ -576,7 +560,7 @@ export function generateCollectionSchema(
     },
     about: {
       '@type': 'Thing',
-      name: 'Blog Posts',
+      name: type === 'blog' ? 'Blog Posts' : 'Artwork',
     },
     author: {
       '@id': SCHEMA_IDS.PERSON,
@@ -585,7 +569,7 @@ export function generateCollectionSchema(
       '@id': SCHEMA_IDS.ORGANIZATION,
     },
     inLanguage: 'en-US',
-    datePublished: '2023-01-01T00:00:00Z', // Add actual date when site launched
+    datePublished: new Date('2024-10-01').toISOString(),
     dateModified: new Date().toISOString(),
     breadcrumb: {
       '@id': `${url.toString()}#breadcrumb`,
@@ -658,7 +642,7 @@ export function generateImageSchema({
     name: title,
     encodingFormat: image.format,
     representativeOfPage: isRepresentative,
-    license: 'https://fractalcounty.com/unlicense',
+    license: `${site.url}/unlicense`,
     copyrightHolder: {
       '@id': SCHEMA_IDS.PERSON,
     },

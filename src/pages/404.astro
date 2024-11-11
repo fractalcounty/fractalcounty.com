@@ -4,15 +4,35 @@ import Link from '@/components/Link.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
 import { Icon } from 'astro-icon/components'
 
-const ERROR_MESSAGES = ['page not found']
+const ERROR_MESSAGES = [
+  // generic
+  'page not found',
+  'there is nothing here',
+  'this path leads nowhere',
+  'where have you gone',
+  'dead end',
+  'something is missing',
+  "this isn't right",
+  'abandon all hope',
+
+  // deltarune
+  'but nobody came',
+
+  // hawaii part ii
+  'blinding, shining star, no page here so far',
+  'alone at the edge of the universe',
+  'but none were there',
+  'you fell into a hole you cannot see',
+  'calming if you look at it right',
+]
 
 const randomMessage =
   ERROR_MESSAGES[Math.floor(Math.random() * ERROR_MESSAGES.length)]
 ---
 
 <PageLayout
-  title='404 - Page Not Found'
-  description="The page you're looking for on chip fractalcounty's website doesn't exist"
+  title={site.pages['404'].title}
+  description={site.pages['404'].description}
 >
   <section
     class='animate relative flex flex-col items-center justify-center gap-y-8 pt-12 text-center'

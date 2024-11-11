@@ -1,5 +1,4 @@
 ---
-import { HOME, SITE } from '@/consts'
 import {
   generateBreadcrumbSchema,
   organizationSchema,
@@ -20,10 +19,10 @@ const schema = {
       '@type': 'WebPage',
       '@id': pageUrl.toString(),
       url: pageUrl.toString(),
-      name: SITE.NAME,
-      description: HOME.DESCRIPTION,
+      name: site.name,
+      description: site.pages.home.description,
       isPartOf: {
-        '@id': 'https://fractalcounty.com/#website',
+        '@id': `${site.url}#website`,
       },
       inLanguage: 'en-US',
       breadcrumb: {
@@ -41,4 +40,8 @@ const schema = {
 }
 ---
 
-<script type='application/ld+json' set:html={JSON.stringify(schema)} />
+<script
+  type='application/ld+json'
+  set:html={JSON.stringify(schema)}
+  is:inline
+/>

@@ -22,7 +22,7 @@ interface Props {
   retweets?: string
   replies?: string
   likes?: string
-  source?: string
+  src?: string
   quotedTweet?: QuotedTweet
 }
 
@@ -35,7 +35,7 @@ const {
   retweets = '100k',
   replies = '50k',
   likes = '300k',
-  source = 'https://twitter.com',
+  src = 'https://twitter.com',
   quotedTweet,
 } = Astro.props
 
@@ -144,26 +144,26 @@ const hasContent = text || imageUrl
             aria-label='Tweet actions'
           >
             <button class='action' aria-label={`Reply, ${replies} replies`}>
-              <Icon name='solar:chat-square-linear' />
+              <Icon name='lucide:message-square' />
               <span>{replies}</span>
             </button>
             <button class='action' aria-label={`Retweet, ${retweets} retweets`}>
-              <Icon name='solar:repeat-bold' />
+              <Icon name='lucide:repeat' />
               <span>{retweets}</span>
             </button>
             <button class='action' aria-label={`Like, ${likes} likes`}>
-              <Icon name='solar:heart-linear' />
+              <Icon name='lucide:heart' />
               <span>{likes}</span>
             </button>
             <Link
-              href={source}
+              href={src}
               class='menu tooltip tooltip-bottom tooltip-primary flex items-center justify-center text-accent-content'
               data-tip='View original source'
               underline={false}
               externalInNewTab={true}
               aria-label='View original tweet'
             >
-              <Icon name='solar:link-bold' class='size-4' />
+              <Icon name='lucide:link' class='size-4' />
             </Link>
           </div>
         )
@@ -173,6 +173,16 @@ const hasContent = text || imageUrl
 </div>
 
 <style>
+  :global(.tooltip) {
+    font-weight: normal !important;
+    font-family: 'Inter', sans-serif !important;
+  }
+
+  :global(.tooltip:before) {
+    font-weight: normal !important;
+    font-family: 'Inter', sans-serif !important;
+  }
+
   .tweet {
     font-family: 'Chirp', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     @apply prose-base p-4;

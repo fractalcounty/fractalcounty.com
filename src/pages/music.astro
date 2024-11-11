@@ -15,18 +15,12 @@ import { fetchLastFmData } from '@/lib/lastfm'
 import { getPlaylistDetails, getSpotifyToken } from '@/lib/spotify'
 
 const LASTFM_USERNAME = 'fractalcounty'
-const LASTFM_API_KEY = import.meta.env.LASTFM_API_KEY
-const SPOTIFY_CLIENT_ID = import.meta.env.SPOTIFY_CLIENT_ID
-const SPOTIFY_CLIENT_SECRET = import.meta.env.SPOTIFY_CLIENT_SECRET
 const PLAYLIST_ID = '6mcNUOZBJVOl38rvUS5suh'
 
-const spotifyToken = await getSpotifyToken(
-  SPOTIFY_CLIENT_ID,
-  SPOTIFY_CLIENT_SECRET
-)
+const spotifyToken = await getSpotifyToken()
 const lastFmData = await fetchLastFmData(
   LASTFM_USERNAME,
-  LASTFM_API_KEY,
+  import.meta.env.LASTFM_API_KEY,
   spotifyToken
 )
 const playlistData = await getPlaylistDetails(PLAYLIST_ID, spotifyToken)
@@ -34,12 +28,12 @@ const playlistData = await getPlaylistDetails(PLAYLIST_ID, spotifyToken)
 const { artists, albums, userInfo, topTracks } = lastFmData
 const playlist = playlistData
 
-const bandcampAlbums = await getCollection('bandcamp')
+const bandcampAlbums = await getCollection('music')
 ---
 
 <PageLayout
-  title='Music'
-  description="chip fractalcounty's library of albums on bandcamp, Spotify playlists and Last.fm listening stats"
+  title={site.pages.music.title}
+  description={site.pages.music.description}
 >
   <MusicPageStructuredData
     slot='structured-data'
@@ -64,7 +58,7 @@ const bandcampAlbums = await getCollection('bandcamp')
         link={{
           text: 'Open in Bandcamp',
           href: 'https://fractalcounty.bandcamp.com',
-          icon: 'fluent:open-24-filled',
+          icon: 'lucide:external-link',
         }}
       />
 
@@ -213,7 +207,7 @@ const bandcampAlbums = await getCollection('bandcamp')
                     src={
                       artist.image[3]['#text'] ||
                       artist.image[2]['#text'] ||
-                      '/images/albums/album-placeholder.webp'
+                      '/images/music/album-placeholder.webp'
                     }
                     alt={`${artist.name}`}
                     width={48}
@@ -261,7 +255,7 @@ const bandcampAlbums = await getCollection('bandcamp')
                   <Image
                     src={
                       album.image[2]['#text'] ||
-                      '/images/albums/album-placeholder.webp'
+                      '/images/music/album-placeholder.webp'
                     }
                     alt={`${album.name} by ${album.artist.name}`}
                     width={48}
@@ -333,7 +327,7 @@ const bandcampAlbums = await getCollection('bandcamp')
           externalInNewTab={true}
         >
           Open in Spotify
-          <Icon name='fluent:open-24-filled' class='size-4' />
+          <Icon name='lucide:external-link' class='size-4' />
         </Link>
       </div>
 

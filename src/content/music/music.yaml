@@ -1,0 +1,18 @@
+- id: early-years
+  title: EARLY YEARS
+  url: https://fractalcounty.bandcamp.com/album/early-years
+  releaseDate: 2022-08-01
+  coverArt: ./early-years.webp
+  description: 2016-2022 demos
+- id: war-years
+  title: WAR YEARS
+  url: https://fractalcounty.bandcamp.com/album/war-years
+  releaseDate: 2023-05-01
+  coverArt: ./war-years.webp
+  description: 2022-2023 demos
+- id: untitled
+  title: UNTITLED
+  url: https://fractalcounty.com/untitled
+  releaseDate: 2024-01-01
+  coverArt: ./album-placeholder.webp
+  description: 2024 demos?

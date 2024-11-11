@@ -1,7 +1,9 @@
 ---
 import Container from '@/components/layout/Container.astro'
 import Link from '@/components/Link.astro'
-import { SITE } from '@/consts'
+import { getNavItems } from '@/config'
+
+const navItems = getNavItems()
 ---
 
 <header
@@ -20,49 +22,40 @@ import { SITE } from '@/consts'
     <div class='flex flex-wrap justify-between gap-y-2'>
       <Link
         href='/'
-        title={`${SITE.NAME} - Return to homepage`}
+        title={`${site.name} - Return to homepage`}
         externalInNewTab={false}
         underline={false}
         class='text-lg font-black subpixel-antialiased'
-        aria-label={`${SITE.NAME} - Return to homepage`}
+        aria-label={`${site.name} - Return to homepage`}
       >
         <h1
           class='title preload-text font-bold uppercase subpixel-antialiased transition-all duration-150 hover:scale-105 hover:text-primary'
           style='font-family: AlteHaasGrotesk, sans-serif; font-display: swap;'
         >
-          {SITE.NAME}
+          {site.name}
         </h1>
       </Link>
       <nav role='navigation' aria-label='Main navigation'>
         <ul class='m-0 flex list-none gap-1 p-0'>
           {
-            [
-              { href: '/blog', label: 'Blog', text: 'blog' },
-              { href: '/art', label: 'Art', text: 'art' },
-              { href: '/music', label: 'Music', text: 'music' },
-              {
-                href: 'https://links.fractalcounty.com/',
-                label: 'Links',
-                text: 'links',
-                external: true,
-              },
-            ].map((item, index) => (
+            navItems.map((item, index) => (
               <>
                 <li>
                   <Link
                     href={item.href}
-                    title={`View ${item.label.toLowerCase()}`}
+                    title={`View ${item.name}`}
                     externalInNewTab={item.external}
+                    class='lowercase'
                     prefetch={true}
                     underline={true}
                     aria-current={
                       Astro.url.pathname === item.href ? 'page' : undefined
                     }
                   >
-                    {item.text}
+                    {item.name}
                   </Link>
                 </li>
-                {index < 3 && (
+                {index < navItems.length - 1 && (
                   <li aria-hidden='true'>
                     <span>/</span>
                   </li>

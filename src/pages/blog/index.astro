@@ -4,7 +4,6 @@ import Container from '@/components/layout/Container.astro'
 import Subheader from '@/components/layout/Subheader.astro'
 import CollectionPageStructuredData from '@/components/meta/CollectionPageStructuredData.astro'
 import ProfilePageStructuredData from '@/components/meta/ProfilePageStructuredData.astro'
-import { BLOG } from '@/consts'
 import PageLayout from '@/layouts/PageLayout.astro'
 import { type CollectionEntry, getCollection } from 'astro:content'
 
@@ -35,14 +34,14 @@ const years = Object.keys(posts).sort(
 ---
 
 <PageLayout
-  title='Blog'
-  description="An index of chip fractalcounty's thoughts and writings on various topics I think are neat, as well as other projects I've worked on."
+  title={site.pages.blog.title}
+  description={site.pages.blog.description}
 >
   <CollectionPageStructuredData
     slot='structured-data'
     type='blog'
-    name={BLOG.TITLE}
-    description={BLOG.DESCRIPTION}
+    name={site.pages.blog.title}
+    description={site.pages.blog.description}
   />
   <ProfilePageStructuredData slot='structured-data' />
   <Container as='section'>

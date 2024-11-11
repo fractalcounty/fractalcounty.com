@@ -138,13 +138,19 @@ export async function fetchLastFmData(
           return {
             ...track,
             albumArt: (() => {
-              if (typeof spotifyInfo?.albumArt === 'string' && spotifyInfo.albumArt.length > 0) {
+              if (
+                typeof spotifyInfo?.albumArt === 'string' &&
+                spotifyInfo.albumArt.length > 0
+              ) {
                 return spotifyInfo.albumArt
               }
-              if (typeof track?.albumArt === 'string' && track.albumArt.length > 0) {
+              if (
+                typeof track?.albumArt === 'string' &&
+                track.albumArt.length > 0
+              ) {
                 return track.albumArt
               }
-              return '/images/albums/album-placeholder.webp'
+              return '/images/music/album-placeholder.webp'
             })(),
             previewUrl: spotifyInfo?.previewUrl ?? null,
           }
@@ -162,7 +168,12 @@ export async function fetchLastFmData(
           ...artist,
           image: artist.image.map((img: LastFmImage, i: number) => ({
             ...img,
-            '#text': i === 3 ? (spotifyImage !== null ? spotifyImage : img['#text']) : img['#text'],
+            '#text':
+              i === 3
+                ? spotifyImage !== null
+                  ? spotifyImage
+                  : img['#text']
+                : img['#text'],
           })),
         }
       })
@@ -180,7 +191,12 @@ export async function fetchLastFmData(
           ...album,
           image: album.image.map((img: LastFmImage, i: number) => ({
             ...img,
-            '#text': i === 3 ? (spotifyAlbumArt !== null ? spotifyAlbumArt : img['#text']) : img['#text'],
+            '#text':
+              i === 3
+                ? spotifyAlbumArt !== null
+                  ? spotifyAlbumArt
+                  : img['#text']
+                : img['#text'],
           })),
         }
       })
@@ -199,9 +215,9 @@ export async function fetchLastFmData(
       albums: [],
       userInfo: {
         playcount: '0',
-        registered: { unixtime: 0 }
+        registered: { unixtime: 0 },
       },
-      topTracks: []
+      topTracks: [],
     }
   }
 }
@@ -216,11 +232,11 @@ export async function fetchTopTracks(
     const response = await fetch(
       `https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${username}&api_key=${apiKey}&period=1month&limit=3&format=json&extended=1`
     )
-    
+
     // handle potential json parse error
     let data: LastFmTopTracksResponse
     try {
-      data = await response.json() as LastFmTopTracksResponse
+      data = (await response.json()) as LastFmTopTracksResponse
     } catch (e) {
       console.error('Failed to parse LastFM response:', e)
       return []
@@ -228,7 +244,7 @@ export async function fetchTopTracks(
 
     // validate response shape
     if (
-      typeof data?.toptracks === 'undefined' || 
+      typeof data?.toptracks === 'undefined' ||
       data.toptracks === null ||
       typeof data.toptracks.track === 'undefined' ||
       data.toptracks.track === null ||
@@ -250,9 +266,10 @@ export async function fetchTopTracks(
             ...track,
             image: track.image.map((img: LastFmImage, i: number) => ({
               ...img,
-              '#text': i === 2 
-                ? spotifyInfo?.albumArt ?? img['#text']
-                : img['#text'],
+              '#text':
+                i === 2
+                  ? (spotifyInfo?.albumArt ?? img['#text'])
+                  : img['#text'],
             })),
           }
         } catch (error) {

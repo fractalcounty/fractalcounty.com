@@ -90,7 +90,7 @@ export interface Props {
 }
 
 const {
-  href,
+  href = '/',
   title,
   externalInNewTab,
   underline = true,
@@ -105,7 +105,8 @@ const {
   ...rest
 } = Astro.props
 
-const shouldPrefetch = prefetch && href.startsWith('/')
+const shouldPrefetch =
+  prefetch && typeof href === 'string' && href.startsWith('/')
 ---
 
 <AstroLink

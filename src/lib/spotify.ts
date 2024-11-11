@@ -78,8 +78,10 @@ interface SpotifyPlaylistResponse {
 }
 
 // get spotify auth token
-export async function getSpotifyToken(clientId: string, clientSecret: string): Promise<string> {
-  const basic = Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
+export async function getSpotifyToken(): Promise<string> {
+  const basic = Buffer.from(
+    `${import.meta.env.SPOTIFY_CLIENT_ID}:${import.meta.env.SPOTIFY_CLIENT_SECRET}`
+  ).toString('base64')
 
   const response = await fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
@@ -90,12 +92,15 @@ export async function getSpotifyToken(clientId: string, clientSecret: string): P
     body: 'grant_type=client_credentials',
   })
 
-  const data = await response.json() as SpotifyAuthResponse
+  const data = (await response.json()) as SpotifyAuthResponse
   return data.access_token
 }
 
 // get artist image from spotify
-export async function getSpotifyArtistImage(artistName: string, token: string): Promise<string | null> {
+export async function getSpotifyArtistImage(
+  artistName: string,
+  token: string
+): Promise<string | null> {
   try {
     const response = await fetch(
       `https://api.spotify.com/v1/search?q=${encodeURIComponent(artistName)}&type=artist&limit=1`,
@@ -105,7 +110,7 @@ export async function getSpotifyArtistImage(artistName: string, token: string): 
         },
       }
     )
-    const data = await response.json() as SpotifyArtistResponse
+    const data = (await response.json()) as SpotifyArtistResponse
     return data.artists?.items[0]?.images[0]?.url ?? null
   } catch (error) {
     console.error(`Error fetching Spotify image for ${artistName}:`, error)
@@ -128,7 +133,7 @@ export async function getSpotifyTrackInfo(
         },
       }
     )
-    const data = await response.json() as SpotifyTrackResponse
+    const data = (await response.json()) as SpotifyTrackResponse
     return {
       albumArt: data.tracks?.items[0]?.album?.images[0]?.url ?? null,
       previewUrl: data.tracks?.items[0]?.preview_url ?? null,
@@ -154,7 +159,7 @@ export async function getSpotifyAlbumInfo(
         },
       }
     )
-    const data = await response.json() as SpotifyAlbumResponse
+    const data = (await response.json()) as SpotifyAlbumResponse
     return data.albums?.items[0]?.images[0]?.url ?? null
   } catch (error) {
     console.error(`error fetching spotify album art for ${albumName}:`, error)
@@ -176,12 +181,12 @@ export async function getPlaylistDetails(
         },
       }
     )
-    const data = await response.json() as SpotifyPlaylistResponse
+    const data = (await response.json()) as SpotifyPlaylistResponse
     return {
       name: data.name,
       description: data.description,
       image: data.images[0]?.url,
-      tracks: data.tracks.items.map(item => ({
+      tracks: data.tracks.items.map((item) => ({
         name: item.track.name,
         artist: item.track.artists[0].name,
         album: item.track.album.name,
@@ -195,4 +200,4 @@ export async function getPlaylistDetails(
     console.error('error fetching playlist:', error)
     return null
   }
-} 
+}

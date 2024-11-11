@@ -1,7 +1,6 @@
 ---
-import { SITE } from '@consts'
 import { formatDateForOpenGraph, getCanonicalUrl } from '@lib/utils'
-import { ViewTransitions } from 'astro:transitions'
+import { ClientRouter } from 'astro:transitions'
 import { AstroFont } from 'astro-font'
 import { getImagePath } from 'astro-opengraph-images'
 import { SEO } from 'astro-seo'
@@ -35,8 +34,7 @@ const {
 
 const openGraphImageUrl =
   image || getImagePath({ url: Astro.url, site: Astro.site })
-const defaultTags = ['chippledipple', 'fractal', 'county', 'art', 'gamedev']
-const combinedTags = Array.from(new Set([...tags, ...defaultTags]))
+const combinedTags = Array.from(new Set([...tags, ...site.defaultTags]))
 const tagsContent = combinedTags.join(', ')
 const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
 ---
@@ -53,8 +51,8 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
 <SEO
   canonical={canonicalUrl}
   title={title}
-  titleTemplate={`${SITE.NAME} | %s`}
-  titleDefault={SITE.NAME}
+  titleTemplate={`${site.name} | %s`}
+  titleDefault={site.name}
   description={description}
   charset='utf-8'
   noindex={noindex}
@@ -62,7 +60,7 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
   languageAlternates={languageAlternates}
   openGraph={{
     basic: {
-      title: `${SITE.NAME} | ${title}`,
+      title: `${site.name} | ${title}`,
       type,
       image: openGraphImageUrl,
       url: Astro.url.href,
@@ -70,7 +68,7 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
     optional: {
       description,
       locale: 'en_US',
-      siteName: SITE.NAME,
+      siteName: site.name,
       localeAlternate: languageAlternates.map((alt) => alt.hrefLang),
     },
     image: {
@@ -79,7 +77,7 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
       type: 'image/png',
       width: 1200,
       height: 630,
-      alt: `White text on a black background that says ${SITE.NAME} followed by ${title}`,
+      alt: `White text on a black background that says ${site.name} followed by ${title}`,
     },
     ...(type === 'article' &&
       publishDate && {
@@ -88,18 +86,18 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
           modifiedTime: updatedDate
             ? formatDateForOpenGraph(updatedDate)
             : formatDateForOpenGraph(publishDate),
-          authors: [SITE.AUTHOR],
+          authors: [site.author.name],
           tags: combinedTags,
         },
       }),
   }}
   twitter={{
     card: 'summary_large_image',
-    site: '@fractalcounty',
-    creator: '@fractalcounty',
+    site: site.author.username,
+    creator: site.author.username,
     title,
     image: openGraphImageUrl,
-    imageAlt: `White text on a black background that says ${SITE.NAME} followed by ${title}`,
+    imageAlt: `White text on a black background that says ${site.name} followed by ${title}`,
     description,
   }}
   extend={{
@@ -107,24 +105,24 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
       {
         rel: 'icon',
         type: 'image/svg+xml',
-        href: '/favicon-dark.svg',
+        href: '/icons/favicon-dark.svg',
         media: '(prefers-color-scheme: dark)',
       },
       {
         rel: 'icon',
         type: 'image/svg+xml',
-        href: '/favicon-dark.svg',
+        href: '/icons/favicon-light.svg',
         media: '(prefers-color-scheme: light)',
       },
       {
         rel: 'icon',
         type: 'image/x-icon',
-        href: '/favicon-dark.svg',
+        href: '/icons/favicon-light.svg',
       },
       {
         rel: 'alternate',
         type: 'application/rss+xml',
-        title: `${SITE.NAME} RSS Feed`,
+        title: `${site.name} RSS Feed`,
         href: '/rss.xml',
       },
       {
@@ -151,7 +149,7 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
       },
       {
         name: 'author',
-        content: SITE.AUTHOR,
+        content: site.author.name,
       },
       {
         name: 'format-detection',
@@ -189,7 +187,7 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
             },
             {
               property: 'article:author',
-              content: `https://fractalcounty.com/#person`,
+              content: `${site.url}/#person`,
             },
           ]
         : []),
@@ -247,7 +245,7 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
   ]}
 />
 
-<ViewTransitions />
+<ClientRouter />
 <script>
   import type { TransitionBeforeSwapEvent } from 'astro:transitions/client'
 

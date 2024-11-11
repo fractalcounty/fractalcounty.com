@@ -5,7 +5,6 @@ import Container from '@/components/layout/Container.astro'
 import Subheader from '@/components/layout/Subheader.astro'
 import CollectionPageStructuredData from '@/components/meta/CollectionPageStructuredData.astro'
 import ProfilePageStructuredData from '@/components/meta/ProfilePageStructuredData.astro'
-import { ART } from '@/consts'
 import PageLayout from '@/layouts/PageLayout.astro'
 // import { artTypes } from '@content/config'
 import { getCollection } from 'astro:content'
@@ -39,14 +38,14 @@ const allYears = [...artData.years].sort((a, b) => b - a)
 ---
 
 <PageLayout
-  title='Art'
-  description="chip fractalcounty's archive of his artwork, media, and other creative endeavors"
+  title={site.pages.art.title}
+  description={site.pages.art.description}
 >
   <CollectionPageStructuredData
     slot='structured-data'
     type='art'
-    name={ART.TITLE}
-    description={ART.DESCRIPTION}
+    name={site.pages.art.title}
+    description={site.pages.art.description}
   />
   <ProfilePageStructuredData slot='structured-data' />
   <Container as='section'>

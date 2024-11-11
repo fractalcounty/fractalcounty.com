@@ -4,12 +4,12 @@ import { Icon } from 'astro-icon/components'
 import DiscordFonts from './fonts/DiscordFonts.astro'
 
 interface Props {
-  archive?: string
+  src?: string
   title?: string
 }
 
 const {
-  archive = '/images/smpearth-chip-wilbur-msg.png',
+  src = '/images/smpearth-chip-wilbur-msg.png',
   title = 'Discord Conversation',
 } = Astro.props
 ---
@@ -17,20 +17,20 @@ const {
 <DiscordFonts />
 
 <section
-  class='discord-conversation bg-neutral outline outline-neutral-content/75'
+  class='discord-conversation relative bg-neutral shadow-lg outline outline-neutral-content/75'
   style='margin-top: 2rem; margin-bottom: 2rem;'
   aria-label={`Discord conversation: ${title}`}
 >
   <h2 id='conversation-title' class='sr-only'>{title}</h2>
   <Link
-    href={archive}
-    class='menu tooltip tooltip-bottom tooltip-primary absolute bottom-4 right-4 text-accent-content/75 hover:text-accent'
+    href={src}
+    class='menu tooltip tooltip-bottom tooltip-primary absolute bottom-4 right-4 text-accent-content'
     data-tip='View original source'
     underline={false}
     externalInNewTab={true}
     aria-label='View original source'
   >
-    <Icon name='solar:link-bold' class='size-4' aria-hidden='true' />
+    <Icon name='lucide:link' class='size-4' aria-hidden='true' />
     <span class='sr-only'>View original source</span>
   </Link>
   <div role='list' class='discord-messages'>
@@ -39,16 +39,24 @@ const {
 </section>
 
 <style>
-  .tooltip {
-    font-family: 'AlteHaasGrotesk';
-    font-weight: normal;
+  :global(.tooltip) {
+    font-weight: normal !important;
+    font-family: 'Inter', sans-serif !important;
   }
+
+  :global(.tooltip:before) {
+    font-weight: normal !important;
+    font-family: 'Inter', sans-serif !important;
+  }
+
   .discord-conversation {
     border-radius: 16px;
     padding: 1.5rem;
     margin-bottom: 1rem;
     font-family: 'gg-sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     @apply prose text-base-content;
+    position: relative;
+    min-height: 100px;
   }
 
   .discord-conversation :global(.discord-message) {

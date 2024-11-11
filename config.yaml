@@ -1,0 +1,60 @@
+site:
+  name: FRACTAL COUNTY
+  url: https://fractalcounty.com
+  defaultTags:
+    - chippledipple
+    - fractal
+    - county
+    - art
+    - gamedev
+  author:
+    name: Chip Fractalcounty
+    email: chip@fractalcounty.com
+    username: '@fractalcounty'
+    bio: Amateur software developer and occasional artist
+    socials:
+      - name: Twitter
+        url: https://x.com/fractalcounty
+      - name: Bluesky
+        url: https://bsky.app/fractalcounty
+      - name: GitHub
+        url: https://github.com/fractalcounty
+      - name: Instagram
+        url: https://www.instagram.com/fractalcounty/
+  pages:
+    home:
+      path: /
+      title: Home
+      description: "Hi, I'm Chip (@fractalcounty). This is my personal website and blog where I dump my thoughts on art, games, and software, as well as my artwork, webcomics, music, and other projects."
+      showInNav: false
+    blog:
+      path: /blog
+      title: Blog
+      description: 'My name is Chip (@fractalcounty) and this is my blog where I dump my thoughts on art, games, software, and other topics that I think are neat.'
+      showInNav: true
+    art:
+      path: /art
+      title: Art
+      description: "I'm Chip (@fractalcounty) and this is my archived gallery of my art, illustrations and webcomics from over the years."
+      showInNav: true
+    music:
+      path: /music
+      title: Music
+      description: 'An index of my released albums and musical projects as well as my Spotify playlists, last.fm listening history, and other music related things.'
+      showInNav: true
+    links:
+      path: https://links.fractalcounty.com/
+      title: Links
+      description: My little collection of links to my other social media profiles and platforms across the internet.
+      showInNav: true
+      external: true
+    unlicense:
+      path: /unlicense
+      title: Unlicense
+      description: Everything that I (@fractalcounty) create, including this very website, is free and unencumbered content released into the public domain.
+      showInNav: false
+    '404':
+      path: /404
+      title: 404 - Page Not Found
+      description: The page you're looking for on chip fractalcounty's website doesn't exist
+      showInNav: false

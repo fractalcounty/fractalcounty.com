@@ -31,6 +31,7 @@ export default antfu({
     'style/operator-linebreak': 'off',
     'style/quote-props': 'off',
     'svelte/indent': 'off',
+    'no-undef': 'off',
   },
   formatters: false,
   jsx: true,
@@ -48,4 +49,5 @@ export default antfu({
     'package.json',
     'scripts/*',
   ],
+  extends: ['./.astro/.eslintrc-auto-import.json'],
 })

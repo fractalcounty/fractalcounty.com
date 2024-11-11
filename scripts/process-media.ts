@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
 import type { Ora } from 'ora'
-import type { Answers } from 'prompts'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
@@ -14,10 +13,6 @@ import sharp from 'sharp'
 const IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif', 'avif']
 const CONTENT_DIR = 'src/content'
 const PUBLIC_DIR = 'public/images'
-
-// check for --force/-f flag
-const forceMode =
-  process.argv.includes('--force') || process.argv.includes('-f')
 
 interface ProcessStats {
   converted: number
