@@ -242,18 +242,6 @@ if (!resolvedTitle && resolvedCollection && resolvedId) {
           )}
         </div>
 
-        <meta itemprop='name' content={resolvedTitle || `Image ${index + 1}`} />
-        <meta
-          itemprop='description'
-          content={
-            alt ||
-            `${resolvedTitle || ''}${resolvedImages.length > 1 ? ` - ${index + 1}` : ''}`
-          }
-        />
-        <meta
-          itemprop='representativeOfPage'
-          content={index === 0 ? 'true' : 'false'}
-        />
         <div id={`image-desc-${index}`} class='sr-only'>
           {alt ||
             `${resolvedTitle || ''}${
@@ -261,13 +249,6 @@ if (!resolvedTitle && resolvedCollection && resolvedId) {
             }`}
           {type && ` - This is a ${type}`}
         </div>
-        <meta itemprop='width' content={image.width.toString()} />
-        <meta itemprop='height' content={image.height.toString()} />
-        <meta itemprop='encodingFormat' content={`image/${image.format}`} />
-        <meta
-          itemprop='license'
-          content='https://fractalcounty.com/unlicense'
-        />
         <figcaption
           class='mb-4 mt-4 text-center text-sm leading-relaxed'
           itemprop='alt'
