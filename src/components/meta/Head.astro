@@ -42,7 +42,7 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
 <SEO
   canonical={canonicalUrl}
   title={title}
-  titleTemplate={`${site.name} | %s`}
+  titleTemplate={`%s | ${site.name}`}
   titleDefault={site.name}
   description={description}
   charset='utf-8'
@@ -51,7 +51,7 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
   languageAlternates={languageAlternates}
   openGraph={{
     basic: {
-      title: `${site.name} | ${title}`,
+      title: `${title} | ${site.name}`,
       type,
       image: openGraphImageUrl,
       url: Astro.url.href,
