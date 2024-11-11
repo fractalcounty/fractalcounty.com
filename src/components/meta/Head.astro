@@ -252,7 +252,7 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
   typeof window !== 'undefined' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches
     ? 'none'
-    : 'fade'}
+    : 'initial'}
 />
 
 <style is:global>
@@ -283,18 +283,7 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
 <script is:inline>
   function init() {
     onScroll()
-
-    // Only run animations if reduced motion is not preferred
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      animate()
-    } else {
-      // For reduced motion users, immediately show all animated elements
-      document
-        .querySelectorAll('.animate, .animate-fast')
-        .forEach((element) => {
-          element.classList.add('show')
-        })
-    }
+    animate()
 
     const backToTop = document.getElementById('back-to-top')
     backToTop?.addEventListener('click', (event) => scrollToTop(event))
@@ -348,12 +337,9 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
 
   function scrollToTop(event) {
     event.preventDefault()
-    const prefersReducedMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches
     window.scrollTo({
       top: 0,
-      behavior: prefersReducedMotion ? 'instant' : 'smooth',
+      behavior: 'smooth',
     })
   }
 
