@@ -6,7 +6,7 @@
     "predev": "bun run scripts/process-media.ts --force",
     "dev": "astro sync && (bun run scripts/watch-media.ts & astro dev)",
     "prebuild": "bun run scripts/process-media.ts --force",
-    "build": "bun install --force && ([ \"$NODE_ENV\" = \"production\" ] || astro check) && astro build",
+    "build": "if command -v bun >/dev/null 2>&1; then bun install --force; else npm install --force; fi && astro sync && astro build",
     "preview": "astro preview",
     "check": "astro check",
     "lint": "eslint . --flag unstable_ts_config --fix && prettier --write ."
