@@ -615,34 +615,51 @@ export function generateBreadcrumbSchema(items: BreadcrumbItem[]) {
 export function generateImageSchema({
   image,
   title,
+  description,
   caption,
   url,
   isRepresentative = false,
   contentLocation,
   keywords,
   datePublished,
+  dateModified,
+  type,
 }: {
   image: ImageMetadata
   title: string
+  description?: string
   caption?: string
   url: string
   isRepresentative?: boolean
   contentLocation?: string
   keywords?: string[]
   datePublished?: string
+  dateModified?: string
+  type?: 'photograph' | 'illustration' | 'animation' | 'webcomic'
 }) {
   return {
-    '@type': 'ImageObject',
+    '@type': ['ImageObject', type ?? 'ImageObject'],
     '@id': `${url}#image`,
+    name: title,
+    description,
     contentUrl: url,
     url: image.src,
     width: image.width,
     height: image.height,
     caption,
-    name: title,
-    encodingFormat: image.format,
+    encodingFormat: `image/${image.format}`,
     representativeOfPage: isRepresentative,
     license: `${site.url}/unlicense`,
+    acquireLicensePage: `${site.url}/unlicense`,
+    copyrightNotice: `Unlicensed. ${new Date().getFullYear()} ${site.author.name}`,
+    creator: {
+      '@type': 'Person',
+      '@id': SCHEMA_IDS.PERSON,
+    },
+    author: {
+      '@id': SCHEMA_IDS.PERSON,
+    },
+    creditText: site.author.name,
     copyrightHolder: {
       '@id': SCHEMA_IDS.PERSON,
     },
@@ -655,7 +672,9 @@ export function generateImageSchema({
         : undefined,
     keywords: keywords?.join(', '),
     datePublished,
+    dateModified,
     accessibilityHazard: ['noFlashingHazard'],
     accessibilityFeature: ['alternativeText', 'highContrast'],
+    thumbnailUrl: url,
   }
 }

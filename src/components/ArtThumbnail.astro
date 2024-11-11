@@ -10,6 +10,21 @@ interface Props {
   index?: number
 }
 
+function getPublicUrl(
+  image: ImageMetadata,
+  collection?: string,
+  id?: string
+): string {
+  const filename = image.src
+    .split('/')
+    .pop()!
+    .replace(/\.[a-z0-9|-]+(_[a-z0-9|-]+)*\./i, '.')
+
+  return collection && id
+    ? `/images/${collection}/${id}/${filename}`
+    : `/images/${filename}`
+}
+
 const { art, size = 'md', index = 0 }: Props = Astro.props
 
 // define sizes as mutable arrays
@@ -43,6 +58,8 @@ const isAboveFold = row < 3 // first 3 rows are above fold
 
 // strict loading strategy based on row position
 const loading = isAboveFold ? 'eager' : 'lazy'
+
+const publicUrl = getPublicUrl(image as ImageMetadata, 'art', art.id)
 ---
 
 <ImageStructuredData
@@ -58,22 +75,49 @@ const loading = isAboveFold ? 'eager' : 'lazy'
   keywords={art.data.tags}
   type={art.data.type}
 />
-<Picture
-  src={image as ImageMetadata}
-  alt={imgTitle}
-  title={imgTitle}
-  formats={formats as ('avif' | 'webp')[]}
-  format={art.data.type === 'animation' ? 'webp' : 'png'}
-  fallbackFormat={art.data.type === 'animation' ? 'webp' : 'png'}
-  widths={sizes[size]}
-  sizes={`
-    (max-width: 640px) ${sizes[size][0]}px,
-    (max-width: 1024px) ${sizes[size][1]}px,
-    ${sizes[size][2]}px
-  `}
-  class='h-full w-full object-cover shadow-md transition-transform duration-500 hover:shadow-lg group-hover:scale-105'
-  loading={loading as 'eager' | 'lazy'}
-  itemprop='image'
+<figure
+  class='group relative h-full w-full overflow-hidden'
   itemscope
   itemtype='http://schema.org/ImageObject'
-/>
+>
+  <Picture
+    src={image as ImageMetadata}
+    alt={imgTitle}
+    title={imgTitle}
+    formats={formats as ('avif' | 'webp')[]}
+    format={art.data.type === 'animation' ? 'webp' : 'png'}
+    fallbackFormat={art.data.type === 'animation' ? 'webp' : 'png'}
+    widths={sizes[size]}
+    sizes={`
+      (max-width: 640px) ${sizes[size][0]}px,
+      (max-width: 1024px) ${sizes[size][1]}px,
+      ${sizes[size][2]}px
+    `}
+    class='h-full w-full object-cover shadow-md transition-transform duration-500 hover:shadow-lg group-hover:scale-105'
+    loading={loading as 'eager' | 'lazy'}
+    decoding={loading === 'eager' ? 'sync' : 'async'}
+    itemprop='image'
+  />
+
+  {/* add metadata */}
+  <meta itemprop='name' content={art.data.title} />
+  <meta itemprop='description' content={art.data.description} />
+  <meta itemprop='width' content={(image as ImageMetadata).width.toString()} />
+  <meta
+    itemprop='height'
+    content={(image as ImageMetadata).height.toString()}
+  />
+  <meta
+    itemprop='encodingFormat'
+    content={`image/${(image as ImageMetadata).format}`}
+  />
+  <meta
+    itemprop='representativeOfPage'
+    content={index === 0 ? 'true' : 'false'}
+  />
+  <meta itemprop='license' content={`${site.url}/unlicense`} />
+  <meta itemprop='url' content={new URL(`/art/${art.id}`, Astro.site)} />
+  <meta itemprop='contentUrl' content={publicUrl} />
+  <meta itemprop='creator' content={site.author.name} />
+  <meta itemprop='creditText' content={site.author.name} />
+</figure>
