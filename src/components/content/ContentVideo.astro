@@ -83,7 +83,17 @@ const getPublicUrl = (videoSrc: string | VideoMetadata): string | undefined => {
   return `/images/${collection}/${post}/${filename}`
 }
 
+// add helper to get youtube thumbnail url
+const getYouTubeThumbnail = (
+  src: string | VideoMetadata
+): string | undefined => {
+  if (!isYouTube(src)) return undefined
+  const videoId = getYouTubeId(typeof src === 'object' ? src.src : src)
+  return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
+}
+
 const publicUrl = getPublicUrl(src)
+const youtubeThumbnail = getYouTubeThumbnail(src)
 
 const { width, scale } = PRESET_SIZES[size]
 ---
@@ -92,7 +102,7 @@ const { width, scale } = PRESET_SIZES[size]
   video={src}
   title={title || 'Video content'}
   url={Astro.url}
-  thumbnail={posterImage}
+  thumbnail={posterImage || youtubeThumbnail}
 />
 <div
   class={cn('video-wrapper w-full pb-6', className)}
