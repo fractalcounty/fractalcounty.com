@@ -9,7 +9,7 @@ import WebsiteStructuredData from '@/components/meta/WebsiteStructuredData.astro
 import PageLayout from '@/layouts/PageLayout.astro'
 import { fetchTopTracks } from '@/lib/lastfm'
 import { getSpotifyToken } from '@/lib/spotify'
-import { Image } from 'astro:assets'
+import { Picture } from 'astro:assets'
 import { getCollection } from 'astro:content'
 
 const NUM_POSTS_ON_HOMEPAGE = 3
@@ -114,12 +114,19 @@ const topTracks = await fetchTopTracks(
             underline={false}
             externalInNewTab={true}
           >
-            <Image
+            <Picture
               src={
                 track.image[2]['#text'] ||
                 '/images/music/album-placeholder.webp'
               }
-              alt={`${track.name} by ${track.artist.name}`}
+              alt={`Album artwork for ${track.name} by ${track.artist}`}
+              width={124}
+              height={124}
+              widths={[124]}
+              sizes='124px'
+              formats={['avif', 'webp']}
+              loading='lazy'
+              class='h-[124px] w-[124px] rounded-lg object-cover'
               inferSize
               class='size-16 rounded-lg border border-base-content/15 object-cover shadow-md'
               loading='lazy'

@@ -16,14 +16,13 @@ const {
   mainBemClass = 'c-breadcrumbs',
   customBaseUrl,
   ariaLabel = 'Breadcrumb navigation',
-  truncated = true,
+  truncated = false,
 } = Astro.props
 
-// check if we're on the homepage by checking if pathname is just '/'
 const isHomePage = Astro.url.pathname === '/'
-
-// get current path segments first
 const pathSegments = Astro.url.pathname.split('/').filter(Boolean)
+
+const visibleSegments = pathSegments.slice(-2)
 ---
 
 <div class:list={[isHomePage && 'sr-only']}>
@@ -39,8 +38,7 @@ const pathSegments = Astro.url.pathname.split('/').filter(Boolean)
         text: 'Home',
         ariaLabel: 'Navigate to homepage',
       },
-      // dynamically generate aria labels for all path segments
-      ...pathSegments.map((segment) => ({
+      ...visibleSegments.map((segment) => ({
         text: segment,
         ariaLabel: `Navigate to ${segment.replace(/-/g, ' ')}`,
       })),
@@ -49,13 +47,9 @@ const pathSegments = Astro.url.pathname.split('/').filter(Boolean)
       'aria-label': ariaLabel,
     }}
   >
-    <Icon
-      slot='separator'
-      name='lucide:forward'
-      class='text-base-content transition-all duration-200'
-      aria-hidden='true'
-      size='1.25rem'
-    />
+    <span slot='separator' aria-hidden='true' class='text-base-content'>
+      /
+    </span>
     <span slot='index' class='inline-flex items-center'>
       <Icon
         name='lucide:house'
@@ -69,27 +63,21 @@ const pathSegments = Astro.url.pathname.split('/').filter(Boolean)
 </div>
 
 <script>
-  // force breadcrumbs to update on page transitions
   function updateBreadcrumbs() {
     const breadcrumbsContainer = document.querySelector('.c-breadcrumbs')
     if (breadcrumbsContainer) {
-      // get current path and force component to update
       const pathname = window.location.pathname
       breadcrumbsContainer.setAttribute('data-path', pathname)
-
-      // trigger a reflow by accessing offsetHeight and store the value
       const height = (breadcrumbsContainer as HTMLElement).offsetHeight
-      return height // return the value to satisfy the linter
+      return height
     }
   }
 
-  // update on page load and after transitions
   document.addEventListener('astro:page-load', updateBreadcrumbs)
   document.addEventListener('astro:after-swap', updateBreadcrumbs)
 </script>
 
 <style>
-  /* minimal breadcrumb styles for footer */
   :global(.c-breadcrumbs) {
     @apply text-xs text-base-content;
   }

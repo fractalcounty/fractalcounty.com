@@ -27,12 +27,19 @@ function getPublicUrl(
 
 const { art, size = 'md', index = 0 }: Props = Astro.props
 
-// define sizes as mutable arrays
+// update the sizes to match the exact display dimensions
 const sizes = {
-  sm: [300, 400, 400] as number[],
+  // exact dimensions for carousel display (386x386)
+  sm: [386, 386, 386] as number[],
   md: [400, 500, 600] as number[],
   lg: [500, 600, 800] as number[],
 } satisfies Record<string, number[]>
+
+// calculate dimensions based on size
+const dimensions = {
+  width: sizes[size][0],
+  height: sizes[size][0], // square aspect ratio
+}
 
 // Get the thumbnail or first image
 const image =
@@ -87,6 +94,8 @@ const publicUrl = getPublicUrl(image as ImageMetadata, 'art', art.id)
     formats={formats as ('avif' | 'webp')[]}
     format={art.data.type === 'animation' ? 'webp' : 'png'}
     fallbackFormat={art.data.type === 'animation' ? 'webp' : 'png'}
+    width={dimensions.width}
+    height={dimensions.height}
     widths={sizes[size]}
     sizes={`
       (max-width: 640px) ${sizes[size][0]}px,
