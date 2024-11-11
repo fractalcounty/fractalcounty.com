@@ -41,7 +41,11 @@ import { Icon } from 'astro-icon/components'
         </div>
         <div class='button-group flex min-w-[4.4rem] items-center gap-2'>
           <div id='back-to-top-wrapper' transition:persist>
-            <Button id='back-to-top' arrow='up'>
+            <Button
+              id='back-to-top'
+              arrow='up'
+              aria-label='Back to top of page'
+            >
               <span class='hidden md:inline'>Back to top</span>
             </Button>
           </div>
