@@ -38,6 +38,12 @@ const updatedDateString = updatedDate?.toISOString()
       tags={tags}
     />
     <slot name='structured-data' />
+    <link
+      rel='alternate'
+      type='application/rss+xml'
+      title={site.pages.blog.title}
+      href={new URL('rss.xml', site.url)}
+    />
   </head>
   <body class='relative mx-auto max-w-[42rem] px-5'>
     <Header />
