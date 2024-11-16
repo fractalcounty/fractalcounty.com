@@ -1,5 +1,5 @@
 ---
-import ContentImage from '@/components/content/ContentImage.astro'
+import Image from '@/components/content/ContentImage.astro'
 import Subheader from '@/components/layout/Subheader.astro'
 import ArtworkStructuredData from '@/components/meta/ArtworkStructuredData.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
@@ -42,7 +42,7 @@ const { Content } = await render(post)
     />
 
     <article class='animate' id='main-content'>
-      <ContentImage
+      <Image
         src={post.data.images}
         title={post.data.title}
         collection='art'

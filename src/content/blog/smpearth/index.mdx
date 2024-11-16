@@ -28,14 +28,11 @@ tags:
   - dream
 ---
 
-import { Image } from 'astro:assets'
-
-import Tweet from '@components/Tweet.astro'
-import DiscordMessage from '@components/DiscordMessage.astro'
-import DiscordConversation from '@components/DiscordConversation.astro'
-import ImageCard from '@components/ImageCard.astro'
-import ContentImage from '@components/content/ContentImage.astro'
-import ContentVideo from '@components/content/ContentVideo.astro'
+import Tweet from '@components/content/ContentTweet.astro'
+import DiscordMessage from '@components/content/ContentDiscordMessage.astro'
+import DiscordConversation from '@components/content/ContentDiscordConversation.astro'
+import Image from '@components/content/ContentImage.astro'
+import Video from '@components/content/ContentVideo.astro'
 
 [SMPEarth](https://smpearth.fandom.com/wiki/SMPEarth) was a private Minecraft server set on a scale map of Earth that I created in high school, designed specifically for content creators to livestream on.
 
@@ -47,7 +44,7 @@ SMPEarth was the direct successor of two other Minecraft servers:
 
 2. [/int/craft,](https://intcraft.wiki/intcraft) a geopolitical roleplaying Minecraft server founded in 2015 by users of 4chan's [/int/](https://www.4chan.org/) board that has had various iterations over the years.
 
-<ContentImage
+<Image
   src={'./intcraft-mascot.webp'}
   style={false}
   alt='/int/chan, the official mascot of /int/craft'
@@ -61,7 +58,7 @@ The idea for SMPEarth emerged shortly after I had become acquainted with some of
 
 Coincidentally, around the same time, I was reminded of a controversy surrounding a user I played with on /int/craft, [WolfDevon,](https://intcraft.wiki/wolfdevon/) who had [converted to Islam and murdered his neo-nazi roommates.](https://www.rollingstone.com/politics/politics-news/all-american-nazis-628023)
 
-<ContentImage
+<Image
   src='./smpearth-devon-arthurs.webp'
   alt='be careful who you invite to your Minecraft server, I guess'
   size='sm'
@@ -103,7 +100,8 @@ Like many others throughout this story, I was unable to resist the forbidden fru
   likes='1,184'
   replies='213'
   retweets='124'
-  imageUrl='/src/content/blog/smpearth/smpearth-map.webp'
+  imageUrl='/blog/smpearth/smpearth-map.webp'
+  date='2019-11-04'
 />
 
 ## Let there be light
@@ -118,7 +116,7 @@ Eventually, [Wilbur Soot](https://en.wikipedia.org/wiki/Wilbur_Soot) got on boar
 
 <Tweet
   src='/images/blog/smpearth/smpearth-wilbur-tweet.webp'
-  pfp='/src/content/blog/smpearth/wilbur-pfp.webp'
+  pfp='/blog/smpearth/wilbur-pfp.webp'
   text="I'm setting up a big Minecraft server with lots of streamers all set on a 1:2000 
   Earth map. Still a while to go but here is where some of the streamers have said they
   want to live 😊"
@@ -127,6 +125,7 @@ Eventually, [Wilbur Soot](https://en.wikipedia.org/wiki/Wilbur_Soot) got on boar
   likes='3,250'
   replies='622'
   retweets='1,074'
+  date='2019-11-05'
 />
 
 ---
@@ -139,7 +138,7 @@ I also pivoted my attention towards the project's marketing and branding, opting
 
 ## The Garden of Eden
 
-<ContentVideo src='yyezbVbQeHY' title='SMPEarth Official Trailer' />
+<Video src='yyezbVbQeHY' title='SMPEarth Official Trailer' />
 
 Up until this point, I had been hosting the development environment for SMPEarth on my own computer. For the purposes of testing amongst a few friends, it worked just as good as even the priciest dedicated server since Minecraft's infamously single-threaded design bottlenecked even on my consumer-grade CPU.
 
@@ -219,7 +218,7 @@ As I came to learn later, he was much more than just an enthusiastic customer of
 
 To cut a long story short, I don't even know if JoshA20 was a real person.
 
-<ContentImage
+<Image
   src='./smpearth-josh-missing.webp'
   alt="JoshA20's deleted Twitter account"
   size='sm'
@@ -235,7 +234,7 @@ At one time, I genuinely believed that he was a false identity created to astrot
 
 <Tweet
   src='/images/blog/smpearth/smpearth-josh-sus.webp'
-  pfp='/src/content/blog/smpearth/josha20-pfp.webp'
+  pfp='/blog/smpearth/josha20-pfp.webp'
   text='🖕 xmc/draxxis - they said it! ha! 1st customer.'
   name='Josh'
   handle='JoshA20_'
@@ -247,8 +246,9 @@ At one time, I genuinely believed that he was a false identity created to astrot
     handle: 'AbsoluteMC',
     text: "Happy Birthday from the entire AMC team to @JoshA20_! 🎉 Our first ever customer,\
     the man who helped AbsoMC rise off the ground and into the wide world who's now a part of...",
-    pfp: '/src/content/blog/smpearth/absolutemc-logo.webp',
+    pfp: '/blog/smpearth/absolutemc-logo.webp',
   }}
+  date='2020-06-13'
 />
 
 Due to the nature of the "sponsorship" and mounting pressure from Minecraft YouTubers that I used to practically pray to every night, I took total responsibility for the issues and spent every waking hour of my life keeping the server held together with what little Adderall I had. It even got so out of control that I was flunking out of high school for a project I was _paying_ to maintain.
@@ -283,7 +283,7 @@ My lapse in judgement opened the door for JoshA20 (and arguably AbsoluteMC depen
 
 <Tweet
   src='/images/blog/smpearth/smpearth-merch-claim.webp'
-  pfp='/src/content/blog/smpearth/smpearth-logo.webp'
+  pfp='/blog/smpearth/smpearth-logo.webp'
   text="ABOUT THE MERCH: All leftover profits from SMP Earth merch go 
   towards for server costs, and any extra will be given to a charity
   of the community's choice when the server ends. We aren't making
@@ -305,7 +305,7 @@ The merch store was a weird one and isn't something I can speak confidently abou
 
 As far as the artists go, to this day I still have no idea if they got paid or not. I wasn't privy to the details to the merch stuff and was far too preoccupied to get involved. All I know is that the endavour didn't tangibly offset server costs or operational burden like it was promised to. I'm skeptical. The only real tangible claim I can make here is that I designed this T-shirt. I don't think I got paid for it, but it might've been because nobody bought it. Or the fact that I was the owner of the server. Either way, I didn't care at the time and I still don't- it's just worth noting.
 
-<ContentImage
+<Image
   src='./smpearth-prism-shirt.webp'
   alt='a T-shirt I designed for the SMPEarth merch store'
   title='SMPEarth'
@@ -314,7 +314,7 @@ As far as the artists go, to this day I still have no idea if they got paid or n
 
 The public server was a different story. I think I joined the server a grand total of one time and forgot about it until a good year or two after I had already left the project.Unless you count complacency, I had absolutely zero involvement from day one and have no idea about the details of its creation.
 
-<ContentImage
+<Image
   src='./smpearth-public-creators.webp'
   alt='the SMPEarth public server website advertising me as one of the creators'
   title='SMPEarth creators'
@@ -328,7 +328,7 @@ On a much funnier and lighthearted note, JoshA20 was also a bit of a copycat. I 
 
 One of my favorite aspects of SMPEarth was the [crappy little ARG](https://smpearth.fandom.com/wiki/Laramie_Online) I threw together. It was probably the worst ARG in the history of ARGs, but I had a lot of fun with it and it helped add a sense of depth to the project that was somewhat lost with AbsoluteMC's opressive branding.
 
-<ContentImage
+<Image
   src='./smpearth-arg.webp'
   alt='one of the structures in the "Laramie Online" ARG'
   title='SMPEarth ARG'
@@ -336,7 +336,7 @@ One of my favorite aspects of SMPEarth was the [crappy little ARG](https://smpea
 
 Regardless, it was legitimately cool seeing people trying to solve a mystery that I had haphazardly thrown together on a whim, and it really lit a fire under my ass to keep putting in work on the server. Although I'm not particularly proud of it, I think a lot of people enjoyed it for what it was.
 
-<ContentImage
+<Image
   src='./smpearth-arg-specto.webp'
   alt='a spectogram from one of the SMPEarth ARG clues'
   title='SMPEarth'
@@ -344,7 +344,7 @@ Regardless, it was legitimately cool seeing people trying to solve a mystery tha
 
 In fact, JoshA20 thought it was _such_ a good idea that he started [his own ARG](https://smpearth.fandom.com/wiki/7_ARG) on the same server, at the same time, with the same exact premise. And he used his leverage as a AbsoluteMC employee to host an official countdown timer on the SMPEarth website.
 
-<ContentImage
+<Image
   src='./smpearth-arg-countdown.webp'
   alt="the SMPEarth website's countdown timer"
   title='SMPEarth countdown'
@@ -352,7 +352,7 @@ In fact, JoshA20 thought it was _such_ a good idea that he started [his own ARG]
 
 Needless to say, this was insanely confusing and pretty much killed all traction my [Laramie Online ARG](https://smpearth.fandom.com/wiki/Laramie_Online) had. Josh's ARG didn't fare any better either, likely due to the fact that everyone just thought it was part of mine. He announced the end of his ARG around the time I lost interest, and I never got a chance to ask him why he even did it- although I have my suspicions.
 
-<ContentImage
+<Image
   src='./smpearth-arg-thank-you.webp'
   alt='a thank you message from the SMPEarth subreddit'
   title='SMPEarth'
@@ -436,8 +436,8 @@ Personally, I thought they were antisocial, harmful, and, worst of all, annoying
 
 <Tweet
   src='/images/blog/smpearth/smpearth-chippledipple-kpoomer.webp'
-  pfp='/src/content/blog/smpearth/chip-pfp.webp'
-  imageUrl='/src/content/blog/smpearth/smpearth-fractalcounty-kpoomer.webp'
+  pfp='/blog/smpearth/chip-pfp.webp'
+  imageUrl='/blog/smpearth/smpearth-fractalcounty-kpoomer.webp'
   name='chip'
   handle='chippledipple'
   likes='1,211'
@@ -478,7 +478,7 @@ Meanwhile, the situation with the stan community escallated to the point that a 
 
 <Tweet
   src='/images/blog/smpearth/smpearth-announcement.webp'
-  pfp='/src/content/blog/smpearth/smpearth-logo.webp'
+  pfp='/blog/smpearth/smpearth-logo.webp'
   text='Public Announcement: We do not condemn nor support the actions of an ex-staff member
   threatening to dox/attack 1,000+ users because of their status on blocking him. This staff
   member is no longer connected to SMPEarth. And hasnt been for months.'
@@ -487,6 +487,7 @@ Meanwhile, the situation with the stan community escallated to the point that a 
   likes='345'
   replies='789'
   retweets='567'
+  date='2020-07-03'
 />
 
 As a result of the blocklist, I was ousted from the project by JoshA20 and AbsoluteMC. I was left without access to the server files and the official Twitter. In a now-deleted tweet, they announced the reason for my "dismissal":
@@ -569,7 +570,7 @@ And without the ability to defend myself, he started setting a new narrative.
 
 Oh, wait, nevermind.
 
-<ContentImage
+<Image
   src='./smpearth-bwu-huh.webp'
   alt='JoshA20 flip flopping'
   title='SMPEarth'
@@ -654,7 +655,7 @@ Unfortunately, the original messages have been lost to the sands of time. But th
 
 <Tweet
   src='/images/blog/smpearth/smpearth-attempt.webp'
-  pfp='/src/content/blog/smpearth/smpearth-logo.webp'
+  pfp='/blog/smpearth/smpearth-logo.webp'
   text='We will be attempting to raise money
   for The Trevor Project, an LGBTQ+
   suicide prevention utility for crisis
@@ -683,7 +684,7 @@ For as negative as it may have sounded, it wasn't all bad. Even at the time of w
 
 I just got more than I bargained for, for better and worse.
 
-<ContentImage
+<Image
   src='./smpearth-bedhead-bernie-mc.webp'
   alt='One of the first interactions I had with Bedhead Bernie'
   title='SMPEarth'

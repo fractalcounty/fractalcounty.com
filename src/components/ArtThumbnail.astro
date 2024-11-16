@@ -27,13 +27,17 @@ function getPublicUrl(
 
 const { art, size = 'md', index = 0 }: Props = Astro.props
 
-// update the sizes to match the exact display dimensions
+// update sizes to match actual display dimensions across breakpoints
 const sizes = {
-  // exact dimensions for carousel display (386x386)
-  sm: [386, 386, 386] as number[],
-  md: [400, 500, 600] as number[],
-  lg: [500, 600, 800] as number[],
-} satisfies Record<string, number[]>
+  // mobile: 151.5px, tablet: 193.33px, desktop: 193.33px
+  sm: [152, 194, 194],
+  // adjust md/lg sizes similarly based on actual display dimensions
+  md: [300, 400, 400],
+  lg: [400, 500, 500],
+} as const
+
+// convert readonly tuple to mutable array when passing to Picture
+const widthsArray = [...sizes[size]]
 
 // calculate dimensions based on size
 const dimensions = {
@@ -96,7 +100,7 @@ const publicUrl = getPublicUrl(image as ImageMetadata, 'art', art.id)
     fallbackFormat={art.data.type === 'animation' ? 'webp' : 'png'}
     width={dimensions.width}
     height={dimensions.height}
-    widths={sizes[size]}
+    widths={widthsArray}
     sizes={`
       (max-width: 640px) ${sizes[size][0]}px,
       (max-width: 1024px) ${sizes[size][1]}px,

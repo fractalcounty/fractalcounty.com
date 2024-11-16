@@ -201,20 +201,6 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
 <AstroFont
   config={[
     {
-      name: 'AlteHaasGrotesk',
-      src: [
-        {
-          style: 'normal',
-          weight: 'bold',
-          path: './public/fonts/AlteHaasGroteskBold.woff2',
-        },
-      ],
-      preload: true,
-      display: 'swap',
-      selector: '.title',
-      fallback: 'sans-serif',
-    },
-    {
       name: 'Inter',
       src: [
         {
@@ -228,9 +214,23 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
           path: './public/fonts/InterItalic.woff2',
         },
       ],
-      preload: false,
+      preload: true,
       display: 'swap',
       selector: 'body',
+      fallback: 'sans-serif',
+    },
+    {
+      name: 'AlteHaasGrotesk',
+      src: [
+        {
+          style: 'normal',
+          weight: '700',
+          path: './public/fonts/AlteHaasGroteskBold.woff2',
+        },
+      ],
+      preload: true,
+      display: 'optional',
+      selector: '.font-brand',
       fallback: 'sans-serif',
     },
   ]}

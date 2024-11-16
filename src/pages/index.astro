@@ -1,9 +1,9 @@
 ---
-import ArrowCard from '@/components/ArrowCard.astro'
 import ArtCarousel from '@/components/ArtCarousel.astro'
 import GitHubCommits from '@/components/GitHubCommits.astro'
 import Subheader from '@/components/layout/Subheader.astro'
 import Link from '@/components/Link.astro'
+import LinkCard from '@/components/LinkCard.astro'
 import ProfilePageStructuredData from '@/components/meta/ProfilePageStructuredData.astro'
 import WebsiteStructuredData from '@/components/meta/WebsiteStructuredData.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
@@ -65,17 +65,16 @@ const topTracks = await fetchTopTracks(
   </article>
 
   <section class='animate space-y-6'>
-    <div class='flex flex-wrap items-center justify-between gap-y-2'>
-      <h2 class='title font-bold uppercase'>Latest posts</h2>
-      <Link href='/blog' title='Blog' externalInNewTab={false}>
-        See all posts
-      </Link>
-    </div>
+    <Subheader
+      title='Latest posts'
+      headingLevel='h2'
+      link={{ text: 'All blog posts', href: '/blog' }}
+    />
     <ul class='grid grid-cols-1 gap-4'>
       {
         allPosts.map((post: any) => (
           <li class='flex-1'>
-            <ArrowCard
+            <LinkCard
               title={post.data.title}
               description={post.data.description}
               icon={post.data.icon}
@@ -93,7 +92,7 @@ const topTracks = await fetchTopTracks(
     <Subheader
       title='Archived art'
       headingLevel='h2'
-      link={{ text: 'See all art', href: '/art' }}
+      link={{ text: 'All artwork', href: '/art' }}
     />
     <ArtCarousel arts={recentArts} priority={true} />
   </section>
@@ -102,15 +101,17 @@ const topTracks = await fetchTopTracks(
     <Subheader
       title='Loved songs (this month)'
       headingLevel='h2'
-      link={{ text: 'See all music', href: '/music' }}
+      link={{ text: 'All music', href: '/music' }}
     />
 
     <div class='grid grid-cols-1 gap-4 sm:grid-cols-2'>
       {
-        topTracks.map((track: any) => (
+        topTracks.map((track: any, index: number) => (
           <Link
             href={track.url}
-            class='group flex h-auto w-full items-center gap-4 rounded-lg border border-base-content/25 bg-transparent p-3 shadow-md transition-all duration-200 hover:bg-neutral hover:shadow-lg'
+            class={`group flex h-auto w-full items-center gap-4 rounded-lg border border-base-content/25 bg-transparent p-3 shadow-md transition-all duration-200 hover:bg-neutral hover:shadow-lg ${
+              index === 3 ? 'hidden sm:flex' : ''
+            }`}
             underline={false}
             externalInNewTab={true}
           >
@@ -120,16 +121,13 @@ const topTracks = await fetchTopTracks(
                 '/images/music/album-placeholder.webp'
               }
               alt={`Album artwork for ${track.name} by ${track.artist}`}
-              width={124}
-              height={124}
-              widths={[124]}
-              sizes='124px'
+              width={64}
+              height={64}
+              widths={[64]}
+              sizes='64px'
               formats={['avif', 'webp']}
               loading='lazy'
-              class='h-[124px] w-[124px] rounded-lg object-cover'
-              inferSize
               class='size-16 rounded-lg border border-base-content/15 object-cover shadow-md'
-              loading='lazy'
             />
             <div class='min-w-0 flex-1'>
               <h3 class='line-clamp-1 font-medium group-hover:text-primary'>
@@ -151,7 +149,7 @@ const topTracks = await fetchTopTracks(
       title='Recent commits'
       headingLevel='h2'
       link={{
-        text: 'See all activity',
+        text: 'View on GitHub',
         href: 'https://github.com/fractalcounty',
         icon: 'lucide:external-link',
         externalInNewTab: true,

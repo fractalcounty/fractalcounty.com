@@ -13,9 +13,13 @@ tags:
 icon: 'lucide:sparkles'
 thumbnail: './chips-dotfiles-preview.webp'
 thumbnailStyle: true
-thumbnailCaption: "aka my adventure in configuration management"
+thumbnailCaption: 'aka my adventure in configuration management'
 thumbnailCaptionType: 'hidden'
 ---
+
+import chipsDotfilesPreview from './chips-dotfiles-preview.webm'
+import chipsDotfilesPreviewThumb from './chips-dotfiles-preview.webp'
+import Video from '@components/content/ContentVideo.astro'
 
 ## The problem
 
@@ -39,13 +43,14 @@ Before I settled on a manual approach, I tried several different dotfile manager
 
 Shell scripts and git.
 
-<video width='100%' autoplay loop muted class='rounded-lg shadow-lg'>
-  <source
-    src='https://github.com/user-attachments/assets/349cf1be-8d9a-4163-8b42-4dd68460c806'
-    type='video/webm'
-  />
-  your browser does not support the video tag.
-</video>
+<Video
+  src={chipsDotfilesPreview}
+  title='FRACTAL COUNTY intro animation'
+  posterImage={chipsDotfilesPreviewThumb}
+  autoplay
+  loop
+  muted
+/>
 
 I know, not the most innovative solution. But boy howdy does it work!
 

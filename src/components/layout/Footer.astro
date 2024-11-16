@@ -1,7 +1,6 @@
 ---
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
 import Button from '@/components/Button.astro'
-// import ColorModeButton from '@/components/ColorModeButton.astro'
 import Link from '@/components/Link.astro'
 import { Icon } from 'astro-icon/components'
 ---
@@ -39,7 +38,13 @@ import { Icon } from 'astro-icon/components'
             </Link>
           </div>
         </div>
+
+        <!-- Footer buttons -->
+        <!-- Should dynamically align to right side as buttons are dynamically rendered depending on page context -->
         <div class='button-group flex min-w-[4.4rem] items-center gap-2'>
+          <!-- Back to top button -->
+          <!-- Only renders on pages with scrollable content -->
+          <!-- Has responsive design, swaps between icon only (sm screen) and text + icon (md+) -->
           <div id='back-to-top-wrapper' transition:persist>
             <Button
               id='back-to-top'

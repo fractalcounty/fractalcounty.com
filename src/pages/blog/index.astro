@@ -1,6 +1,6 @@
 ---
-import ArrowCard from '@/components/ArrowCard.astro'
 import Subheader from '@/components/layout/Subheader.astro'
+import LinkCard from '@/components/LinkCard.astro'
 import CollectionPageStructuredData from '@/components/meta/CollectionPageStructuredData.astro'
 import ProfilePageStructuredData from '@/components/meta/ProfilePageStructuredData.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
@@ -50,15 +50,15 @@ const years = Object.keys(posts).sort(
         {
           years.map((year) => (
             <section class='animate'>
-              <div class='divider divider-start my-8 font-medium text-base-content/75'>
+              <h2 class='divider divider-start my-8 font-medium text-base-content/75'>
                 {year}
-              </div>
+              </h2>
               <div>
                 <ul class='flex flex-col gap-4'>
                   {posts[year].map((post) => (
                     <li>
                       <article class='post-preview'>
-                        <ArrowCard
+                        <LinkCard
                           title={post.data.title}
                           description={post.data.description}
                           icon={post.data.icon}

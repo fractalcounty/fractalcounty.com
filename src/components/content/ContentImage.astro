@@ -249,36 +249,39 @@ if (!resolvedTitle && resolvedCollection && resolvedId) {
             }`}
           {type && ` - This is a ${type}`}
         </div>
-        <figcaption
-          class='mb-4 mt-4 text-center text-sm leading-relaxed'
-          itemprop='alt'
-          id={`alt-${index}`}
-        >
-          {enableFullResLink && getFullResUrl(image) ? (
-            <Link
-              href={getFullResUrl(image)}
-              underline={false}
-              prefetch={false}
-              class='italic text-accent-content/75 hover:underline hover:decoration-2'
-            >
-              {captionType === 'original'
-                ? 'View full resolution'
-                : alt ||
-                  `${resolvedTitle || ''}${
-                    resolvedImages.length > 1 ? ` - ${index + 1}` : ''
-                  }`}
-            </Link>
-          ) : (
-            <span class='italic text-accent-content/75'>
-              {captionType === 'original'
-                ? 'Full resolution not available'
-                : alt ||
-                  `${resolvedTitle || ''}${
-                    resolvedImages.length > 1 ? ` - ${index + 1}` : ''
-                  }`}
-            </span>
-          )}
-        </figcaption>
+
+        {captionType !== 'hidden' && (
+          <figcaption
+            class='mb-4 mt-4 text-center text-sm leading-relaxed'
+            itemprop='alt'
+            id={`alt-${index}`}
+          >
+            {enableFullResLink && getFullResUrl(image) ? (
+              <Link
+                href={getFullResUrl(image)}
+                underline={false}
+                prefetch={false}
+                class='italic text-accent-content/75 hover:underline hover:decoration-2'
+              >
+                {captionType === 'original'
+                  ? 'View full resolution'
+                  : alt ||
+                    `${resolvedTitle || ''}${
+                      resolvedImages.length > 1 ? ` - ${index + 1}` : ''
+                    }`}
+              </Link>
+            ) : (
+              <span class='italic text-accent-content/75'>
+                {captionType === 'original'
+                  ? 'Full resolution not available'
+                  : alt ||
+                    `${resolvedTitle || ''}${
+                      resolvedImages.length > 1 ? ` - ${index + 1}` : ''
+                    }`}
+              </span>
+            )}
+          </figcaption>
+        )}
       </figure>
     ))
   }

@@ -1,5 +1,5 @@
 ---
-import ContentImage from '@/components/content/ContentImage.astro'
+import Image from '@/components/content/ContentImage.astro'
 import Subheader from '@/components/layout/Subheader.astro'
 import Link from '@/components/Link.astro'
 import PostStructuredData from '@/components/meta/PostStructuredData.astro'
@@ -48,7 +48,7 @@ const { Content } = await render(post)
     <article id='main-content'>
       {
         post.data.thumbnail && (
-          <ContentImage
+          <Image
             src={post.data.thumbnail}
             title={post.data.title}
             collection='blog'
@@ -61,7 +61,7 @@ const { Content } = await render(post)
         )
       }
       <div class='animate'>
-        <Content components={{ a: Link, img: ContentImage }} />
+        <Content components={{ a: Link, img: Image }} />
       </div>
     </article>
   </section>

@@ -1,8 +1,8 @@
 ---
-import ImageCard from '@components/ImageCard.astro'
+import Image from '@components/content/ContentImage.astro'
+import ChirpFont from '@components/fonts/ChirpFont.astro'
 import Link from '@components/Link.astro'
 import { Icon } from 'astro-icon/components'
-import TwitterFonts from './fonts/TwitterFonts.astro'
 
 interface QuotedTweet {
   name: string
@@ -24,12 +24,13 @@ interface Props {
   likes?: string
   src?: string
   quotedTweet?: QuotedTweet
+  date?: Date | string
 }
 
 const {
   name = 'chip',
   handle = 'chippledipple',
-  pfp = '/src/content/blog/smpearth/chip-pfp.webp',
+  pfp = 'blog/smpearth/chip-pfp.webp',
   text,
   imageUrl,
   retweets = '100k',
@@ -37,12 +38,20 @@ const {
   likes = '300k',
   src = 'https://twitter.com',
   quotedTweet,
+  date,
 } = Astro.props
 
 const hasContent = text || imageUrl
+
+const formatTwitterDate = (date: Date | string | undefined) => {
+  if (!date) return ''
+  const d = typeof date === 'string' ? new Date(`${date}T00:00:00`) : date
+  const month = d.toLocaleString('en-US', { month: 'short' })
+  return `${month} ${d.getDate()}, ${d.getFullYear()}`
+}
 ---
 
-<TwitterFonts />
+<ChirpFont />
 
 <div
   class='tweet prose prose-sm mx-auto my-auto rounded-lg bg-neutral p-6 text-base-content shadow-lg outline outline-neutral-content/75'
@@ -54,14 +63,15 @@ const hasContent = text || imageUrl
     <div
       class='avatar mr-[16px] size-12 flex-shrink-0 overflow-hidden rounded-full'
     >
-      <ImageCard
-        imagePath={pfp}
-        altText={`${name}'s avatar`}
-        showShadow={false}
-        rounded={false}
-        showCaption={false}
+      <Image
+        src={pfp}
+        alt={`${name}'s avatar`}
+        style={false}
+        size='sm'
         class='h-full w-full'
         imageClass='w-full h-full object-cover'
+        captionType='hidden'
+        enableFullResLink={false}
       />
     </div>
 
@@ -71,6 +81,16 @@ const hasContent = text || imageUrl
           <span class='username'>{name}</span>
           <span class='handle' aria-label={`${handle} username`}>@{handle}</span
           >
+          {
+            date && (
+              <>
+                <span class='date-separator' aria-hidden='true'>
+                  ·
+                </span>
+                <span class='date'>{formatTwitterDate(date)}</span>
+              </>
+            )
+          }
         </div>
       </div>
 
@@ -78,15 +98,16 @@ const hasContent = text || imageUrl
 
       {
         imageUrl && (
-          <div class={`tweet-image ${text ? '-mt-3' : ''} -my-4`}>
-            <ImageCard
-              imagePath={imageUrl}
-              altText='Tweet media'
-              showShadow={false}
-              rounded={true}
-              showCaption={false}
+          <div class={`tweet-image ${text ? '-mt-3' : ''} -my-4 -mt-6`}>
+            <Image
+              src={imageUrl}
+              alt='Tweet media'
+              style={true}
+              size='auto'
               class='w-full'
               imageClass='w-full h-auto object-cover rounded-lg'
+              captionType='hidden'
+              enableFullResLink={false}
             />
           </div>
         )
@@ -101,14 +122,15 @@ const hasContent = text || imageUrl
           >
             <div class='flex items-center gap-2'>
               <span class='quoted-pfp size-6 flex-shrink-0 overflow-hidden rounded-full'>
-                <ImageCard
-                  imagePath={quotedTweet.pfp}
-                  altText={`${quotedTweet.name}'s avatar`}
-                  showShadow={false}
-                  rounded={false}
-                  showCaption={false}
+                <Image
+                  src={quotedTweet.pfp}
+                  alt={`${quotedTweet.name}'s avatar`}
+                  style={false}
+                  size='sm'
                   class='h-full w-full'
                   imageClass='w-full h-full object-cover'
+                  captionType='hidden'
+                  enableFullResLink={false}
                 />
               </span>
 
@@ -121,14 +143,15 @@ const hasContent = text || imageUrl
             {quotedTweet.text && <p class='body'>{quotedTweet.text}</p>}
             {quotedTweet.imageUrl && (
               <div class={`tweet-image ${quotedTweet.text ? 'mt-2' : ''} mb-2`}>
-                <ImageCard
-                  imagePath={quotedTweet.imageUrl}
-                  altText='Quoted tweet media'
-                  showShadow={false}
-                  rounded={true}
-                  showCaption={false}
+                <Image
+                  src={quotedTweet.imageUrl}
+                  alt='Quoted tweet media'
+                  style={true}
+                  size='auto'
                   class='w-full'
                   imageClass='w-full h-auto object-cover rounded-lg'
+                  captionType='hidden'
+                  enableFullResLink={false}
                 />
               </div>
             )}
@@ -214,7 +237,7 @@ const hasContent = text || imageUrl
 
   .body {
     font-weight: 400;
-    @apply !m-0 leading-5;
+    @apply !m-0 leading-[1.4];
   }
 
   .quoted-pfp {
@@ -290,5 +313,13 @@ const hasContent = text || imageUrl
     max-height: 300px;
     width: 100%;
     object-fit: cover;
+  }
+
+  .date-separator {
+    @apply mx-1 text-accent-content;
+  }
+
+  .date {
+    @apply text-accent-content;
   }
 </style>

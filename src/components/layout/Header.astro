@@ -25,14 +25,14 @@ const navItems = getNavItems()
         title={`${site.name} - Return to homepage`}
         externalInNewTab={false}
         underline={false}
-        class='text-lg font-black subpixel-antialiased'
+        class='font-brand text-base font-black subpixel-antialiased md:text-lg'
         aria-label={`${site.name} - Return to homepage`}
       >
-        <h1
-          class='title font-bold uppercase subpixel-antialiased transition-all duration-150 hover:scale-105 hover:text-primary'
+        <span
+          class='title font-bold uppercase subpixel-antialiased transition-colors duration-150 hover:text-primary'
         >
           {site.name}
-        </h1>
+        </span>
       </Link>
       <nav role='navigation' aria-label='Main navigation'>
         <ul class='m-0 flex list-none gap-1 p-0'>

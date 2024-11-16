@@ -42,7 +42,7 @@ const updatedDateString = updatedDate?.toISOString()
       rel='alternate'
       type='application/rss+xml'
       title={site.pages.blog.title}
-      href={new URL('rss.xml', site.url)}
+      href={`${site.url}/rss.xml`}
     />
   </head>
   <body class='relative mx-auto max-w-[42rem] px-5'>

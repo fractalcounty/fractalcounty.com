@@ -127,7 +127,7 @@ const {
                 return (
                   <Heading
                     class:list={[
-                      'title font-semibold text-base-content',
+                      'font-brand font-bold',
                       isPost ? 'text-xl normal-case' : 'text-base uppercase',
                     ]}
                   >
@@ -139,7 +139,7 @@ const {
               {link && (
                 <Link
                   href={link.href}
-                  class='inline-flex items-center gap-2 text-base'
+                  class='inline-flex items-center gap-2 text-sm'
                   externalInNewTab={link.externalInNewTab}
                 >
                   {link.text}

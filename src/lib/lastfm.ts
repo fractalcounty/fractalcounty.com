@@ -232,7 +232,7 @@ export async function fetchTopTracks(
   try {
     // increase limit to ensure we have enough tracks after filtering
     const response = await fetch(
-      `https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${username}&api_key=${apiKey}&period=1month&limit=16&format=json&extended=1`
+      `https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${username}&api_key=${apiKey}&period=1month&limit=20&format=json&extended=1`
     )
 
     // handle potential json parse error
@@ -265,7 +265,7 @@ export async function fetchTopTracks(
         return acc
       }, [])
     } else {
-      processedTracks = allTracks.slice(0, 4)
+      processedTracks = allTracks.slice(0, 3)
     }
 
     const enhancedTracks = await Promise.all(

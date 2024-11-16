@@ -16,13 +16,13 @@
   h3,
   h4,
   h5,
-  h6,
-  .title {
+  h6 {
     @apply text-base-content;
     @apply font-bold;
   }
 
-  .title {
+  .font-brand {
+    @apply subpixel-antialiased;
     @apply uppercase;
   }
 
@@ -40,7 +40,9 @@
 
   @media (prefers-reduced-motion: reduce) {
     /* disable all animations/transitions by default */
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
@@ -103,7 +105,9 @@ footer {
 .animate {
   opacity: 0;
   transform: translateY(10px);
-  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+  transition:
+    opacity 0.3s ease-out,
+    transform 0.3s ease-out;
   will-change: opacity, transform;
 }
 
@@ -115,7 +119,9 @@ footer {
 .animate-fast {
   opacity: 0;
   transform: translateY(10px);
-  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+  transition:
+    opacity 0.2s ease-out,
+    transform 0.2s ease-out;
 }
 
 .animate-fast.show {
