@@ -16,7 +16,8 @@
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": "never"
-    }
+    },
+    "editor.formatOnSaveMode": "file"
   },
 
   // limit prettier to astro files
