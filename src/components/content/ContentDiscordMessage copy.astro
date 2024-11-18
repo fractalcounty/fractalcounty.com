@@ -1,0 +1,132 @@
+---
+import type { JSX } from 'astro/jsx-runtime'
+import ContentImage from '@/components/content/ContentImage.astro'
+
+interface Props {
+  author: string
+  content: (string | JSX.Element)[]
+  avatar?: string
+  date?: string
+}
+
+const { author, content, avatar = '/default-avatar.png', date } = Astro.props
+
+function formatDate(dateString: string) {
+  try {
+    const dateObject = new Date(dateString)
+    if (Number.isNaN(dateObject.getTime())) {
+      return dateString
+    }
+    return dateObject.toISOString()
+  } catch {
+    return dateString
+  }
+}
+---
+
+<div
+  class='discord-message group'
+  role='listitem'
+  aria-label={`Discord message from ${author}`}>
+  <div class='avatar-wrapper' role='img' aria-label={`${author}'s avatar`}>
+    <ContentImage
+      src={avatar}
+      alt={`${author}'s avatar`}
+      size='sm'
+      style={false}
+      class='avatar !m-0'
+      imageClass='w-full h-full object-cover rounded-full'
+      captionType='hidden'
+      enableFullResLink={false}
+    />
+  </div>
+  <div class='message-content'>
+    <div class='message-header'>
+      <span class='author font-semibold text-theme-content-strong'
+        >{author}</span
+      >
+      {
+        date && (
+          <time class='date text-theme-secondary' datetime={formatDate(date)}>
+            {date}
+          </time>
+        )
+      }
+    </div>
+    <div class='message-blocks prose text-theme-content'>
+      {
+        content.map((item) => (
+          <div class='content'>
+            {typeof item === 'string' ?
+              item
+                .split(/(@\w+)/)
+                .map((part) =>
+                  part.match(/^@\w+/) ?
+                    <span class='mention'>{part}</span>
+                  : part,
+                )
+            : <Fragment set:html={item} />}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<style>
+  .discord-message {
+    font-family: 'gg-sans', sans-serif;
+    display: flex;
+    align-items: flex-start;
+    transition: background-color 0.2s ease;
+    padding-top: 1rem;
+    position: relative;
+  }
+  .avatar-wrapper {
+    width: 42px;
+    height: 42px;
+    position: absolute;
+    top: 0.7rem;
+    left: 0;
+    overflow: hidden;
+  }
+  .avatar {
+    width: 100%;
+    height: 100%;
+  }
+  .message-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: 48px;
+  }
+  .message-header {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 2px;
+  }
+  .author {
+    font-size: 1rem;
+    line-height: 1.375rem;
+    margin-right: 0.25rem;
+  }
+  .date {
+    font-size: 0.75rem;
+  }
+  .message-blocks {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+  .content {
+    font-size: 1rem;
+    line-height: 1.375rem;
+    min-height: 1.375rem;
+  }
+  .mention {
+    background-color: oklch(var(--p) / 0.2);
+    color: oklch(var(--p));
+    border-radius: 3px;
+    padding: 0 2px;
+  }
+</style>

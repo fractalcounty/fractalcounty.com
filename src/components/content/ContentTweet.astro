@@ -54,8 +54,8 @@ const formatTwitterDate = (date: Date | string | undefined) => {
 <ChirpFont />
 
 <div
-  class='tweet prose prose-sm mx-auto my-auto rounded-lg bg-theme-panel p-6 text-theme-content shadow-lg outline outline-theme-border'
-  style="font-family: Chirp, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin-top: 2rem; margin-bottom: 2rem;"
+  class='tweet mx-auto my-8 rounded-lg bg-theme-panel p-6 text-theme-content shadow-lg outline outline-theme-border'
+  style="font-family: Chirp, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;"
   role='article'
   aria-label={`Tweet by ${name}`}>
   <div class='header flex items-start pr-2'>
@@ -175,30 +175,35 @@ const formatTwitterDate = (date: Date | string | undefined) => {
       {
         hasContent && (
           <div
-            class='actions mt-2 flex items-center justify-between bg-inherit text-theme-content-weak'
+            class='actions mt-3 flex w-full flex-row items-center justify-between bg-inherit text-theme-content-weak'
             role='group'
             aria-label='Tweet actions'>
-            <button class='action' aria-label={`Reply, ${replies} replies`}>
-              <Icon name='lucide:message-square' />
-              <span>{replies}</span>
-            </button>
-            <button class='action' aria-label={`Retweet, ${retweets} retweets`}>
-              <Icon name='lucide:repeat' />
-              <span>{retweets}</span>
-            </button>
-            <button class='action' aria-label={`Like, ${likes} likes`}>
-              <Icon name='lucide:heart' />
-              <span>{likes}</span>
-            </button>
-            <Link
-              href={src}
-              class='menu tooltip tooltip-bottom tooltip-primary flex items-center justify-center'
-              data-tip='View original source'
-              underline={false}
-              externalInNewTab={true}
-              aria-label='View original tweet'>
-              <Icon name='lucide:link' class='size-4' />
-            </Link>
+            <div class='flex w-full items-center justify-between gap-4'>
+              <button class='action' aria-label={`Reply, ${replies} replies`}>
+                <Icon name='lucide:message-square' />
+                <span>{replies}</span>
+              </button>
+              <button
+                class='action'
+                aria-label={`Retweet, ${retweets} retweets`}>
+                <Icon name='lucide:repeat' />
+                <span>{retweets}</span>
+              </button>
+              <button class='action' aria-label={`Like, ${likes} likes`}>
+                <Icon name='lucide:heart' />
+                <span>{likes}</span>
+              </button>
+              <Link
+                href={src}
+                class='action font-normal text-theme-content-weak'
+                data-tip='View original source'
+                underline={false}
+                externalInNewTab={true}
+                aria-label='View original tweet'>
+                <Icon name='lucide:link' class='size-4' />
+                <span class='hidden sm:inline'>Source</span>
+              </Link>
+            </div>
           </div>
         )
       }
@@ -225,7 +230,11 @@ const formatTwitterDate = (date: Date | string | undefined) => {
       'Segoe UI',
       Roboto,
       sans-serif;
-    @apply prose-base p-4;
+    @apply p-4;
+    width: 95% !important;
+    max-width: 640px !important;
+    min-width: 0;
+    @apply break-words;
   }
 
   .tweet * {
@@ -292,6 +301,7 @@ const formatTwitterDate = (date: Date | string | undefined) => {
     padding: 0;
     transition: color 0.2s ease;
     @apply text-sm;
+    @apply flex min-w-0 items-center justify-start gap-1;
   }
 
   .action:hover {
@@ -325,5 +335,10 @@ const formatTwitterDate = (date: Date | string | undefined) => {
 
   .date-separator {
     @apply mx-1;
+  }
+
+  .actions {
+    min-width: 0;
+    width: 100%;
   }
 </style>

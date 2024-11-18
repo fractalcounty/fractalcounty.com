@@ -168,7 +168,7 @@ const { width, scale } = PRESET_SIZES[size]
 </div>
 
 <style>
-  .video-wrapper {
+  .video-wrapper figure {
     width: calc(100% * var(--scale-factor));
     margin: 0 auto;
   }
@@ -177,9 +177,7 @@ const { width, scale } = PRESET_SIZES[size]
     @apply rounded-xl;
   }
 
-  /* ensure play button anchor maintains href */
   lite-youtube .lty-playbtn[role='button'] {
-    /* override any attempts to remove href */
     &[href] {
       text-decoration: none;
     }

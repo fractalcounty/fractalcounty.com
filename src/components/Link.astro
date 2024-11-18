@@ -110,8 +110,8 @@ const {
 
 const shouldPrefetch =
   prefetch && typeof href === 'string' && href.startsWith('/')
-const isExternal =
-  typeof href === 'string' && (href.startsWith('http') || href.startsWith('//'))
+// const isExternal =
+//   typeof href === 'string' && (href.startsWith('http') || href.startsWith('//'))
 ---
 
 <AstroLink
@@ -136,5 +136,5 @@ const isExternal =
   aria-label={ariaLabel}
   {...rest}>
   <slot />
-  {isExternal && icon && <Icon name='lucide:external-link' class='size-4' />}
+  {icon && <Icon name='lucide:external-link' class='size-4' />}
 </AstroLink>
