@@ -54,7 +54,7 @@ const formatTwitterDate = (date: Date | string | undefined) => {
 <ChirpFont />
 
 <div
-  class='tweet prose prose-sm mx-auto my-auto rounded-lg bg-neutral p-6 text-base-content shadow-lg outline outline-neutral-content/75'
+  class='tweet prose prose-sm mx-auto my-auto rounded-lg bg-theme-panel p-6 text-theme-content shadow-lg outline outline-theme-border'
   style="font-family: Chirp, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin-top: 2rem; margin-bottom: 2rem;"
   role='article'
   aria-label={`Tweet by ${name}`}>
@@ -76,23 +76,31 @@ const formatTwitterDate = (date: Date | string | undefined) => {
     <div class='flex-grow'>
       <div class='flex items-center justify-between'>
         <div class='info'>
-          <span class='username'>{name}</span>
-          <span class='handle' aria-label={`${handle} username`}>@{handle}</span
+          <span class='username font-semibold text-theme-content-strong'
+            >{name}</span
+          >
+          <span
+            class='handle font-normal text-theme-secondary'
+            aria-label={`${handle} username`}>@{handle}</span
           >
           {
             date && (
               <>
-                <span class='date-separator' aria-hidden='true'>
+                <span
+                  class='date-separator text-theme-secondary'
+                  aria-hidden='true'>
                   ·
                 </span>
-                <span class='date'>{formatTwitterDate(date)}</span>
+                <span class='date text-theme-secondary'>
+                  {formatTwitterDate(date)}
+                </span>
               </>
             )
           }
         </div>
       </div>
 
-      {text && <p class='body text-base-content'>{text}</p>}
+      {text && <p class='body text-theme-content'>{text}</p>}
 
       {
         imageUrl && (
@@ -114,7 +122,7 @@ const formatTwitterDate = (date: Date | string | undefined) => {
       {
         quotedTweet && (
           <div
-            class='quoted-tweet mb-3 mt-3 rounded-lg border border-neutral-content bg-neutral pb-3 pl-3 pr-3 pt-2'
+            class='quoted-tweet mb-3 mt-3 rounded-lg border border-theme-accent pb-3 pl-3 pr-3 pt-2'
             role='article'
             aria-label={`Quoted tweet by ${quotedTweet.name}`}>
             <div class='flex items-center gap-2'>
@@ -132,12 +140,20 @@ const formatTwitterDate = (date: Date | string | undefined) => {
               </span>
 
               <div class='info'>
-                <span class='username'>{quotedTweet.name}</span>
-                <span class='handle'>@{quotedTweet.handle}</span>
+                <span class='username font-semibold text-theme-content-strong'>
+                  {quotedTweet.name}
+                </span>
+                <span
+                  class='handle font-normal text-theme-secondary'
+                  aria-label={`${quotedTweet.handle} username`}>
+                  @{quotedTweet.handle}
+                </span>
               </div>
             </div>
 
-            {quotedTweet.text && <p class='body'>{quotedTweet.text}</p>}
+            {quotedTweet.text && (
+              <p class='body text-theme-content'>{quotedTweet.text}</p>
+            )}
             {quotedTweet.imageUrl && (
               <div class={`tweet-image ${quotedTweet.text ? 'mt-2' : ''} mb-2`}>
                 <Image
@@ -159,7 +175,7 @@ const formatTwitterDate = (date: Date | string | undefined) => {
       {
         hasContent && (
           <div
-            class='actions mt-2 flex items-center justify-between bg-inherit text-base-content'
+            class='actions mt-2 flex items-center justify-between bg-inherit text-theme-content-weak'
             role='group'
             aria-label='Tweet actions'>
             <button class='action' aria-label={`Reply, ${replies} replies`}>
@@ -176,7 +192,7 @@ const formatTwitterDate = (date: Date | string | undefined) => {
             </button>
             <Link
               href={src}
-              class='menu tooltip tooltip-bottom tooltip-primary flex items-center justify-center text-base-content'
+              class='menu tooltip tooltip-bottom tooltip-primary flex items-center justify-center'
               data-tip='View original source'
               underline={false}
               externalInNewTab={true}
@@ -228,16 +244,7 @@ const formatTwitterDate = (date: Date | string | undefined) => {
     @apply flex flex-row items-center justify-center space-x-1;
   }
 
-  .username {
-    @apply font-semibold;
-  }
-
-  .handle {
-    @apply font-normal text-base-content;
-  }
-
   .body {
-    font-weight: 400;
     @apply !m-0 leading-[1.4];
   }
 
@@ -317,10 +324,6 @@ const formatTwitterDate = (date: Date | string | undefined) => {
   }
 
   .date-separator {
-    @apply mx-1 text-base-content;
-  }
-
-  .date {
-    @apply text-base-content;
+    @apply mx-1;
   }
 </style>

@@ -13,21 +13,25 @@ export default {
         'theme-primary': '#7aa2f7',
         'theme-darkest': '#151621', // 950
         'theme-base': '#1A1B29', // 900
-        // #242639 800 
+        'theme-panel': '#24283b', // 800, tweet bg
         'theme-neutral': '#2D3149', // 700
-        // #373C58 600
+        'theme-border': '#373C58', // 600
         'theme-accent': '#414868', // 500
         // #555F87 400
-        // #6C79A3 300
-        'theme-content-weak': '#8B96B7', // 200
+        'theme-secondary': '#6C79A3', // 300, sub-subtitles
+        'theme-content-weak': '#8B96B7', // 200, subtitles
         'theme-content': '#a9b1d6', // 100
         'theme-content-strong': '#c0caf5', // 50
       }, 
       'casper': { // light theme
         'theme-primary': '#34548a',
+        'theme-darkest': '#d5d6db',
         'theme-base': '#d5d6db',
+        'theme-panel': '#e5e6eb',
         'theme-neutral': '#9699a3',
+        'theme-border': '#565a6e',
         'theme-accent': '#565a6e',
+        'theme-secondary': '#4A4D63',
         'theme-content-weak': '#4A4D63',
         'theme-content': '#343b58',
         'theme-content-strong': '#0f0f14',

@@ -31,11 +31,11 @@ const { arts, class: className }: Props = Astro.props
           underline={false}
           data-index={index}>
           <Thumbnail art={art} size='sm' index={index} />
-          <div class='absolute inset-0 bg-gradient-to-t from-base-100/70 via-base-100/30 to-transparent opacity-100 transition-opacity duration-300 sm:opacity-0 sm:group-hover:opacity-100'>
-            <div class='absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-base-100/60 via-base-100/30 to-transparent p-4'>
+          <div class='absolute inset-0 bg-gradient-to-t from-theme-base/70 via-theme-base/30 to-transparent opacity-100 transition-opacity duration-300 sm:opacity-0 sm:group-hover:opacity-100'>
+            <div class='absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-theme-base/60 via-theme-base/30 to-transparent p-4'>
               <div class='-space-y-0'>
                 {isMultiImage && (
-                  <span class='inline-flex items-center gap-x-1 text-xs font-semibold text-primary'>
+                  <span class='inline-flex items-center gap-x-1 text-xs font-semibold text-theme-primary'>
                     {art.data.type === 'webcomic' ?
                       <Icon name='lucide:file-text' size={'1rem'} />
                     : art.data.type === 'animation' ?
@@ -49,10 +49,10 @@ const { arts, class: className }: Props = Astro.props
                     : 'images'}
                   </span>
                 )}
-                <h2 class='text-lg font-semibold text-base-content lg:text-sm'>
+                <h2 class='text-lg font-semibold text-theme-content lg:text-sm'>
                   {art.data.title}
                 </h2>
-                <p class='mt-2 hidden text-sm text-base-content sm:block'>
+                <p class='mt-2 hidden text-sm text-theme-content sm:block'>
                   {art.data.description}
                 </p>
               </div>
@@ -75,25 +75,3 @@ const { arts, class: className }: Props = Astro.props
     }
   }
 </style>
-
-<script>
-  // handle grid item animations
-  document.addEventListener('astro:page-load', () => {
-    const grid = document.querySelector('.grid')
-    if (!grid) return
-
-    // type assertion for HTMLElement which has style property
-    const items = grid.querySelectorAll<HTMLElement>('[data-index]')
-    items.forEach((item, index) => {
-      const delay = Math.min(index * 50, 300) // cap at 300ms
-      item.style.opacity = '0'
-      item.style.transform = 'translateY(10px)'
-      item.style.transition = 'opacity 0.2s ease-out, transform 0.2s ease-out'
-
-      setTimeout(() => {
-        item.style.opacity = '1'
-        item.style.transform = 'translateY(0)'
-      }, delay)
-    })
-  })
-</script>

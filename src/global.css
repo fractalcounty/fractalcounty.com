@@ -2,25 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  body {
-    @apply bg-base-100 text-theme-content antialiased;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply font-bold;
-  }
-
-  #main-content {
-    @apply mt-12;
-  }
-}
-
 .sr-only {
   position: absolute;
   width: 1px;

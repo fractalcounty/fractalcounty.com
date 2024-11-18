@@ -107,7 +107,7 @@ const topTracks = await fetchTopTracks(
         topTracks.map((track: any, index: number) => (
           <Link
             href={track.url}
-            class={`group flex h-auto w-full items-center gap-4 rounded-lg border border-base-content/25 bg-transparent p-3 shadow-md transition-all duration-200 hover:bg-neutral hover:shadow-lg ${
+            class={`group flex h-auto w-full items-center gap-4 rounded-lg border border-theme-border bg-transparent p-3 shadow-md transition-all duration-200 hover:border-theme-primary/50 hover:bg-theme-neutral hover:shadow-lg ${
               index === 3 ? 'hidden sm:flex' : ''
             }`}
             underline={false}
@@ -124,13 +124,13 @@ const topTracks = await fetchTopTracks(
               sizes='64px'
               formats={['avif', 'webp']}
               loading='lazy'
-              class='size-16 rounded-lg border border-base-content/15 object-cover shadow-md'
+              class='size-16 rounded-lg border border-theme-border object-cover shadow-md'
             />
             <div class='min-w-0 flex-1'>
-              <h3 class='line-clamp-1 font-medium group-hover:text-primary'>
+              <h3 class='line-clamp-1 font-medium group-hover:text-theme-primary'>
                 {track.name}
               </h3>
-              <p class='line-clamp-1 text-sm text-base-content/80'>
+              <p class='line-clamp-1 text-sm text-theme-content/80'>
                 {track.artist.name} • {Number(track.playcount).toLocaleString()}{' '}
                 plays
               </p>

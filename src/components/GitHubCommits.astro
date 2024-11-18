@@ -83,10 +83,10 @@ const commits = await getLatestCommits('fractalcounty')
         <li>
           <Link
             href={commit.html_url}
-            class='group flex flex-col items-start gap-1 rounded-lg border border-base-content/25 bg-transparent p-3 shadow-md transition-all duration-200 hover:bg-neutral hover:shadow-lg'
+            class='group flex flex-col items-start gap-1 rounded-lg border border-theme-border bg-transparent p-3 shadow-md transition-all duration-200 hover:border-theme-primary/50 hover:bg-theme-neutral hover:shadow-lg'
             externalInNewTab={true}
             underline={false}>
-            <div class='flex items-center gap-2 text-sm text-base-content'>
+            <div class='flex items-center gap-2 text-sm text-theme-content'>
               <Icon name='lucide:code' size='1rem' />
               <span class='font-medium'>
                 {commit.repository.name.split('/')[1]} •
@@ -102,6 +102,6 @@ const commits = await getLatestCommits('fractalcounty')
           </Link>
         </li>
       ))
-    : <li class='text-sm text-base-content'>No recent commits found</li>
+    : <li class='text-sm text-theme-content'>No recent commits found</li>
   }
 </ul>

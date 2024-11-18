@@ -79,17 +79,17 @@ const bandcampAlbums = await getCollection('music')
                 loading='eager'
                 class='h-full w-full object-cover transition-transform duration-300 group-hover:scale-105'
               />
-              <div class='absolute inset-0 bg-gradient-to-t from-base-100/90 via-base-100/40 to-transparent transition-all duration-300 group-hover:from-base-100/95 group-hover:via-base-100/50'>
+              <div class='absolute inset-0 bg-gradient-to-t from-theme-base/90 via-theme-base/50 to-transparent transition-all duration-300 group-hover:from-theme-base/95 group-hover:via-theme-base/60'>
                 <div class='absolute inset-0 flex flex-col justify-end p-4'>
                   <div class='-space-y-0'>
-                    <span class='inline-flex items-center gap-x-1 text-xs font-semibold text-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100'>
+                    <span class='inline-flex items-center gap-x-1 text-xs font-semibold text-theme-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100'>
                       {new Date(album.data.releaseDate).getFullYear()}
                     </span>
-                    <h2 class='text-lg font-semibold text-base-content lg:text-sm'>
+                    <h2 class='text-lg font-bold text-theme-content lg:text-sm'>
                       {album.data.title}
                     </h2>
                     {album.data.description && (
-                      <p class='mt-1 text-sm text-base-content/80'>
+                      <p class='mt-1 text-sm text-theme-content-weak'>
                         {album.data.description}
                       </p>
                     )}
@@ -157,16 +157,16 @@ const bandcampAlbums = await getCollection('music')
                   loading='eager'
                   class='h-full w-full object-cover transition-transform duration-300 group-hover:scale-105'
                 />
-                <div class='absolute inset-0 bg-gradient-to-t from-base-100/90 via-base-100/40 to-transparent transition-all duration-300 group-hover:from-base-100/95 group-hover:via-base-100/50'>
+                <div class='absolute inset-0 bg-gradient-to-t from-theme-base/90 via-theme-base/50 to-transparent transition-all duration-300 group-hover:from-theme-base/95 group-hover:via-theme-base/60'>
                   <div class='absolute inset-0 flex flex-col justify-end p-4'>
                     <div class='-space-y-0'>
-                      <span class='inline-flex items-center gap-x-1 text-xs font-semibold text-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100'>
+                      <span class='inline-flex items-center gap-x-1 text-xs font-semibold text-theme-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100'>
                         {track.playcount} plays
                       </span>
-                      <h4 class='text-lg font-semibold text-base-content lg:text-sm'>
+                      <h4 class='text-lg font-semibold text-theme-content lg:text-sm'>
                         {track.name}
                       </h4>
-                      <p class='mt-1 text-sm text-base-content/80'>
+                      <p class='mt-1 text-sm text-theme-content-weak'>
                         {track.artist.name}
                       </p>
                     </div>
@@ -198,7 +198,7 @@ const bandcampAlbums = await getCollection('music')
               artists.map((artist: any) => (
                 <Link
                   href={artist.url}
-                  class='group flex h-[76px] w-full items-center gap-4 rounded-lg border border-base-content/25 bg-transparent p-3 shadow-md transition-all duration-200 hover:bg-neutral hover:shadow-lg'
+                  class='group flex h-[76px] w-full items-center gap-4 rounded-lg border border-theme-border bg-transparent p-3 shadow-md transition-all duration-200 hover:border-theme-primary/50 hover:bg-theme-neutral hover:shadow-lg'
                   underline={false}
                   externalInNewTab={true}>
                   <Image
@@ -214,10 +214,10 @@ const bandcampAlbums = await getCollection('music')
                     class='size-12 flex-shrink-0 rounded-lg object-cover'
                   />
                   <div class='min-w-0 flex-1'>
-                    <h4 class='line-clamp-1 font-medium group-hover:text-primary'>
+                    <h4 class='line-clamp-1 font-semibold group-hover:text-theme-primary'>
                       {artist.name}
                     </h4>
-                    <p class='line-clamp-1 text-sm text-base-content/80'>
+                    <p class='line-clamp-1 text-sm text-theme-secondary'>
                       {Number(artist.playcount).toLocaleString()} plays
                     </p>
                   </div>
@@ -245,7 +245,7 @@ const bandcampAlbums = await getCollection('music')
               albums.map((album: any) => (
                 <Link
                   href={album.url}
-                  class='group flex h-[76px] w-full items-center gap-4 rounded-lg border border-base-content/25 bg-transparent p-3 shadow-md transition-all duration-200 hover:bg-neutral hover:shadow-lg'
+                  class='group flex h-[76px] w-full items-center gap-4 rounded-lg border border-theme-border bg-transparent p-3 shadow-md transition-all duration-200 hover:border-theme-primary/50 hover:bg-theme-neutral hover:shadow-lg'
                   underline={false}
                   externalInNewTab={true}>
                   <Image
@@ -260,10 +260,10 @@ const bandcampAlbums = await getCollection('music')
                     class='size-12 flex-shrink-0 rounded-lg object-cover'
                   />
                   <div class='min-w-0 flex-1'>
-                    <h4 class='line-clamp-1 font-medium group-hover:text-primary'>
+                    <h4 class='line-clamp-1 font-medium group-hover:text-theme-primary'>
                       {album.name}
                     </h4>
-                    <p class='line-clamp-1 text-sm text-base-content/80'>
+                    <p class='line-clamp-1 text-sm text-theme-secondary'>
                       {album.artist.name} •{' '}
                       {Number(album.playcount).toLocaleString()} plays
                     </p>
@@ -293,7 +293,7 @@ const bandcampAlbums = await getCollection('music')
 
       <div
         id='customView'
-        class='space-y-4 rounded-xl border border-theme-neutral p-4 shadow-md hover:shadow-lg'>
+        class='space-y-4 rounded-xl border border-theme-border p-4 shadow-md'>
         {
           playlist && (
             <div class='space-y-4'>
@@ -307,7 +307,7 @@ const bandcampAlbums = await getCollection('music')
                     height={259}
                     widths={[129, 259]}
                     sizes='149px'
-                    class='absolute inset-0 h-full w-full rounded-lg border border-theme-neutral object-cover shadow-md'
+                    class='absolute inset-0 h-full w-full rounded-lg border border-theme-border/50 object-cover shadow-md'
                     style={{
                       aspectRatio: '1/1',
                       objectFit: 'cover',
@@ -340,14 +340,14 @@ const bandcampAlbums = await getCollection('music')
                       alt={track.name}
                       width={48}
                       height={48}
-                      class='size-12 rounded border border-theme-neutral object-cover shadow-sm'
+                      class='size-12 rounded border border-theme-border object-cover shadow-sm hover:border-theme-primary/50'
                       loading='lazy'
                     />
                     <div class='min-w-0 flex-1'>
                       <h4 class='line-clamp-1 font-medium group-hover:text-theme-primary'>
                         {track.name}
                       </h4>
-                      <p class='line-clamp-1 text-sm text-theme-content-weak'>
+                      <p class='line-clamp-1 text-sm text-theme-secondary'>
                         {track.artist}
                       </p>
                     </div>

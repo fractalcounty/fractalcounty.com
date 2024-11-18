@@ -7,11 +7,11 @@ const navItems = getNavItems()
 
 <header
   role='banner'
-  class='fixed left-1/2 top-0 z-50 w-full max-w-[42rem] -translate-x-1/2 bg-base-100/80 px-5 py-4 backdrop-blur-sm'
+  class='fixed left-1/2 top-0 z-50 w-full max-w-[42rem] -translate-x-1/2 bg-theme-base/90 px-5 py-4 backdrop-blur-sm'
   transition:persist>
   <a
     href='#main-content'
-    class='sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-neutral focus:px-4 focus:py-2 focus:text-base-content focus:outline-none focus:ring-2 focus:ring-base-content'
+    class='sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-theme-neutral focus:px-4 focus:py-2 focus:text-theme-content focus:outline-none focus:ring-2 focus:ring-theme-content'
     tabindex='0'>
     Skip to main content
   </a>
@@ -24,7 +24,7 @@ const navItems = getNavItems()
         externalInNewTab={false}
         underline={false}
         aria-label={`${site.name} - Return to homepage`}
-        class='title flex items-center text-theme-content transition-colors duration-150 hover:text-primary'>
+        class='title flex items-center text-theme-content transition-colors duration-150 hover:text-theme-primary'>
         <svg
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 0 418 57'

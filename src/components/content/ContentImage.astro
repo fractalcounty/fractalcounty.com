@@ -176,7 +176,7 @@ if (!resolvedTitle && resolvedCollection && resolvedId) {
           {enableFullResLink && getFullResUrl(image) ?
             <Link
               href={getFullResUrl(image)}
-              class='tooltip tooltip-primary block w-full text-center focus-visible:outline-base-content'
+              class='tooltip-theme-primary tooltip block w-full text-center focus-visible:outline-theme-content'
               title={`View full resolution ${resolvedTitle}${resolvedImages.length > 1 ? ` - ${index + 1}` : ''}`}
               aria-label={`View full resolution version of ${resolvedTitle || 'image'}${resolvedImages.length > 1 ? ` - ${index + 1}` : ''}`}
               data-tip='Click to view original'
@@ -203,7 +203,7 @@ if (!resolvedTitle && resolvedCollection && resolvedId) {
                   'mx-auto',
                   style && 'rounded-xl shadow-md',
                   imageClass,
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-base-content',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-theme-content',
                 ]}
                 itemprop='image'
                 role='img'
@@ -257,7 +257,7 @@ if (!resolvedTitle && resolvedCollection && resolvedId) {
                 href={getFullResUrl(image)}
                 underline={false}
                 prefetch={false}
-                class='italic text-base-content/75 hover:underline hover:decoration-2'>
+                class='italic text-theme-content/75 hover:underline hover:decoration-2'>
                 {captionType === 'original' ?
                   'View full resolution'
                 : alt ||
@@ -266,7 +266,7 @@ if (!resolvedTitle && resolvedCollection && resolvedId) {
                   }`
                 }
               </Link>
-            : <span class='italic text-base-content/75'>
+            : <span class='italic text-theme-content/75'>
                 {captionType === 'original' ?
                   'Full resolution not available'
                 : alt ||

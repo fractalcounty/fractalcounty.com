@@ -23,15 +23,15 @@ const {
 } = Astro.props
 
 const baseStyles =
-  'relative group flex items-center justify-center rounded-lg border border-base-content/25 bg-transparent hover:bg-neutral text-base-content duration-200 ease-in-out'
+  'relative group flex items-center justify-center rounded-lg border border-theme-border hover:border-theme-primary/50 bg-transparent hover:bg-theme-neutral text-theme-content duration-200 ease-in-out'
 
 // modify padding logic to consider responsive prop
 const paddingClass =
-  arrow !== 'none'
-    ? responsive
-      ? 'md:pl-7 md:pr-3 md:py-1.5 size-9 md:size-auto' // responsive version
-      : 'pl-7 pr-3 py-1.5' // non-responsive version
-    : 'px-3 py-1.5'
+  arrow !== 'none' ?
+    responsive ?
+      'md:pl-7 md:pr-3 md:py-1.5 size-9 md:size-auto' // responsive version
+    : 'pl-7 pr-3 py-1.5' // non-responsive version
+  : 'px-3 py-1.5'
 
 // add type for arrow directions
 type ArrowDirection = 'left' | 'right' | 'up' | 'none'
@@ -51,19 +51,17 @@ const rotationClass = (
   href={href}
   class:list={[baseStyles, paddingClass, className]}
   data-category={dataCategory}
-  {...props}
->
+  {...props}>
   {
     arrow !== 'none' && (
       <svg
         xmlns='http://www.w3.org/2000/svg'
         viewBox='0 0 24 24'
         class:list={[
-          'absolute left-2 top-1/2 size-4 -translate-y-1/2 fill-none stroke-current stroke-2 transition-colors duration-300 ease-in-out group-hover:stroke-primary',
+          'absolute left-2 top-1/2 size-4 -translate-y-1/2 fill-none stroke-current stroke-2 transition-colors duration-300 ease-in-out group-hover:stroke-theme-primary',
           rotationClass,
           arrowClass,
-        ]}
-      >
+        ]}>
         <line
           x1='5'
           y1='12'
@@ -79,8 +77,7 @@ const rotationClass = (
     )
   }
   <div
-    class='text-sm transition-colors duration-300 ease-in-out group-hover:text-primary'
-  >
+    class='text-sm transition-colors duration-300 ease-in-out group-hover:text-theme-primary'>
     <slot />
   </div>
 </Component>
