@@ -58,7 +58,9 @@ export default defineConfig({
       assetsInlineLimit: 0,
     },
   },
-  markdown: {},
+  markdown: {
+    syntaxHighlight: false,
+  },
   image: {
     domains: ['i.scdn.co', 'lastfm.freetls.fastly.net'],
     remotePatterns: [
@@ -100,7 +102,11 @@ export default defineConfig({
       },
     }),
     astroBreakpoints(),
-    mdx(),
+    mdx({
+      syntaxHighlight: false,
+      remarkPlugins: [],
+      rehypePlugins: [],
+    }),
     sitemap({
       changefreq: 'weekly',
       priority: 1.0,

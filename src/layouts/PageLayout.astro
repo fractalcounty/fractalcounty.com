@@ -47,9 +47,9 @@ const updatedDateString = updatedDate?.toISOString()
   </head>
   <body class='relative mx-auto max-w-[42rem] px-5'>
     <Header />
-    <main id='main' class='mt-24 space-y-12'>
+    <main id='main' class='mb-6 mt-24 space-y-12' transition:animate='fade'>
       <slot />
     </main>
-    <Footer />
+    <Footer transition:persist='footer' />
   </body>
 </html>

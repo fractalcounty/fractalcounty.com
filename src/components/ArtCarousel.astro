@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content'
+import Thumbnail from '@/components/Thumbnail.astro'
 import { Icon } from 'astro-icon/components'
-import ArtThumbnail from './ArtThumbnail.astro'
 import Link from './Link.astro'
 
 interface Props {
@@ -37,8 +37,7 @@ const carouselDescription = 'Scroll horizontally to view more artwork'
     class='carousel carousel-center w-full space-x-4 px-2'
     role='region'
     aria-label={carouselLabel}
-    tabindex='0'
-  >
+    tabindex='0'>
     <div class='flex w-full gap-4'>
       {
         carouselItems.map(({ art, isMultiImage, imageCount }, index) => (
@@ -46,48 +45,42 @@ const carouselDescription = 'Scroll horizontally to view more artwork'
             class='carousel-item w-[calc(50%-0.5rem)] sm:w-[calc(33.333%-0.75rem)]'
             role='tabpanel'
             aria-label={`${art.data.title}`}
-            tabindex='0'
-          >
+            tabindex='0'>
             <Link
               href={`/art/${art.id}`}
               class='group relative aspect-square w-full overflow-hidden rounded-xl bg-base-300 shadow-md transition-all duration-150 hover:shadow-lg'
               underline={false}
-              aria-label={`View details for ${art.data.title}`}
-            >
-              <ArtThumbnail art={art} size='sm' index={index} />
+              aria-label={`View details for ${art.data.title}`}>
+              <Thumbnail art={art} size='sm' index={index} />
 
               <div
                 class='absolute inset-0 bg-gradient-to-t from-base-100/80 via-base-100/50 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100'
-                role='presentation'
-              >
+                role='presentation'>
                 <div class='absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-base-100/70 via-base-100/50 to-transparent p-4'>
                   <div class='space-y-0'>
                     {isMultiImage && (
                       <span
                         class='inline-flex items-center gap-x-1 text-xs font-bold text-primary'
-                        aria-label={`Contains ${imageCount} ${art.data.type === 'webcomic' ? 'pages' : 'images'}`}
-                      >
+                        aria-label={`Contains ${imageCount} ${art.data.type === 'webcomic' ? 'pages' : 'images'}`}>
                         <svg
                           xmlns='http://www.w3.org/2000/svg'
                           class='h-4 w-4'
                           viewBox='0 0 24 24'
                           fill='none'
                           stroke='currentColor'
-                          stroke-width='2'
-                        >
-                          {art.data.type === 'webcomic' ? (
+                          stroke-width='2'>
+                          {art.data.type === 'webcomic' ?
                             <path
                               stroke-linecap='round'
                               stroke-linejoin='round'
                               d='M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10'
                             />
-                          ) : (
-                            <path
+                          : <path
                               stroke-linecap='round'
                               stroke-linejoin='round'
                               d='M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z'
                             />
-                          )}
+                          }
                         </svg>
                         {imageCount}{' '}
                         {art.data.type === 'webcomic' ? 'pages' : 'images'}
@@ -117,8 +110,7 @@ const carouselDescription = 'Scroll horizontally to view more artwork'
           data-carousel-gradient='right'
           data-carousel-id={carouselId}
           role='presentation'
-          aria-hidden='true'
-        >
+          aria-hidden='true'>
           <div class='absolute right-2 top-1/2 flex -translate-y-1/2 flex-col items-center gap-1 sm:right-4'>
             <Icon
               name='lucide:chevron-right'
@@ -133,8 +125,7 @@ const carouselDescription = 'Scroll horizontally to view more artwork'
           data-carousel-gradient='left'
           data-carousel-id={carouselId}
           role='presentation'
-          aria-hidden='true'
-        >
+          aria-hidden='true'>
           <div class='absolute left-2 top-1/2 flex -translate-y-1/2 flex-col items-center gap-1 sm:left-4'>
             <Icon
               name='lucide:chevron-left'
@@ -160,10 +151,10 @@ const carouselDescription = 'Scroll horizontally to view more artwork'
         if (!carousel?.id) return
 
         const leftGradient = document.querySelector(
-          `[data-carousel-gradient="left"][data-carousel-id="${carousel.id}"]`
+          `[data-carousel-gradient="left"][data-carousel-id="${carousel.id}"]`,
         )
         const rightGradient = document.querySelector(
-          `[data-carousel-gradient="right"][data-carousel-id="${carousel.id}"]`
+          `[data-carousel-gradient="right"][data-carousel-id="${carousel.id}"]`,
         )
 
         if (!leftGradient || !rightGradient) return

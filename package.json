@@ -4,11 +4,11 @@
   "version": "1.0.0",
   "scripts": {
     "predev": "bun run scripts/process-media.ts --force",
-    "dev": "astro sync && (bun run scripts/watch-media.ts & astro dev)",
+    "dev": "astro sync && (bun run scripts/watch-media.ts & bunx --bun astro dev)",
     "prebuild": "bun run scripts/process-media.ts --force",
-    "build": "bun install --force && astro sync && astro build",
-    "preview": "astro preview",
-    "check": "astro check",
+    "build": "bun install --force && astro sync && bunx --bun astro build",
+    "preview": "bunx --bun astro preview",
+    "check": "bunx --bun astro check",
     "lint": "eslint . --flag unstable_ts_config --fix && prettier --write .",
     "debug-spotify-art": "bun run scripts/debug-spotify-art.ts"
   },
@@ -68,10 +68,16 @@
     "react": "^18.3.1",
     "simple-git-hooks": "^2.11.1",
     "tailwind-merge": "^2.5.4",
+    "tw-colors": "^3.3.2",
     "tw-to-css": "^0.0.12",
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.13.0",
     "unplugin-auto-import": "^0.18.3"
+  },
+  "overrides": {
+    "shiki": "latest",
+    "@shikijs/core": "latest",
+    "oniguruma-to-es": "latest"
   },
   "simple-git-hooks": {
     "pre-commit": "bun run prebuild && bun run lint-staged"

@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-base-100 text-base-content antialiased;
+    @apply bg-base-100 text-theme-content antialiased;
   }
 
   h1,
@@ -13,24 +13,14 @@
   h4,
   h5,
   h6 {
-    @apply text-base-content;
     @apply font-bold;
-  }
-
-  article {
-    @apply prose prose-headings:font-bold prose-headings:text-neutral-content prose-p:text-base-content prose-code:text-base-content;
-    @apply prose-strong:text-neutral-content;
-    @apply prose-code:text-base-content;
-    @apply prose max-w-full prose-img:mx-auto prose-img:my-auto;
-    @apply prose-headings:font-bold;
   }
 
   #main-content {
     @apply mt-12;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    /* disable all animations/transitions by default */
+  /* @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
     *::after {
@@ -40,14 +30,12 @@
       scroll-behavior: auto !important;
     }
 
-    /* disable view transition animations */
     ::view-transition-group(*),
     ::view-transition-old(*),
     ::view-transition-new(*) {
       animation: none !important;
     }
 
-    /* completely disable animate classes */
     .animate,
     .animate-fast {
       opacity: 1 !important;
@@ -55,12 +43,11 @@
       transition: none !important;
     }
 
-    /* ensure elements are immediately visible */
     .animate:not(.show),
     .animate-fast:not(.show) {
       opacity: 1 !important;
     }
-  }
+  } */
 }
 
 .sr-only {
@@ -97,16 +84,11 @@ footer {
   @apply py-5 text-sm;
 }
 
-/* optimize animation performance */
-.animate {
-  /* use transform: translate3d to trigger GPU acceleration */
+/* .animate {
   transform: translate3d(0, 10px, 0);
   opacity: 0;
-  /* use will-change to hint browser about animation */
   will-change: transform, opacity;
-  /* reduce transition duration */
   transition: all 0.2s ease-out;
-  /* add backface-visibility to reduce memory usage */
   backface-visibility: hidden;
 }
 
@@ -126,7 +108,7 @@ footer {
 .animate-fast.show {
   opacity: 1;
   transform: translateY(0);
-}
+} */
 
 html #back-to-top-wrapper {
   @apply transition-[opacity,width] duration-300 ease-in-out;
@@ -156,20 +138,18 @@ button[data-category]:active {
   @apply min-w-[2.1rem];
 }
 
-/* optimize view transitions */
-::view-transition-old(*),
+/* ::view-transition-old(*),
 ::view-transition-new(*) {
   animation-duration: 0.3s;
   animation-timing-function: ease-out;
   will-change: transform, opacity;
 }
 
-/* ensure smooth transitions between pages */
 ::view-transition-group(root) {
   animation: none;
   mix-blend-mode: normal;
-  min-height: 100vh; /* prevent layout shifts */
-}
+  min-height: 100vh; 
+} */
 
 /* ensure skip links are always focusable */
 .sr-only:focus {

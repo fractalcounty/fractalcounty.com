@@ -67,22 +67,22 @@ const {
 
 // resolve dimensions based on preset or explicit values
 const { width, height, sizes } =
-  explicitWidth || explicitHeight
-    ? { width: explicitWidth, height: explicitHeight, sizes: '100vw' }
-    : PRESET_SIZES[size]
+  explicitWidth || explicitHeight ?
+    { width: explicitWidth, height: explicitHeight, sizes: '100vw' }
+  : PRESET_SIZES[size]
 
 // generate responsive widths based on preset size
 const widths =
-  size === 'auto'
-    ? undefined
-    : [width! * 0.5, width!, width! * 1.5].filter(Boolean)
+  size === 'auto' ? undefined : (
+    [width! * 0.5, width!, width! * 1.5].filter(Boolean)
+  )
 
 // detect collection and id from url path segments
 const pathSegments = Astro.url.pathname.split('/')
 const detectedCollection =
-  pathSegments[1] === 'art' || pathSegments[1] === 'blog'
-    ? (pathSegments[1] as 'art' | 'blog')
-    : undefined
+  pathSegments[1] === 'art' || pathSegments[1] === 'blog' ?
+    (pathSegments[1] as 'art' | 'blog')
+  : undefined
 const detectedId = detectedCollection ? pathSegments[2] : undefined
 
 // if collection wasn't passed, use detected
@@ -91,21 +91,20 @@ const resolvedId = detectedId
 
 // glob for all content images
 const images = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/content/**/*.{jpeg,jpg,png,gif,webp}'
+  '/src/content/**/*.{jpeg,jpg,png,gif,webp}',
 )
 
 // helper to resolve image paths to ImageMetadata
 const resolveImage = async (
-  path: string | ImageMetadata
+  path: string | ImageMetadata,
 ): Promise<ImageMetadata> => {
   if (typeof path !== 'string') return path
 
   const fullPath =
-    path.startsWith('./') && resolvedCollection && resolvedId
-      ? `/src/content/${resolvedCollection}/${resolvedId}/${path.slice(2)}`
-      : path.startsWith('/')
-        ? `/src/content${path}`
-        : `/src/content/${path}`
+    path.startsWith('./') && resolvedCollection && resolvedId ?
+      `/src/content/${resolvedCollection}/${resolvedId}/${path.slice(2)}`
+    : path.startsWith('/') ? `/src/content${path}`
+    : `/src/content/${path}`
 
   if (!images[fullPath]) {
     throw new Error(`Image "${fullPath}" not found in content directory`)
@@ -115,8 +114,9 @@ const resolveImage = async (
 }
 
 // handle single image or array of images
-const resolvedImages = Array.isArray(src)
-  ? await Promise.all(src.map(resolveImage))
+const resolvedImages =
+  Array.isArray(src) ?
+    await Promise.all(src.map(resolveImage))
   : [await resolveImage(src)]
 
 // update getPublicUrl to handle all hash patterns
@@ -155,9 +155,9 @@ if (!resolvedTitle && resolvedCollection && resolvedId) {
   caption={alt}
   isRepresentative={true}
   type={type}
-  datePublished={collection && resolvedId
-    ? undefined
-    : new Date().toISOString()}
+  datePublished={collection && resolvedId ? undefined : (
+    new Date().toISOString()
+  )}
 />
 <figure
   class:list={[
@@ -168,13 +168,12 @@ if (!resolvedTitle && resolvedCollection && resolvedId) {
   ]}
   itemscope
   itemtype='http://schema.org/ImageObject'
-  aria-labelledby='image-title'
->
+  aria-labelledby='image-title'>
   {
     resolvedImages.map((image, index) => (
       <figure class:list={['w-full', index === 0 ? 'mt-0' : 'mt-2']}>
         <div>
-          {enableFullResLink && getFullResUrl(image) ? (
+          {enableFullResLink && getFullResUrl(image) ?
             <Link
               href={getFullResUrl(image)}
               class='tooltip tooltip-primary block w-full text-center focus-visible:outline-base-content'
@@ -185,8 +184,7 @@ if (!resolvedTitle && resolvedCollection && resolvedId) {
               prefetch={false}
               itemprop='image'
               itemscope
-              itemtype='http://schema.org/ImageObject'
-            >
+              itemtype='http://schema.org/ImageObject'>
               <Picture
                 src={image}
                 alt={
@@ -214,8 +212,7 @@ if (!resolvedTitle && resolvedCollection && resolvedId) {
                 itemprop='url'
               />
             </Link>
-          ) : (
-            <Picture
+          : <Picture
               src={image}
               alt={
                 alt ||
@@ -239,7 +236,7 @@ if (!resolvedTitle && resolvedCollection && resolvedId) {
               aria-describedby={`image-desc-${index}`}
               itemprop='image'
             />
-          )}
+          }
         </div>
 
         <div id={`image-desc-${index}`} class='sr-only'>
@@ -254,32 +251,31 @@ if (!resolvedTitle && resolvedCollection && resolvedId) {
           <figcaption
             class='mb-4 mt-4 text-center text-sm leading-relaxed'
             itemprop='alt'
-            id={`alt-${index}`}
-          >
-            {enableFullResLink && getFullResUrl(image) ? (
+            id={`alt-${index}`}>
+            {enableFullResLink && getFullResUrl(image) ?
               <Link
                 href={getFullResUrl(image)}
                 underline={false}
                 prefetch={false}
-                class='italic text-accent-content/75 hover:underline hover:decoration-2'
-              >
-                {captionType === 'original'
-                  ? 'View full resolution'
-                  : alt ||
-                    `${resolvedTitle || ''}${
-                      resolvedImages.length > 1 ? ` - ${index + 1}` : ''
-                    }`}
+                class='italic text-base-content/75 hover:underline hover:decoration-2'>
+                {captionType === 'original' ?
+                  'View full resolution'
+                : alt ||
+                  `${resolvedTitle || ''}${
+                    resolvedImages.length > 1 ? ` - ${index + 1}` : ''
+                  }`
+                }
               </Link>
-            ) : (
-              <span class='italic text-accent-content/75'>
-                {captionType === 'original'
-                  ? 'Full resolution not available'
-                  : alt ||
-                    `${resolvedTitle || ''}${
-                      resolvedImages.length > 1 ? ` - ${index + 1}` : ''
-                    }`}
+            : <span class='italic text-base-content/75'>
+                {captionType === 'original' ?
+                  'Full resolution not available'
+                : alt ||
+                  `${resolvedTitle || ''}${
+                    resolvedImages.length > 1 ? ` - ${index + 1}` : ''
+                  }`
+                }
               </span>
-            )}
+            }
           </figcaption>
         )}
       </figure>

@@ -1,8 +1,8 @@
 ---
 import Button from '@/components/Button.astro'
-import FormattedDate from '@/components/FormattedDate.astro'
+import Date from '@/components/Date.astro'
+import Divider from '@/components/Divider.astro'
 import Link from '@/components/Link.astro'
-import { Icon } from 'astro-icon/components'
 
 interface Props {
   headingLevel?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
@@ -24,12 +24,6 @@ interface Props {
     url?: string
   }>
   metadataPosition?: 'top' | 'bottom'
-  link?: {
-    text: string
-    href: string
-    icon?: string
-    externalInNewTab?: boolean
-  }
 }
 
 const {
@@ -48,27 +42,24 @@ const {
   metadata = [],
   metadataPosition = 'top',
   class: classProp,
-  link,
 } = Astro.props
+
+// helper to determine if heading is h3 or lower
+const isSubHeader = ['h3', 'h4', 'h5', 'h6'].includes(headingLevel)
 ---
 
 <header class:list={['animate space-y-2', classProp]}>
-  <!-- move metadata section into a component for reuse -->
   {
     (() => {
       const metadataContent =
-        isPost && publishDate ? (
+        isPost && publishDate ?
           <div class='flex items-center gap-1.5 text-sm text-base-content/70'>
-            <time datetime={publishDate.toISOString()}>
-              <FormattedDate date={publishDate} />
-            </time>
+            <Date date={publishDate} />
 
             {updatedDate && (
               <>
                 <span aria-hidden='true'>&bull;</span>
-                <time datetime={updatedDate.toISOString()}>
-                  updated <FormattedDate date={updatedDate} format='relative' />
-                </time>
+                <Date date={updatedDate} format='relative' />
               </>
             )}
 
@@ -88,7 +79,7 @@ const {
               </>
             )}
           </div>
-        ) : metadata.length > 0 ? (
+        : metadata.length > 0 ?
           <div class='flex flex-wrap items-center gap-3 text-sm text-base-content/70'>
             {metadata.map((item, i) => (
               <>
@@ -99,72 +90,82 @@ const {
                 )}
                 <div class='flex items-center gap-1.5'>
                   <span class='opacity-70'>{item.label}:</span>
-                  {item.url ? (
+                  {item.url ?
                     <Link
                       href={item.url}
                       class='hover:text-primary'
-                      underline={false}
-                    >
+                      underline={false}>
                       {item.value}
                     </Link>
-                  ) : (
-                    <span>{item.value}</span>
-                  )}
+                  : <span>{item.value}</span>}
                 </div>
               </>
             ))}
           </div>
-        ) : null
+        : null
 
       return (
         <>
           {metadataPosition === 'top' && metadataContent}
 
-          <div class='flex items-center justify-between gap-4'>
-            <div class='flex flex-1 items-center justify-between'>
+          {isSubHeader ?
+            <div class='flex w-full items-center gap-4'>
               {(() => {
                 const Heading = headingLevel
                 return (
                   <Heading
                     class:list={[
-                      'font-brand font-bold',
-                      isPost ? 'text-xl normal-case' : 'text-base uppercase',
-                    ]}
-                  >
+                      'whitespace-nowrap font-semibold uppercase',
+                      'text-theme-content-weak', // weaker text for sub-headings
+                    ]}>
                     {title}
                   </Heading>
                 )
               })()}
+              <div class='flex-1'>
+                <Divider />
+              </div>
+              <div class='text-sm'>
+                <slot name='link' />
+              </div>
+            </div>
+          : <div class='flex items-center justify-between gap-4'>
+              <div class='flex flex-1 items-center justify-between'>
+                {(() => {
+                  const Heading = headingLevel
+                  return (
+                    <Heading
+                      class:list={[
+                        'font-brand font-bold',
+                        isPost ? 'text-xl normal-case' : 'text-base uppercase',
+                      ]}>
+                      {title}
+                    </Heading>
+                  )
+                })()}
+                <div class='text-sm'>
+                  <slot name='link' />
+                </div>
+              </div>
 
-              {link && (
-                <Link
-                  href={link.href}
-                  class='inline-flex items-center gap-2 text-sm'
-                  externalInNewTab={link.externalInNewTab}
-                >
-                  {link.text}
-                  {link.icon && <Icon name={link.icon} class='size-4' />}
-                </Link>
+              {backUrl && (
+                <Button as='a' href={backUrl} arrow='left'>
+                  <span class='hidden md:inline'>{backLabel}</span>
+                  <span class='inline md:hidden' aria-label={backLabel} />
+                </Button>
+              )}
+
+              {categories && (
+                <nav aria-label='categories' class='flex flex-wrap gap-2'>
+                  {categories.map((category) => (
+                    <Button href={`#${category}`} data-category={category}>
+                      {category}
+                    </Button>
+                  ))}
+                </nav>
               )}
             </div>
-
-            {backUrl && (
-              <Button as='a' href={backUrl} arrow='left'>
-                <span class='hidden md:inline'>{backLabel}</span>
-                <span class='inline md:hidden' aria-label={backLabel} />
-              </Button>
-            )}
-
-            {categories && (
-              <nav aria-label='categories' class='flex flex-wrap gap-2'>
-                {categories.map((category) => (
-                  <Button href={`#${category}`} data-category={category}>
-                    {category}
-                  </Button>
-                ))}
-              </nav>
-            )}
-          </div>
+          }
 
           {subtitle && <p class='text-sm text-base-content/70'>{subtitle}</p>}
 
@@ -173,7 +174,7 @@ const {
           {links.length > 0 && (
             <nav aria-label='related links' class='flex flex-wrap gap-4'>
               {links.map((link) => (
-                <Link href={link.url} underline={true}>
+                <Link href={link.url} underline={true} icon={true}>
                   {link.label}
                 </Link>
               ))}

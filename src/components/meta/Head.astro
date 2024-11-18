@@ -192,19 +192,9 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
   </noscript>
 </Fragment>
 
-<ClientRouter
-  fallback='swap'
-  transition:persist='theme,scroll'
-  transition:animate={// respect reduced motion preference
-  (
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  ) ?
-    'none'
-  : 'initial'}
-/>
+<ClientRouter fallback='swap' transition:persist='theme,scroll' />
 
-<style is:global>
+<!-- <style is:global>
   ::view-transition-old(*),
   ::view-transition-new(*) {
     animation: none;
@@ -215,7 +205,7 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
   html::view-transition-group(root) {
     animation: none;
   }
-</style>
+</style> -->
 
 <script>
   import type { TransitionBeforeSwapEvent } from 'astro:transitions/client'
@@ -232,7 +222,7 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
 <script is:inline>
   function init() {
     onScroll()
-    animate()
+    // animate()
 
     const backToTop = document.getElementById('back-to-top')
     backToTop?.addEventListener('click', (event) => scrollToTop(event))
@@ -243,17 +233,17 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
     document.addEventListener('scroll', onScroll, { passive: true })
   }
 
-  function animate() {
-    const animateElements = document.querySelectorAll('.animate')
-    const MAX_DELAY = 150 // maximum total animation delay in ms
+  // function animate() {
+  //   const animateElements = document.querySelectorAll('.animate')
+  //   const MAX_DELAY = 150 // maximum total animation delay in ms
 
-    animateElements.forEach((element, index) => {
-      const delay = Math.min(index * 25, MAX_DELAY)
-      setTimeout(() => {
-        element.classList.add('show')
-      }, delay)
-    })
-  }
+  //   animateElements.forEach((element, index) => {
+  //     const delay = Math.min(index * 25, MAX_DELAY)
+  //     setTimeout(() => {
+  //       element.classList.add('show')
+  //     }, delay)
+  //   })
+  // }
 
   function onScroll() {
     // Debounce scroll events for better performance

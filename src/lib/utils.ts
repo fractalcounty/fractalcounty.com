@@ -64,3 +64,28 @@ export function getCanonicalUrl(path: string): string {
 export function getAbsoluteUrl(path: string, site: URL | string): string {
   return new URL(path, site).toString()
 }
+
+/**
+ * organizes collection entries by year
+ * @param entries - array of collection entries to organize
+ * @returns object with sorted years and entries mapped by year
+ */
+export function organizeEntriesByYear<T extends { data: { publishDate: Date } }>(entries: T[]) {
+  const entriesByYear = entries
+    .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
+    .reduce((acc, entry) => {
+      const year = entry.data.publishDate.getFullYear()
+      if (!Object.prototype.hasOwnProperty.call(acc, year)) {
+        acc[year] = []
+      }
+      acc[year].push(entry)
+      return acc
+    }, {} as Record<number, T[]>)
+
+  return {
+    years: Object.keys(entriesByYear)
+      .map(Number)
+      .sort((a, b) => b - a),
+    entriesByYear,
+  }
+}

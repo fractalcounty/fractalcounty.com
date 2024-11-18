@@ -1,5 +1,6 @@
 ---
 import { cn } from '@lib/utils'
+import { Icon } from 'astro-icon/components'
 import { Link as AstroLink } from 'astro-link'
 
 type AriaRole =
@@ -80,6 +81,7 @@ export interface Props {
   style?: string
   underline?: boolean
   externalInNewTab?: boolean
+  icon?: boolean
   rel?: string
   prefetch?: boolean
   itemprop?: string
@@ -94,6 +96,7 @@ const {
   title,
   externalInNewTab,
   underline = true,
+  icon = false,
   prefetch = true,
   rel,
   class: className,
@@ -107,6 +110,8 @@ const {
 
 const shouldPrefetch =
   prefetch && typeof href === 'string' && href.startsWith('/')
+const isExternal =
+  typeof href === 'string' && (href.startsWith('http') || href.startsWith('//'))
 ---
 
 <AstroLink
@@ -117,18 +122,19 @@ const shouldPrefetch =
   externalInNewTab={externalInNewTab}
   data-astro-prefetch={shouldPrefetch ? 'hover' : undefined}
   class={cn(
-    'inline-block transition-colors duration-300 ease-in-out',
-    underline
-      ? 'underline decoration-primary/65 underline-offset-2 hover:decoration-primary'
-      : 'no-underline',
+    'inline-flex items-center gap-2',
+    'transition-colors duration-300 ease-in-out',
+    underline ?
+      'underline decoration-primary/65 underline-offset-2 hover:decoration-primary'
+    : 'no-underline',
     'hover:text-primary',
-    className
+    className,
   )}
   {...itemprop ? { itemprop } : {}}
   {...itemscope ? { itemscope } : {}}
   {...itemtype ? { itemtype } : {}}
   aria-label={ariaLabel}
-  {...rest}
->
+  {...rest}>
   <slot />
+  {isExternal && icon && <Icon name='lucide:external-link' class='size-4' />}
 </AstroLink>

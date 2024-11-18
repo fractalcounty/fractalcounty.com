@@ -1,22 +1,20 @@
 ---
 import Button from '@/components/Button.astro'
 import Link from '@/components/Link.astro'
+import Prose from '@/components/Prose.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
 import { Icon } from 'astro-icon/components'
 ---
 
 <PageLayout
   title={site.pages['404'].title}
-  description={site.pages['404'].description}
->
+  description={site.pages['404'].description}>
   <section
-    class='animate relative flex flex-col items-center justify-center gap-y-8 pt-12 text-center'
-  >
+    class='relative flex flex-col items-center justify-center gap-y-8 pt-12 text-center'>
     <div class='relative flex items-center justify-center'>
       <p
         class='font-brand !text-[12rem] !font-bold !text-base-content/25'
-        style='font-size: 12rem !important; line-height: 1 !important; color: oklch(var(--n))'
-      >
+        style='font-size: 12rem !important; line-height: 1 !important; color: oklch(var(--n))'>
         404
       </p>
       <Icon
@@ -26,39 +24,38 @@ import { Icon } from 'astro-icon/components'
       />
     </div>
 
-    <article>
+    <Prose>
       <error-message>
         <h1
-          class='font-brand mx-auto max-w-[18ch] text-balance !text-[1rem] !font-bold !tracking-tighter'
-          style='font-size: 2rem !important; line-height: 1.3 !important; text-align-last: center;'
-        >
-          page not found
+          class='font-brand mx-auto max-w-[18ch] text-balance !text-[1rem] !font-bold uppercase !tracking-tighter subpixel-antialiased'
+          style='font-size: 2rem !important; line-height: 1.3 !important; text-align-last: center;'>
+          Error 404: Page not found
         </h1>
       </error-message>
 
       <Link href='/' underline={false} class='z-10 mt-3' prefetch={true}>
         <Button arrow='left' responsive={false}> take me HOME </Button>
       </Link>
-    </article>
+    </Prose>
   </section>
 
   <script>
     // define error messages array
     const ERROR_MESSAGES = [
-      'page not found',
-      'there is nothing here',
-      'this path leads nowhere',
-      'where have you gone',
-      'dead end',
-      'something is missing',
-      "this isn't right",
-      'abandon all hope',
-      'but nobody came',
-      'blinding, shining star, no page here so far',
-      'alone at the edge of the universe',
-      'but none were there',
-      'you fell into a hole you cannot see',
-      'calming if you look at it right',
+      'Page not found',
+      'There is nothing here',
+      'This path leads nowhere',
+      'Where have you gone',
+      'Dead end',
+      'Something is missing',
+      "This isn't right",
+      'Abandon all hope',
+      'But nobody came',
+      'Blinding, shining star, no page here so far',
+      'Alone at the edge of the universe',
+      'But none were there',
+      'You fell into a hole you cannot see',
+      'Calming if you look at it right',
     ]
 
     // create custom element for client-side message randomization
