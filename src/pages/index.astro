@@ -1,11 +1,12 @@
 ---
 import ArtCarousel from '@/components/ArtCarousel.astro'
+import Card from '@/components/Card.astro'
 import GitHubCommits from '@/components/GitHubCommits.astro'
-import Subheader from '@/components/layout/Subheader.astro'
+import Heading from '@/components/Heading.astro'
 import Link from '@/components/Link.astro'
-import LinkCard from '@/components/LinkCard.astro'
 import ProfilePageStructuredData from '@/components/meta/ProfilePageStructuredData.astro'
 import WebsiteStructuredData from '@/components/meta/WebsiteStructuredData.astro'
+import Prose from '@/components/Prose.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
 import { fetchTopTracks } from '@/lib/lastfm'
 import { getSpotifyToken } from '@/lib/spotify'
@@ -19,7 +20,7 @@ const allPosts = (await getCollection('blog'))
   .filter((post: any) => !post.data.draft)
   .sort(
     (a: any, b: any) =>
-      b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+      b.data.publishDate.valueOf() - a.data.publishDate.valueOf(),
   )
   .slice(0, NUM_POSTS_ON_HOMEPAGE)
 
@@ -27,7 +28,7 @@ const recentArts = (await getCollection('art'))
   .filter((art: any) => !art.data.draft)
   .sort(
     (a: any, b: any) =>
-      b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+      b.data.publishDate.valueOf() - a.data.publishDate.valueOf(),
   )
   .slice(0, NUM_ART_ON_HOMEPAGE)
 
@@ -38,20 +39,19 @@ const topTracks = await fetchTopTracks(
   LASTFM_USERNAME,
   import.meta.env.LASTFM_API_KEY,
   spotifyToken,
-  true
+  true,
 )
 ---
 
 <PageLayout
   title={site.pages.home.title}
-  description={site.pages.home.description}
->
+  description={site.pages.home.description}>
   <WebsiteStructuredData slot='structured-data' />
   <ProfilePageStructuredData slot='structured-data' />
 
-  <article class='main-content space-y-4'>
-    <Subheader title="Hello, I'm Chip" />
-    <p class='animate'>
+  <Prose class='main-content space-y-4'>
+    <Heading title="Hello, I'm Chip" />
+    <p>
       I make things on the internet— usually silly things, but occasionally
       normal things as well. This is my personal dumping grounds for my thoughts
       on art, games, and software that I couldn't fit on my <Link
@@ -62,19 +62,19 @@ const topTracks = await fetchTopTracks(
       </Link> as well as my artwork, webcomics, music, and other creative endeavors
       from over the years.
     </p>
-  </article>
+  </Prose>
 
-  <section class='animate space-y-6'>
-    <Subheader
-      title='Latest posts'
-      headingLevel='h2'
-      link={{ text: 'All blog posts', href: '/blog' }}
-    />
+  <section class='space-y-6'>
+    <Heading title='Latest posts' headingLevel='h2'>
+      <Link href='/blog' slot='link' title='Go to blog page'>
+        All blog posts
+      </Link>
+    </Heading>
     <ul class='grid grid-cols-1 gap-4'>
       {
         allPosts.map((post: any) => (
           <li class='flex-1'>
-            <LinkCard
+            <Card
               title={post.data.title}
               description={post.data.description}
               icon={post.data.icon}
@@ -88,33 +88,30 @@ const topTracks = await fetchTopTracks(
     </ul>
   </section>
 
-  <section class='animate space-y-6'>
-    <Subheader
-      title='Archived art'
-      headingLevel='h2'
-      link={{ text: 'All artwork', href: '/art' }}
-    />
+  <section class='space-y-6'>
+    <Heading title='Archived art' headingLevel='h2'>
+      <Link href='/art' slot='link' title='Go to art page'> All artwork </Link>
+    </Heading>
     <ArtCarousel arts={recentArts} priority={true} />
   </section>
 
-  <section class='animate space-y-6'>
-    <Subheader
-      title='Loved songs (this month)'
-      headingLevel='h2'
-      link={{ text: 'All music', href: '/music' }}
-    />
+  <section class='space-y-6'>
+    <Heading title='Loved songs (this month)' headingLevel='h2'>
+      <Link href='/music' slot='link' title='Go to music page'>
+        All music
+      </Link>
+    </Heading>
 
     <div class='grid grid-cols-1 gap-4 sm:grid-cols-2'>
       {
         topTracks.map((track: any, index: number) => (
           <Link
             href={track.url}
-            class={`group flex h-auto w-full items-center gap-4 rounded-lg border border-base-content/25 bg-transparent p-3 shadow-md transition-all duration-200 hover:bg-neutral hover:shadow-lg ${
+            class={`group flex h-auto w-full items-center gap-4 rounded-lg border border-theme-border bg-transparent p-3 shadow-md transition-all duration-200 hover:border-theme-primary/50 hover:bg-theme-neutral hover:shadow-lg ${
               index === 3 ? 'hidden sm:flex' : ''
             }`}
             underline={false}
-            externalInNewTab={true}
-          >
+            externalInNewTab={true}>
             <Picture
               src={
                 track.image[2]['#text'] ||
@@ -127,13 +124,13 @@ const topTracks = await fetchTopTracks(
               sizes='64px'
               formats={['avif', 'webp']}
               loading='lazy'
-              class='size-16 rounded-lg border border-base-content/15 object-cover shadow-md'
+              class='size-16 rounded-lg border border-theme-border object-cover shadow-md'
             />
             <div class='min-w-0 flex-1'>
-              <h3 class='line-clamp-1 font-medium group-hover:text-primary'>
+              <h3 class='line-clamp-1 font-medium group-hover:text-theme-primary'>
                 {track.name}
               </h3>
-              <p class='line-clamp-1 text-sm text-base-content/80'>
+              <p class='line-clamp-1 text-sm text-theme-content/80'>
                 {track.artist.name} • {Number(track.playcount).toLocaleString()}{' '}
                 plays
               </p>
@@ -144,54 +141,51 @@ const topTracks = await fetchTopTracks(
     </div>
   </section>
 
-  <section class='animate space-y-6'>
-    <Subheader
-      title='Recent commits'
-      headingLevel='h2'
-      link={{
-        text: 'View on GitHub',
-        href: 'https://github.com/fractalcounty',
-        icon: 'lucide:external-link',
-        externalInNewTab: true,
-      }}
-    />
+  <section class='space-y-6'>
+    <Heading title='Recent commits' headingLevel='h2'>
+      <Link
+        href='https://github.com/fractalcounty'
+        icon={true}
+        externalInNewTab={true}
+        slot='link'>
+        View on GitHub
+      </Link>
+    </Heading>
     <GitHubCommits />
   </section>
 
-  <section class='animate space-y-4'>
-    <Subheader title='Contact me' headingLevel='h2' />
-    <article>
+  <section class='space-y-4'>
+    <Heading title='Contact me' headingLevel='h2' />
+    <Prose>
       <p>
         If you want to get in touch with me about something or just to say hi,
         reach out on social media or send me an email.
       </p>
-    </article>
-    <ul class='flex flex-wrap gap-2'>
-      {
-        site.author.socials
-          ?.filter((social) => social.showInContact)
-          .map(({ url, name }) => (
-            <li class='flex gap-x-2 text-nowrap lowercase'>
-              <Link
-                href={url}
-                title={`${site.author.username} on ${name}`}
-                externalInNewTab={true}
-              >
-                {name}
-              </Link>
-              /
-            </li>
-          ))
-      }
-      <li class='line-clamp-1'>
-        <Link
-          href={`mailto:${encodeURIComponent(site.author.email)}`}
-          title={`Email ${site.author.name}`}
-          externalInNewTab={false}
-        >
-          {site.author.email}
-        </Link>
-      </li>
-    </ul>
+      <ul class='not-prose flex flex-wrap gap-2 text-theme-content'>
+        {
+          site.author.socials
+            ?.filter((social) => social.showInContact)
+            .map(({ url, name }) => (
+              <li class='flex gap-x-2 text-nowrap lowercase'>
+                <Link
+                  href={url}
+                  title={`${site.author.username} on ${name}`}
+                  externalInNewTab={true}>
+                  {name}
+                </Link>
+                /
+              </li>
+            ))
+        }
+        <li class='line-clamp-1'>
+          <Link
+            href={`mailto:${encodeURIComponent(site.author.email)}`}
+            title={`Email ${site.author.name}`}
+            externalInNewTab={false}>
+            {site.author.email}
+          </Link>
+        </li>
+      </ul>
+    </Prose>
   </section>
 </PageLayout>

@@ -15,12 +15,13 @@ const formatDate = (date: Date, format: Props['format']) => {
         day: 'numeric',
         year: 'numeric',
       })
-    case 'relative':
-      // relative time like "2 days ago" or "in 3 months"
-      return new Intl.RelativeTimeFormat('en').format(
-        Math.ceil((date.getTime() - Date.now()) / (1000 * 60 * 60 * 24)),
-        'day'
+    case 'relative': {
+      const now = new globalThis.Date()
+      const diffInDays = Math.ceil(
+        (date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
       )
+      return new Intl.RelativeTimeFormat('en').format(diffInDays, 'day')
+    }
     default:
       return date.toLocaleDateString('en-us', {
         month: 'short',

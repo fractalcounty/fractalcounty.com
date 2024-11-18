@@ -1,7 +1,13 @@
 ---
-import Footer from '@/components/layout/Footer.astro'
-import Header from '@/components/layout/Header.astro'
-import Head from '@/components/meta/Head.astro'
+import InterFont from '@/components/fonts/InterFont.astro'
+import Footer from '@/components/Footer.astro'
+import Header from '@/components/Header.astro'
+import BaseHead from '@/components/meta/BaseHead.astro'
+import OpenGraph from '@/components/meta/OpenGraph.astro'
+import { getCanonicalUrl } from '@/lib/utils'
+import { ClientRouter } from 'astro:transitions'
+import { Head } from 'astro-capo'
+import '@/global.css'
 
 type Props = {
   title: string
@@ -11,6 +17,7 @@ type Props = {
   updatedDate?: Date
   tags?: string[]
   isContentPage?: boolean
+  languageAlternates?: Array<{ href: string; hrefLang: string }>
 }
 
 const {
@@ -20,36 +27,57 @@ const {
   publishDate,
   updatedDate,
   tags = [],
+  languageAlternates = [],
 } = Astro.props
 
 const publishDateString = publishDate?.toISOString()
 const updatedDateString = updatedDate?.toISOString()
+const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
+const combinedTags = Array.from(new Set([...tags, ...site.defaultTags]))
+const tagsContent = combinedTags.join(', ')
+const titleTemplate = site.titleTemplate
+  .replace('%s', title)
+  .replace('%site%', site.name)
 ---
 
 <!doctype html>
-<html lang='en' data-theme='laramie' transition:persist='theme'>
-  <head>
-    <Head
+<html
+  lang='en'
+  data-theme='laramie'
+  transition:persist='theme'
+  class='bg-theme-base text-theme-content'>
+  <Head>
+    <!-- global meta -->
+    <BaseHead />
+    <InterFont />
+
+    <!-- page-specific fonts -->
+    <slot name='head' />
+
+    <!-- page-specific meta -->
+    <title>{titleTemplate}</title>
+    <meta name='description' content={description} />
+    <meta name='title' content={titleTemplate} />
+    <link rel='canonical' href={canonicalUrl} />
+    <meta name='keywords' content={tagsContent} />
+    <OpenGraph
       title={title}
       description={description}
       type={type}
       publishDate={publishDateString}
       updatedDate={updatedDateString}
       tags={tags}
+      languageAlternates={languageAlternates}
     />
+    <ClientRouter fallback='swap' transition:persist='theme,scroll' />
     <slot name='structured-data' />
-    <link
-      rel='alternate'
-      type='application/rss+xml'
-      title={site.pages.blog.title}
-      href={`${site.url}/rss.xml`}
-    />
-  </head>
+  </Head>
+
   <body class='relative mx-auto max-w-[42rem] px-5'>
     <Header />
-    <main id='main' class='mt-24 space-y-12'>
+    <main id='main' class='mb-6 mt-24 space-y-12' transition:animate='fade'>
       <slot />
     </main>
-    <Footer />
+    <Footer transition:persist='footer' />
   </body>
 </html>

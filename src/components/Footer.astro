@@ -5,15 +5,14 @@ import Link from '@/components/Link.astro'
 import { Icon } from 'astro-icon/components'
 ---
 
-<footer class='animate mt-auto py-6' role='contentinfo'>
+<footer class='mt-auto py-6' role='contentinfo'>
   <section>
     <div class='flex flex-col'>
       <nav aria-label='Breadcrumb' class='h-6'>
         <Breadcrumbs />
       </nav>
       <div
-        class='flex h-10 items-center justify-between pt-2 text-xs md:text-sm'
-      >
+        class='flex h-10 items-center justify-between pt-2 text-xs md:text-sm'>
         <div>
           <div class='flex items-center gap-1'>
             <Icon name='anticopyright' class='text-[11px]' />
@@ -22,8 +21,7 @@ import { Icon } from 'astro-icon/components'
               class='hover:underline'
               title={`${site.name} unlicense`}
               underline={false}
-              externalInNewTab={false}
-            >
+              externalInNewTab={false}>
               UNLICENSE 2024
             </Link>
             <span>|</span>
@@ -32,8 +30,7 @@ import { Icon } from 'astro-icon/components'
               class='hover:underline'
               title="'Copyright is Brain Damage' by Nina Paley"
               externalInNewTab={true}
-              underline={false}
-            >
+              underline={false}>
               copyright is brain damage
             </Link>
           </div>
@@ -49,8 +46,7 @@ import { Icon } from 'astro-icon/components'
             <Button
               id='back-to-top'
               arrow='up'
-              aria-label='Back to top of page'
-            >
+              aria-label='Back to top of page'>
               <span class='hidden md:inline'>Back to top</span>
             </Button>
           </div>

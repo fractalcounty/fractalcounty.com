@@ -57,7 +57,7 @@ const isYouTube = (src: string | VideoMetadata): boolean => {
 const getYouTubeId = (src: string): string => {
   if (/^[\w-]{11}$/.test(src)) return src
   const match = src.match(
-    /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/
+    /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/,
   )
   return match?.[1] || src
 }
@@ -76,16 +76,16 @@ const getPublicUrl = (videoSrc: string | VideoMetadata): string | undefined => {
 
   // get filename from src
   const filename =
-    typeof videoSrc === 'object'
-      ? videoSrc.src.split('/').pop()
-      : videoSrc.split('/').pop()
+    typeof videoSrc === 'object' ?
+      videoSrc.src.split('/').pop()
+    : videoSrc.split('/').pop()
 
   return `/images/${collection}/${post}/${filename}`
 }
 
 // add helper to get youtube thumbnail url
 const getYouTubeThumbnail = (
-  src: string | VideoMetadata
+  src: string | VideoMetadata,
 ): string | undefined => {
   if (!isYouTube(src)) return undefined
   const videoId = getYouTubeId(typeof src === 'object' ? src.src : src)
@@ -106,21 +106,18 @@ const { width, scale } = PRESET_SIZES[size]
 />
 <div
   class={cn('video-wrapper w-full pb-6', className)}
-  style={`--scale-factor: ${scale};`}
->
+  style={`--scale-factor: ${scale};`}>
   <figure
     class='not-prose mx-auto'
-    style={width ? `max-width: ${width}px` : undefined}
-  >
+    style={width ? `max-width: ${width}px` : undefined}>
     <div
       class={cn(
         'relative w-full bg-base-200',
         rounded && 'rounded-xl overflow-hidden',
-        showShadow && 'shadow-xl'
-      )}
-    >
+        showShadow && 'shadow-xl',
+      )}>
       {
-        isYouTube(src) ? (
+        isYouTube(src) ?
           <div class='aspect-video'>
             <YouTube
               id={getYouTubeId(typeof src === 'object' ? src.src : src)}
@@ -129,8 +126,7 @@ const { width, scale } = PRESET_SIZES[size]
               params='rel=0&modestbranding=1'
             />
           </div>
-        ) : (
-          <video
+        : <video
             src={typeof src === 'object' ? src.src : src}
             class='h-auto w-full'
             {title}
@@ -145,13 +141,12 @@ const { width, scale } = PRESET_SIZES[size]
             }
             aria-label={title || 'Video player'}
           />
-        )
       }
     </div>
     {
       title && (
-        <figcaption class='-mb-3 mt-2 text-center text-sm italic text-accent-content/75'>
-          {enableFullResLink && publicUrl ? (
+        <figcaption class='-mb-3 mt-2 text-center text-sm italic text-theme-content/75'>
+          {enableFullResLink && publicUrl ?
             <Link
               href={publicUrl}
               underline={false}
@@ -159,16 +154,13 @@ const { width, scale } = PRESET_SIZES[size]
               externalInNewTab={false}
               prefetch={false}
               role='link'
-              aria-label={title}
-            >
+              aria-label={title}>
               Download original:{' '}
-              {typeof src === 'object'
-                ? src.src.split('/').pop()
-                : src.split('/').pop()}
+              {typeof src === 'object' ?
+                src.src.split('/').pop()
+              : src.split('/').pop()}
             </Link>
-          ) : (
-            title
-          )}
+          : title}
         </figcaption>
       )
     }

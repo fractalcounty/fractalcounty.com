@@ -22,12 +22,10 @@ const {
 
 <div
   class={`custom-video-card-wrapper ${className || ''}`}
-  style={`--scale-factor: ${scale};`}
->
+  style={`--scale-factor: ${scale};`}>
   <figure class='custom-video-card prose'>
     <div
-      class={`video-container ${rounded ? 'rounded-2xl overflow-hidden' : ''} ${showShadow ? 'shadow-xl' : ''}`}
-    >
+      class={`video-container ${rounded ? 'rounded-2xl overflow-hidden' : ''} ${showShadow ? 'shadow-xl' : ''}`}>
       <YouTube
         {id}
         {title}
@@ -66,6 +64,6 @@ const {
   }
 
   .custom-video-card-caption {
-    @apply prose-sm mt-2 text-center italic text-accent-content;
+    @apply prose-sm mt-2 text-center italic text-theme-content;
   }
 </style>

@@ -1,17 +1,18 @@
 ---
 import type { CollectionEntry } from 'astro:content'
+import Link from '@/components/Link.astro'
+import Thumbnail from '@/components/Thumbnail.astro'
 import { Icon } from 'astro-icon/components'
-import ArtThumbnail from './ArtThumbnail.astro'
-import Link from './Link.astro'
 
 interface Props {
   arts: CollectionEntry<'art'>[]
+  class?: string
 }
 
-const { arts }: Props = Astro.props
+const { arts, class: className }: Props = Astro.props
 ---
 
-<div class='animate grid gap-6'>
+<div class={`grid gap-6 ${className}`}>
   {
     arts.map((art, index) => {
       const isMultiImage =
@@ -20,42 +21,38 @@ const { arts }: Props = Astro.props
         (art.data.type === 'illustration' &&
           Array.isArray(art.data.images) &&
           art.data.images.length > 1)
-      const imageCount = Array.isArray(art.data.images)
-        ? art.data.images.length
-        : 1
+      const imageCount =
+        Array.isArray(art.data.images) ? art.data.images.length : 1
 
       return (
         <Link
           href={`/art/${art.id}`}
           class='group relative aspect-square overflow-hidden rounded-xl bg-base-300 shadow-md transition-all duration-150 hover:shadow-lg'
           underline={false}
-          data-index={index}
-        >
-          <ArtThumbnail art={art} size='sm' index={index} />
-          <div class='absolute inset-0 bg-gradient-to-t from-base-100/70 via-base-100/30 to-transparent opacity-100 transition-opacity duration-300 sm:opacity-0 sm:group-hover:opacity-100'>
-            <div class='absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-base-100/60 via-base-100/30 to-transparent p-4'>
+          data-index={index}>
+          <Thumbnail art={art} size='sm' index={index} />
+          <div class='absolute inset-0 bg-gradient-to-t from-theme-base/70 via-theme-base/30 to-transparent opacity-100 transition-opacity duration-300 sm:opacity-0 sm:group-hover:opacity-100'>
+            <div class='absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-theme-base/60 via-theme-base/30 to-transparent p-4'>
               <div class='-space-y-0'>
                 {isMultiImage && (
-                  <span class='inline-flex items-center gap-x-1 text-xs font-semibold text-primary'>
-                    {art.data.type === 'webcomic' ? (
+                  <span class='inline-flex items-center gap-x-1 text-xs font-semibold text-theme-primary'>
+                    {art.data.type === 'webcomic' ?
                       <Icon name='lucide:file-text' size={'1rem'} />
-                    ) : art.data.type === 'animation' ? (
+                    : art.data.type === 'animation' ?
                       <Icon name='lucide:image-play' size={'1rem'} />
-                    ) : (
-                      <Icon name='lucide:image' size={'1rem'} />
-                    )}
+                    : <Icon name='lucide:image' size={'1rem'} />}
                     {imageCount}{' '}
-                    {art.data.type === 'webcomic'
-                      ? 'pages'
-                      : art.data.type === 'animation'
-                        ? 'files'
-                        : 'images'}
+                    {art.data.type === 'webcomic' ?
+                      'pages'
+                    : art.data.type === 'animation' ?
+                      'files'
+                    : 'images'}
                   </span>
                 )}
-                <h2 class='text-lg font-semibold text-base-content lg:text-sm'>
+                <h2 class='text-lg font-semibold text-theme-content lg:text-sm'>
                   {art.data.title}
                 </h2>
-                <p class='mt-2 hidden text-sm text-base-content sm:block'>
+                <p class='mt-2 hidden text-sm text-theme-content sm:block'>
                   {art.data.description}
                 </p>
               </div>
@@ -78,25 +75,3 @@ const { arts }: Props = Astro.props
     }
   }
 </style>
-
-<script>
-  // handle grid item animations
-  document.addEventListener('astro:page-load', () => {
-    const grid = document.querySelector('.grid')
-    if (!grid) return
-
-    // type assertion for HTMLElement which has style property
-    const items = grid.querySelectorAll<HTMLElement>('[data-index]')
-    items.forEach((item, index) => {
-      const delay = Math.min(index * 50, 300) // cap at 300ms
-      item.style.opacity = '0'
-      item.style.transform = 'translateY(10px)'
-      item.style.transition = 'opacity 0.2s ease-out, transform 0.2s ease-out'
-
-      setTimeout(() => {
-        item.style.opacity = '1'
-        item.style.transform = 'translateY(0)'
-      }, delay)
-    })
-  })
-</script>

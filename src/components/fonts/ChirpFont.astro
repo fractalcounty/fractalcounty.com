@@ -1,43 +1,79 @@
 ---
-import { AstroFont } from 'astro-font'
+// this component injects chirp font styles for tweet components
+// only loaded when needed and optimized for below-fold content
 ---
 
-<AstroFont
-  config={[
-    {
-      name: 'Chirp',
-      src: [
-        {
-          style: 'normal',
-          weight: 'normal',
-          path: '/fonts/ChirpRegular.woff2',
-        },
-        {
-          style: 'normal',
-          weight: '500',
-          path: '/fonts/ChirpMedium.woff2',
-        },
-        {
-          style: 'normal',
-          weight: '600',
-          path: '/fonts/ChirpBold.woff2',
-        },
-        {
-          style: 'normal',
-          weight: '700',
-          path: '/fonts/ChirpHeavy.woff2',
-        },
-      ],
-      preload: false,
-      display: 'swap',
-      selector: '.tweet',
-      fallback: 'sans-serif',
-    },
-  ]}
-/>
+<Fragment>
+  <style is:inline>
+    /* define font faces but defer loading until needed */
+    @font-face {
+      font-family: 'Chirp';
+      src: url('/fonts/ChirpRegular.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
 
-<style is:global>
-  .tweet {
-    font-family: 'Chirp', sans-serif;
-  }
-</style>
+    @font-face {
+      font-family: 'Chirp';
+      src: url('/fonts/ChirpMedium.woff2') format('woff2');
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Chirp';
+      src: url('/fonts/ChirpBold.woff2') format('woff2');
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Chirp';
+      src: url('/fonts/ChirpHeavy.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
+
+  <script>
+    // load fonts only when tweet component enters viewport
+    const loadChirpFonts = () => {
+      const fonts = [
+        new FontFace('Chirp', 'url(/fonts/ChirpRegular.woff2)', {
+          weight: '400',
+        }),
+        new FontFace('Chirp', 'url(/fonts/ChirpMedium.woff2)', {
+          weight: '500',
+        }),
+        new FontFace('Chirp', 'url(/fonts/ChirpBold.woff2)', { weight: '600' }),
+        new FontFace('Chirp', 'url(/fonts/ChirpHeavy.woff2)', {
+          weight: '700',
+        }),
+      ]
+
+      Promise.all(fonts.map((font) => font.load())).then((loadedFonts) => {
+        loadedFonts.forEach((font) => document.fonts.add(font))
+      })
+    }
+
+    // use intersection observer to load fonts when tweet is visible
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          loadChirpFonts()
+          observer.disconnect()
+        }
+      })
+    })
+
+    // observe tweet components
+    document.addEventListener('astro:page-load', () => {
+      const tweets = document.querySelectorAll('.tweet')
+      tweets.forEach((tweet) => observer.observe(tweet))
+    })
+  </script>
+</Fragment>

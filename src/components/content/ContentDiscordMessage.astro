@@ -1,6 +1,6 @@
 ---
 import type { JSX } from 'astro/jsx-runtime'
-import ImageCard from '@components/ImageCard.astro'
+import { Image } from 'astro:assets'
 
 interface Props {
   author: string
@@ -15,11 +15,11 @@ function formatDate(dateString: string) {
   try {
     const dateObject = new Date(dateString)
     if (Number.isNaN(dateObject.getTime())) {
-      return dateString // Return the original string if it's not a valid date
+      return dateString
     }
     return dateObject.toISOString()
   } catch {
-    return dateString // Return the original string if there's any error
+    return dateString
   }
 }
 ---
@@ -27,47 +27,42 @@ function formatDate(dateString: string) {
 <div
   class='discord-message group'
   role='listitem'
-  aria-label={`Discord message from ${author}`}
->
+  aria-label={`Discord message from ${author}`}>
   <div class='avatar-wrapper' role='img' aria-label={`${author}'s avatar`}>
-    <ImageCard
-      imagePath={avatar}
-      altText={`${author}'s avatar`}
-      showShadow={false}
-      rounded={true}
-      showCaption={false}
-      scale={1}
+    <Image
+      src={avatar}
+      alt={`${author}'s avatar`}
+      width={48}
+      height={48}
       class='avatar'
     />
   </div>
   <div class='message-content'>
     <div class='message-header'>
-      <strong class='author'>{author}</strong>
+      <span class='author font-semibold text-theme-content-strong'
+        >{author}</span
+      >
       {
         date && (
-          <time class='date' datetime={formatDate(date)}>
+          <time class='date text-theme-secondary' datetime={formatDate(date)}>
             {date}
           </time>
         )
       }
     </div>
-    <div class='message-blocks'>
+    <div class='message-blocks prose text-theme-content'>
       {
         content.map((item) => (
           <div class='content'>
-            {typeof item === 'string' ? (
+            {typeof item === 'string' ?
               item
                 .split(/(@\w+)/)
                 .map((part) =>
-                  part.match(/^@\w+/) ? (
+                  part.match(/^@\w+/) ?
                     <span class='mention'>{part}</span>
-                  ) : (
-                    part
-                  )
+                  : part,
                 )
-            ) : (
-              <Fragment set:html={item} />
-            )}
+            : <Fragment set:html={item} />}
           </div>
         ))
       }
@@ -81,24 +76,17 @@ function formatDate(dateString: string) {
     display: flex;
     align-items: flex-start;
     transition: background-color 0.2s ease;
+    padding-top: 32px;
+    position: relative;
   }
   .avatar-wrapper {
     width: 48px;
     height: 48px;
-    margin-right: 16px;
-    margin-top: -32px;
-    align-self: flex-start;
-    flex-shrink: 0;
+    position: absolute;
+    top: 0.6rem;
+    left: 0.25rem;
   }
-  .avatar-wrapper :global(.custom-image-card-wrapper) {
-    width: 100%;
-    height: 100%;
-  }
-  .avatar-wrapper :global(.custom-image-card) {
-    width: 100%;
-    height: 100%;
-  }
-  .avatar-wrapper :global(.custom-image-card img) {
+  .avatar {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -108,6 +96,7 @@ function formatDate(dateString: string) {
     flex: 1;
     display: flex;
     flex-direction: column;
+    margin-left: 58px;
   }
   .message-header {
     display: flex;
@@ -115,33 +104,27 @@ function formatDate(dateString: string) {
     margin-bottom: 2px;
   }
   .author {
-    font-weight: bold;
     font-size: 1rem;
     line-height: 1.375rem;
     margin-right: 0.25rem;
   }
   .date {
     font-size: 0.75rem;
-    font-weight: 500;
   }
   .message-blocks {
     display: flex;
     flex-direction: column;
-    gap: 0.125rem; /* tighter spacing between consecutive messages */
+    gap: 0.125rem;
   }
   .content {
     font-size: 1rem;
     line-height: 1.375rem;
-    min-height: 1.375rem; /* ensures empty messages take space */
+    min-height: 1.375rem;
   }
   .mention {
     background-color: oklch(var(--p) / 0.2);
     color: oklch(var(--p));
     border-radius: 3px;
     padding: 0 2px;
-    font-weight: 500;
-  }
-  .discord-message:hover .mention {
-    background-color: oklch(var(--p) / 0.3);
   }
 </style>

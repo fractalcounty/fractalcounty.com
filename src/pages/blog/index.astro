@@ -1,41 +1,20 @@
 ---
-import Subheader from '@/components/layout/Subheader.astro'
-import LinkCard from '@/components/LinkCard.astro'
+import Card from '@/components/Card.astro'
+import Divider from '@/components/Divider.astro'
+import Heading from '@/components/Heading.astro'
 import CollectionPageStructuredData from '@/components/meta/CollectionPageStructuredData.astro'
 import ProfilePageStructuredData from '@/components/meta/ProfilePageStructuredData.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
-import { type CollectionEntry, getCollection } from 'astro:content'
+import { organizeEntriesByYear } from '@/lib/utils'
+import { getCollection } from 'astro:content'
 
-const blogPosts = (await getCollection('blog')).filter(
-  (post) => !post.data.draft
-)
-
-const allPosts = [...blogPosts].sort(
-  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
-)
-
-type Acc = {
-  [year: string]: CollectionEntry<'blog'>[]
-}
-
-const posts = allPosts.reduce((acc: Acc, post) => {
-  const year = post.data.publishDate.getFullYear().toString()
-  if (!acc[year]) {
-    acc[year] = []
-  }
-  acc[year].push(post)
-  return acc
-}, {})
-
-const years = Object.keys(posts).sort(
-  (a, b) => Number.parseInt(b) - Number.parseInt(a)
-)
+const posts = await getCollection('blog', (entry) => !entry.data.draft)
+const { years, entriesByYear } = organizeEntriesByYear(posts)
 ---
 
 <PageLayout
   title={site.pages.blog.title}
-  description={site.pages.blog.description}
->
+  description={site.pages.blog.description}>
   <CollectionPageStructuredData
     slot='structured-data'
     type='blog'
@@ -43,37 +22,28 @@ const years = Object.keys(posts).sort(
     description={site.pages.blog.description}
   />
   <ProfilePageStructuredData slot='structured-data' />
-  <section>
-    <div class='space-y-10'>
-      <Subheader title='Blog' subtitle='thoughts and ideas' />
-      <div class='space-y-4'>
-        {
-          years.map((year) => (
-            <section class='animate'>
-              <h2 class='divider divider-start my-8 font-medium text-base-content/75'>
-                {year}
-              </h2>
-              <div>
-                <ul class='flex flex-col gap-4'>
-                  {posts[year].map((post) => (
-                    <li>
-                      <article class='post-preview'>
-                        <LinkCard
-                          title={post.data.title}
-                          description={post.data.description}
-                          icon={post.data.icon}
-                          href={`/blog/${post.id.replace(/\/index\.mdx$|\.mdx$/, '')}`}
-                          date={post.data.publishDate}
-                        />
-                      </article>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </section>
-          ))
-        }
-      </div>
-    </div>
-  </section>
+
+  <article class='mb-12 space-y-6'>
+    <Heading title='Blog' subtitle='thoughts and ideas' />
+    {
+      years.map((year) => (
+        <>
+          <Divider>{year}</Divider>
+          <ul class='flex flex-col gap-4 pb-4'>
+            {entriesByYear[year].map((post) => (
+              <li>
+                <Card
+                  title={post.data.title}
+                  description={post.data.description}
+                  icon={post.data.icon}
+                  href={`/blog/${post.id.replace(/\/index\.mdx$|\.mdx$/, '')}`}
+                  date={post.data.publishDate}
+                />
+              </li>
+            ))}
+          </ul>
+        </>
+      ))
+    }
+  </article>
 </PageLayout>

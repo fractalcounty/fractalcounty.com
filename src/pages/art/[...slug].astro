@@ -1,6 +1,6 @@
 ---
 import Image from '@/components/content/ContentImage.astro'
-import Subheader from '@/components/layout/Subheader.astro'
+import Heading from '@/components/Heading.astro'
 import ArtworkStructuredData from '@/components/meta/ArtworkStructuredData.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
 import { getCollection, render } from 'astro:content'
@@ -27,11 +27,10 @@ const { Content } = await render(post)
   publishDate={post.data.publishDate}
   updatedDate={post.data.updatedDate}
   tags={post.data.tags}
-  isContentPage={true}
->
+  isContentPage={true}>
   <ArtworkStructuredData slot='structured-data' art={post} />
   <section>
-    <Subheader
+    <Heading
       title={post.data.title}
       publishDate={post.data.publishDate}
       updatedDate={post.data.updatedDate}
@@ -41,7 +40,7 @@ const { Content } = await render(post)
       links={post.data.links}
     />
 
-    <article class='animate' id='main-content'>
+    <article id='main-content'>
       <Image
         src={post.data.images}
         title={post.data.title}

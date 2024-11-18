@@ -1,8 +1,9 @@
 ---
 import Image from '@/components/content/ContentImage.astro'
-import Subheader from '@/components/layout/Subheader.astro'
+import Heading from '@/components/Heading.astro'
 import Link from '@/components/Link.astro'
 import PostStructuredData from '@/components/meta/PostStructuredData.astro'
+import Prose from '@/components/Prose.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
 import { readingTime } from '@/lib/utils'
 import { getCollection, render } from 'astro:content'
@@ -30,11 +31,10 @@ const { Content } = await render(post)
   publishDate={post.data.publishDate}
   updatedDate={post.data.updatedDate}
   tags={post.data.tags}
-  isContentPage={true}
->
+  isContentPage={true}>
   <PostStructuredData slot='structured-data' entry={post} type='blog' />
   <section>
-    <Subheader
+    <Heading
       title={post.data.title}
       publishDate={post.data.publishDate}
       updatedDate={post.data.updatedDate}
@@ -55,14 +55,13 @@ const { Content } = await render(post)
             style={post.data.thumbnailStyle ?? true}
             alt={post.data.thumbnailCaption}
             captionType={post.data.thumbnailCaptionType ?? 'alt'}
-            class='animate'
             loading='eager'
           />
         )
       }
-      <div class='animate'>
+      <Prose>
         <Content components={{ a: Link, img: Image }} />
-      </div>
+      </Prose>
     </article>
   </section>
 </PageLayout>

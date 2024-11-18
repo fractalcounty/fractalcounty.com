@@ -1,61 +1,52 @@
 ---
 import Video from '@/components/content/ContentVideo.astro'
-import Subheader from '@/components/layout/Subheader.astro'
+import Heading from '@/components/Heading.astro'
 import Link from '@/components/Link.astro'
+import Prose from '@/components/Prose.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
 ---
 
 <PageLayout
   title={site.pages.unlicense.title}
-  description={site.pages.unlicense.description}
->
-  <section>
-    <div class='space-y-8'>
-      <Subheader title='Unlicense' />
-      <article class='animate'>
-        <p class='animate'>
-          This is free and unencumbered software released into the public
-          domain.
-        </p>
+  description={site.pages.unlicense.description}>
+  <Prose class='space-y-8'>
+    <Heading title='Unlicense' />
+    <p>
+      This is free and unencumbered software released into the public domain.
+    </p>
 
-        <p class='animate'>
-          Anyone is free to copy, modify, publish, use, compile, sell, or
-          distribute this software, either in source code form or as a compiled
-          binary, for any purpose, commercial or non-commercial, and by any
-          means.
-        </p>
+    <p>
+      Anyone is free to copy, modify, publish, use, compile, sell, or distribute
+      this software, either in source code form or as a compiled binary, for any
+      purpose, commercial or non-commercial, and by any means.
+    </p>
 
-        <p class='animate'>
-          In jurisdictions that recognize copyright laws, the author or authors
-          of this software dedicate any and all copyright interest in the
-          software to the public domain. We make this dedication for the benefit
-          of the public at large and to the detriment of our heirs and
-          successors. We intend this dedication to be an overt act of
-          relinquishment in perpetuity of all present and future rights to this
-          software under copyright law.
-        </p>
+    <p>
+      In jurisdictions that recognize copyright laws, the author or authors of
+      this software dedicate any and all copyright interest in the software to
+      the public domain. We make this dedication for the benefit of the public
+      at large and to the detriment of our heirs and successors. We intend this
+      dedication to be an overt act of relinquishment in perpetuity of all
+      present and future rights to this software under copyright law.
+    </p>
 
-        <p class='animate'>
-          The software is provided "as is", without warranty of any kind,
-          express or implied, including but not limited to the warranties of
-          merchantability, fitness for a particular purpose and noninfringement.
-          In no event shall the authors be liable for any claim, damages or
-          other liability, whether in an action of contract, tort or otherwise,
-          arising from, out of or in connection with the software or the use or
-          other dealings in the software.
-        </p>
+    <p>
+      The software is provided 'as is', without warranty of any kind, express or
+      implied, including but not limited to the warranties of merchantability,
+      fitness for a particular purpose and noninfringement. In no event shall
+      the authors be liable for any claim, damages or other liability, whether
+      in an action of contract, tort or otherwise, arising from, out of or in
+      connection with the software or the use or other dealings in the software.
+    </p>
 
-        <p class='animate'>
-          For more information, please refer to <Link
-            href='http://unlicense.org/'>http://unlicense.org/</Link
-          >
-        </p>
-      </article>
-      <Video
-        class='animate'
-        src='IeTybKL1pM4'
-        title='"Copying Is Not Theft" by Question Copyright'
-      />
-    </div>
-  </section>
+    <p>
+      For more information, please refer to <Link href='http://unlicense.org/'
+        >http://unlicense.org/</Link
+      >
+    </p>
+    <Video
+      src='IeTybKL1pM4'
+      title='"Copying Is Not Theft" by Question Copyright'
+    />
+  </Prose>
 </PageLayout>

@@ -22,9 +22,8 @@ const breadcrumbItems = [
   { name: art.data.title, item: pageUrl.toString() },
 ]
 
-const primaryImage = Array.isArray(art.data.images)
-  ? art.data.images[0]
-  : art.data.images
+const primaryImage =
+  Array.isArray(art.data.images) ? art.data.images[0] : art.data.images
 
 function getPublicPath(src: string, id: string) {
   if (src.startsWith('/_astro/')) {

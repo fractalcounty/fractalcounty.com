@@ -1,4 +1,5 @@
 ---
+import Date from '@/components/Date.astro'
 import Link from '@/components/Link.astro'
 import { Icon } from 'astro-icon/components'
 
@@ -25,28 +26,22 @@ const {
 
 <Link
   href={href || `/`}
-  class={`group relative flex flex-nowrap items-center rounded-lg border border-base-content/25 bg-transparent px-4 py-4 pr-10 shadow-md transition-all duration-200 hover:bg-neutral hover:shadow-lg ${className}`}
+  class={`group relative flex flex-nowrap items-center rounded-lg border border-theme-border hover:border-theme-primary/50 bg-transparent px-4 py-4 pr-10 shadow-md transition-all duration-200 hover:bg-theme-neutral hover:shadow-lg ${className}`}
   underline={false}
-  externalInNewTab={externalInNewTab}
->
+  externalInNewTab={externalInNewTab}>
   <!-- Icon -->
   {icon && <Icon name={icon} class='mr-3 size-6 flex-shrink-0' />}
 
   <!-- Title and description -->
   <div class='flex flex-1 flex-col truncate'>
     <div class='flex items-center gap-2'>
-      <span class='font-semibold group-hover:text-primary'>
+      <span class='font-semibold group-hover:text-theme-primary'>
         {title}
       </span>
       {
         date && (
           <span class='text-sm opacity-75'>
-            •{' '}
-            {date.toLocaleDateString('en-US', {
-              month: 'short',
-              day: 'numeric',
-              year: 'numeric',
-            })}
+            • <Date date={date} />
           </span>
         )
       }
@@ -60,8 +55,7 @@ const {
   <svg
     xmlns='http://www.w3.org/2000/svg'
     viewBox='0 0 24 24'
-    class='absolute right-2 top-1/2 size-5 -translate-y-1/2 fill-none stroke-current stroke-2 transition-colors duration-300 ease-in-out group-hover:stroke-primary'
-  >
+    class='absolute right-2 top-1/2 size-5 -translate-y-1/2 fill-none stroke-current stroke-2 transition-colors duration-300 ease-in-out group-hover:stroke-theme-primary'>
     <line
       x1='5'
       y1='12'

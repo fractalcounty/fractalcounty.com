@@ -1,0 +1,79 @@
+---
+interface Props {
+  /**
+   * orientation of divider
+   * @default 'horizontal'
+   */
+  orientation?: 'horizontal' | 'vertical'
+  /**
+   * alignment of divider content
+   * @default 'center'
+   */
+  align?: 'start' | 'center' | 'end'
+  /**
+   * custom classes to apply to divider
+   */
+  class?: string
+}
+
+const {
+  orientation = 'horizontal',
+  align = 'start',
+  class: className,
+} = Astro.props
+
+// calculate alignment classes - removed line before content for start/end
+const alignmentClasses = {
+  start: 'before:hidden after:flex-1',
+  center: 'before:flex-1 after:flex-1',
+  end: 'before:flex-1 after:hidden',
+}
+
+const orientationClasses = {
+  horizontal: 'flex w-full items-center text-center',
+  vertical: 'flex flex-col h-full items-center text-center',
+}
+
+// updated colors and thickness
+const baseClasses =
+  'before:bg-theme-neutral after:bg-theme-neutral text-theme-content-weak'
+
+const lineClasses = {
+  horizontal: 'before:h-[2px] after:h-[2px]',
+  vertical: 'before:w-[2px] after:w-[2px]',
+}
+
+// check if slot content exists
+const hasContent = Astro.slots.has('default')
+
+const gapClasses =
+  hasContent ?
+    {
+      horizontal: 'gap-x-4 before:w-full after:w-full',
+      vertical: 'gap-y-4 before:h-full after:h-full',
+    }
+  : {
+      horizontal: 'before:w-full',
+      vertical: 'before:h-full',
+    }
+---
+
+<div
+  class:list={[
+    baseClasses,
+    orientationClasses[orientation],
+    alignmentClasses[align],
+    lineClasses[orientation],
+    gapClasses[orientation],
+    className,
+  ]}
+  role='separator'
+  aria-orientation={orientation}>
+  {
+    hasContent && (
+      <span class='shrink-0 font-medium'>
+        <slot />
+      </span>
+    )
+  }
+</div>

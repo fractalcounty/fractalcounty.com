@@ -47,7 +47,20 @@ export default defineConfig({
       }),
     },
   },
-  markdown: {},
+  vite: {
+    resolve: {
+      alias: {
+        '@config': '/src/config.ts',
+        '@': '/src',
+      },
+    },
+    build: {
+      assetsInlineLimit: 0,
+    },
+  },
+  markdown: {
+    syntaxHighlight: false,
+  },
   image: {
     domains: ['i.scdn.co', 'lastfm.freetls.fastly.net'],
     remotePatterns: [
@@ -70,14 +83,6 @@ export default defineConfig({
       },
     },
   },
-  vite: {
-    resolve: {
-      alias: {
-        '@config': '/src/config.ts',
-        '@': '/src',
-      },
-    },
-  },
   integrations: [
     AutoImport({
       imports: [
@@ -97,7 +102,11 @@ export default defineConfig({
       },
     }),
     astroBreakpoints(),
-    mdx(),
+    mdx({
+      syntaxHighlight: false,
+      remarkPlugins: [],
+      rehypePlugins: [],
+    }),
     sitemap({
       changefreq: 'weekly',
       priority: 1.0,

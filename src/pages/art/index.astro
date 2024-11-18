@@ -1,45 +1,20 @@
 ---
-import type { CollectionEntry } from 'astro:content'
 import ArtGrid from '@/components/ArtGrid.astro'
-import Subheader from '@/components/layout/Subheader.astro'
+import Divider from '@/components/Divider.astro'
+import Heading from '@/components/Heading.astro'
 import CollectionPageStructuredData from '@/components/meta/CollectionPageStructuredData.astro'
 import ProfilePageStructuredData from '@/components/meta/ProfilePageStructuredData.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
-// import { artTypes } from '@content/config'
+import { organizeEntriesByYear } from '@/lib/utils'
 import { getCollection } from 'astro:content'
 
-// optimize art data processing
-const arts = (await getCollection('art'))
-  .filter((art: CollectionEntry<'art'>) => !art.data.draft)
-  .sort(
-    (a: CollectionEntry<'art'>, b: CollectionEntry<'art'>) =>
-      b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
-  )
-
-// create an optimized data structure for year-based organization
-const artData = {
-  years: new Set<number>(),
-  byYear: new Map<number, CollectionEntry<'art'>[]>(),
-}
-
-// single pass through the data
-arts.forEach((art: CollectionEntry<'art'>) => {
-  const year = art.data.publishDate.getFullYear()
-  artData.years.add(year)
-  if (!artData.byYear.has(year)) {
-    artData.byYear.set(year, [])
-  }
-  artData.byYear.get(year)!.push(art)
-})
-
-const allYears = [...artData.years].sort((a, b) => b - a)
-// const categories = ['all', ...artTypes] as const
+const arts = await getCollection('art', (entry) => !entry.data.draft)
+const { years, entriesByYear } = organizeEntriesByYear(arts)
 ---
 
 <PageLayout
   title={site.pages.art.title}
-  description={site.pages.art.description}
->
+  description={site.pages.art.description}>
   <CollectionPageStructuredData
     slot='structured-data'
     type='art'
@@ -47,26 +22,18 @@ const allYears = [...artData.years].sort((a, b) => b - a)
     description={site.pages.art.description}
   />
   <ProfilePageStructuredData slot='structured-data' />
-  <section>
-    <div class='animate space-y-12'>
-      <Subheader
-        title='Art'
-        subtitle='archive of my artwork and other creations'
-      />
-      <div class='gallery-container'>
-        {
-          allYears.map((year) => (
-            <div class='year-section' data-year={year}>
-              <div class='animate divider divider-start my-8 font-medium text-base-content/75'>
-                {year}
-              </div>
-              <ArtGrid arts={artData.byYear.get(year) || []} />
-            </div>
-          ))
-        }
-      </div>
-    </div>
-  </section>
+
+  <article class='mb-12 space-y-6'>
+    <Heading title='Art' subtitle='archive of my artwork and other creations' />
+    {
+      years.map((year) => (
+        <>
+          <Divider>{year}</Divider>
+          <ArtGrid arts={entriesByYear[year]} class='pb-4 pt-4' />
+        </>
+      ))
+    }
+  </article>
 </PageLayout>
 
 <style>

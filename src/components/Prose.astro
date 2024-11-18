@@ -1,0 +1,27 @@
+---
+interface Props {
+  class?: string
+}
+
+const { class: className } = Astro.props
+---
+
+<article
+  class:list={[
+    'prose max-w-full',
+    'prose-headings:font-bold prose-headings:text-theme-content',
+    'prose-p:text-theme-content',
+    'prose-strong:text-theme-content-strong',
+    'prose-em:text-theme-content-strong',
+    'prose-code:bg-theme-neutral prose-code:text-theme-content-strong',
+    'prose-blockquote:text-theme-content-weak',
+    'prose-figcaption:text-theme-content-weak',
+    'prose-lead:text-theme-content-strong',
+    'prose-ul:text-theme-content-weak',
+    'prose-ol:text-theme-content-weak',
+    'prose-li:text-theme-content-weak',
+    'prose-img:mx-auto prose-img:my-auto',
+    className,
+  ]}>
+  <slot />
+</article>

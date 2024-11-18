@@ -1,5 +1,6 @@
 ---
-import Subheader from '@/components/layout/Subheader.astro'
+import Divider from '@/components/Divider.astro'
+import Heading from '@/components/Heading.astro'
 import Link from '@/components/Link.astro'
 import CollectionPageStructuredData from '@/components/meta/CollectionPageStructuredData.astro'
 import MusicPageStructuredData from '@/components/meta/MusicPageStructuredData.astro'
@@ -7,7 +8,6 @@ import ProfilePageStructuredData from '@/components/meta/ProfilePageStructuredDa
 import PageLayout from '@/layouts/PageLayout.astro'
 import { Image, Picture } from 'astro:assets'
 import { getCollection } from 'astro:content'
-import { Icon } from 'astro-icon/components'
 
 // replace the spotify and lastfm functions with imports
 import { fetchLastFmData } from '@/lib/lastfm'
@@ -20,7 +20,7 @@ const spotifyToken = await getSpotifyToken()
 const lastFmData = await fetchLastFmData(
   LASTFM_USERNAME,
   import.meta.env.LASTFM_API_KEY,
-  spotifyToken
+  spotifyToken,
 )
 const playlistData = await getPlaylistDetails(PLAYLIST_ID, spotifyToken)
 
@@ -32,8 +32,7 @@ const bandcampAlbums = await getCollection('music')
 
 <PageLayout
   title={site.pages.music.title}
-  description={site.pages.music.description}
->
+  description={site.pages.music.description}>
   <MusicPageStructuredData
     slot='structured-data'
     lastFmData={lastFmData}
@@ -49,28 +48,29 @@ const bandcampAlbums = await getCollection('music')
   <ProfilePageStructuredData slot='structured-data' />
 
   <section>
-    <div class='animate mb-12'>
-      <Subheader
+    <div class='mb-12'>
+      <Heading
         class='mb-12 space-y-12'
         headingLevel='h1'
         title='Music'
-        subtitle='my released albums & music projects'
-        link={{
-          text: 'Listen on Bandcamp',
-          href: 'https://fractalcounty.bandcamp.com',
-          icon: 'lucide:external-link',
-        }}
-      />
+        subtitle='my released albums & music projects'>
+        <Link
+          slot='link'
+          href='https://fractalcounty.bandcamp.com'
+          externalInNewTab={true}
+          icon={true}>
+          Listen on Bandcamp
+        </Link>
+      </Heading>
 
       <div class='grid grid-cols-2 gap-6 md:grid-cols-3'>
         {
           bandcampAlbums.map((album: any, index: number) => (
             <Link
               href={album.data.url}
-              class={`animate group relative aspect-square overflow-hidden rounded-xl bg-base-300 shadow-md transition-all duration-150 hover:shadow-lg ${index >= 2 ? 'hidden md:block' : ''}`}
+              class={`group relative aspect-square overflow-hidden rounded-xl bg-base-300 shadow-md transition-all duration-150 hover:shadow-lg ${index >= 2 ? 'hidden md:block' : ''}`}
               underline={false}
-              externalInNewTab={true}
-            >
+              externalInNewTab={true}>
               <Image
                 src={album.data.coverArt}
                 alt={`${album.data.title} album art`}
@@ -79,17 +79,17 @@ const bandcampAlbums = await getCollection('music')
                 loading='eager'
                 class='h-full w-full object-cover transition-transform duration-300 group-hover:scale-105'
               />
-              <div class='absolute inset-0 bg-gradient-to-t from-base-100/90 via-base-100/40 to-transparent transition-all duration-300 group-hover:from-base-100/95 group-hover:via-base-100/50'>
+              <div class='absolute inset-0 bg-gradient-to-t from-theme-base/90 via-theme-base/50 to-transparent transition-all duration-300 group-hover:from-theme-base/95 group-hover:via-theme-base/60'>
                 <div class='absolute inset-0 flex flex-col justify-end p-4'>
                   <div class='-space-y-0'>
-                    <span class='inline-flex items-center gap-x-1 text-xs font-semibold text-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100'>
+                    <span class='inline-flex items-center gap-x-1 text-xs font-semibold text-theme-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100'>
                       {new Date(album.data.releaseDate).getFullYear()}
                     </span>
-                    <h2 class='text-lg font-semibold text-base-content lg:text-sm'>
+                    <h2 class='text-lg font-bold text-theme-content lg:text-sm'>
                       {album.data.title}
                     </h2>
                     {album.data.description && (
-                      <p class='mt-1 text-sm text-base-content/80'>
+                      <p class='mt-1 text-sm text-theme-content-weak'>
                         {album.data.description}
                       </p>
                     )}
@@ -102,8 +102,9 @@ const bandcampAlbums = await getCollection('music')
       </div>
     </div>
 
+    <!-- last.fm section -->
     <div class='space-y-12'>
-      <Subheader
+      <Heading
         title='last.fm'
         subtitle='my listening stats from last.fm'
         metadataPosition='bottom'
@@ -125,21 +126,20 @@ const bandcampAlbums = await getCollection('music')
         ]}
       />
 
-      <!-- top tracks grid -->
+      <!-- top tracks sub-section -->
       <div class='space-y-4'>
-        <div class='animate flex items-center gap-4'>
-          <h3 class='font-semibold uppercase'>Top Tracks</h3>
-          <div class='h-[1px] flex-1 bg-base-content/20'></div>
+        <Heading headingLevel='h3' title='Top Tracks'>
           <Link
+            slot='link'
+            icon={true}
+            class='text-theme-content-weak'
             href={`https://www.last.fm/user/${LASTFM_USERNAME}/library/tracks`}
-            class='text-sm hover:text-primary'
-            externalInNewTab={true}
-          >
+            externalInNewTab={true}>
             View All
           </Link>
-        </div>
+        </Heading>
 
-        <div class='animate grid gap-6'>
+        <div class='grid grid-cols-2 gap-6 md:grid-cols-3'>
           {
             topTracks.map((track: any, index: number) => (
               <Link
@@ -147,8 +147,7 @@ const bandcampAlbums = await getCollection('music')
                 class='group relative aspect-square overflow-hidden rounded-xl bg-base-300 shadow-md transition-all duration-150 hover:shadow-lg'
                 underline={false}
                 externalInNewTab={true}
-                data-index={index}
-              >
+                data-index={index}>
                 <Image
                   src={track.albumArt}
                   alt={`Album art for ${track.name} by ${track.artist.name}`}
@@ -158,16 +157,16 @@ const bandcampAlbums = await getCollection('music')
                   loading='eager'
                   class='h-full w-full object-cover transition-transform duration-300 group-hover:scale-105'
                 />
-                <div class='absolute inset-0 bg-gradient-to-t from-base-100/90 via-base-100/40 to-transparent transition-all duration-300 group-hover:from-base-100/95 group-hover:via-base-100/50'>
+                <div class='absolute inset-0 bg-gradient-to-t from-theme-base/90 via-theme-base/50 to-transparent transition-all duration-300 group-hover:from-theme-base/95 group-hover:via-theme-base/60'>
                   <div class='absolute inset-0 flex flex-col justify-end p-4'>
                     <div class='-space-y-0'>
-                      <span class='inline-flex items-center gap-x-1 text-xs font-semibold text-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100'>
+                      <span class='inline-flex items-center gap-x-1 text-xs font-semibold text-theme-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100'>
                         {track.playcount} plays
                       </span>
-                      <h4 class='text-lg font-semibold text-base-content lg:text-sm'>
+                      <h4 class='text-lg font-semibold text-theme-content lg:text-sm'>
                         {track.name}
                       </h4>
-                      <p class='mt-1 text-sm text-base-content/80'>
+                      <p class='mt-1 text-sm text-theme-content-weak'>
                         {track.artist.name}
                       </p>
                     </div>
@@ -179,31 +178,29 @@ const bandcampAlbums = await getCollection('music')
         </div>
       </div>
 
-      <!-- top artists and albums columns -->
+      <!-- top artists and albums columns sub-sections -->
       <div class='grid w-full grid-cols-1 gap-6 md:grid-cols-2'>
-        <!-- top artists -->
+        <!-- top artists sub-section (left column) -->
         <div class='w-full space-y-4'>
-          <div class='animate flex items-center gap-4'>
-            <h3 class='title font-bold uppercase'>Top Artists</h3>
-            <div class='h-[1px] flex-1 bg-base-content/20'></div>
+          <Heading headingLevel='h3' title='Top Artists'>
             <Link
+              slot='link'
+              icon={true}
+              class='text-theme-content-weak'
               href={`https://www.last.fm/user/${LASTFM_USERNAME}/library/artists`}
-              class='text-sm hover:text-primary'
-              externalInNewTab={true}
-            >
+              externalInNewTab={true}>
               View All
             </Link>
-          </div>
+          </Heading>
 
-          <div class='animate space-y-3'>
+          <div class='space-y-3'>
             {
               artists.map((artist: any) => (
                 <Link
                   href={artist.url}
-                  class='group flex h-[76px] w-full items-center gap-4 rounded-lg border border-base-content/25 bg-transparent p-3 shadow-md transition-all duration-200 hover:bg-neutral hover:shadow-lg'
+                  class='group flex h-[76px] w-full items-center gap-4 rounded-lg border border-theme-border bg-transparent p-3 shadow-md transition-all duration-200 hover:border-theme-primary/50 hover:bg-theme-neutral hover:shadow-lg'
                   underline={false}
-                  externalInNewTab={true}
-                >
+                  externalInNewTab={true}>
                   <Image
                     src={
                       artist.image[3]['#text'] ||
@@ -217,10 +214,10 @@ const bandcampAlbums = await getCollection('music')
                     class='size-12 flex-shrink-0 rounded-lg object-cover'
                   />
                   <div class='min-w-0 flex-1'>
-                    <h4 class='line-clamp-1 font-medium group-hover:text-primary'>
+                    <h4 class='line-clamp-1 font-semibold group-hover:text-theme-primary'>
                       {artist.name}
                     </h4>
-                    <p class='line-clamp-1 text-sm text-base-content/80'>
+                    <p class='line-clamp-1 text-sm text-theme-secondary'>
                       {Number(artist.playcount).toLocaleString()} plays
                     </p>
                   </div>
@@ -230,29 +227,27 @@ const bandcampAlbums = await getCollection('music')
           </div>
         </div>
 
-        <!-- top albums -->
+        <!-- top albums sub-section (right column) -->
         <div class='mb-12 w-full space-y-4'>
-          <div class='animate flex items-center gap-4'>
-            <h3 class='title font-bold uppercase'>Top Albums</h3>
-            <div class='h-[1px] flex-1 bg-base-content/20'></div>
+          <Heading headingLevel='h3' title='Top Albums'>
             <Link
+              slot='link'
+              icon={true}
+              class='text-theme-content-weak'
               href={`https://www.last.fm/user/${LASTFM_USERNAME}/library/albums`}
-              class='text-sm hover:text-primary'
-              externalInNewTab={true}
-            >
+              externalInNewTab={true}>
               View All
             </Link>
-          </div>
+          </Heading>
 
-          <div class='animate space-y-3'>
+          <div class='space-y-3'>
             {
               albums.map((album: any) => (
                 <Link
                   href={album.url}
-                  class='group flex h-[76px] w-full items-center gap-4 rounded-lg border border-base-content/25 bg-transparent p-3 shadow-md transition-all duration-200 hover:bg-neutral hover:shadow-lg'
+                  class='group flex h-[76px] w-full items-center gap-4 rounded-lg border border-theme-border bg-transparent p-3 shadow-md transition-all duration-200 hover:border-theme-primary/50 hover:bg-theme-neutral hover:shadow-lg'
                   underline={false}
-                  externalInNewTab={true}
-                >
+                  externalInNewTab={true}>
                   <Image
                     src={
                       album.image[2]['#text'] ||
@@ -265,10 +260,10 @@ const bandcampAlbums = await getCollection('music')
                     class='size-12 flex-shrink-0 rounded-lg object-cover'
                   />
                   <div class='min-w-0 flex-1'>
-                    <h4 class='line-clamp-1 font-medium group-hover:text-primary'>
+                    <h4 class='line-clamp-1 font-medium group-hover:text-theme-primary'>
                       {album.name}
                     </h4>
-                    <p class='line-clamp-1 text-sm text-base-content/80'>
+                    <p class='line-clamp-1 text-sm text-theme-secondary'>
                       {album.artist.name} •{' '}
                       {Number(album.playcount).toLocaleString()} plays
                     </p>
@@ -279,67 +274,29 @@ const bandcampAlbums = await getCollection('music')
           </div>
         </div>
       </div>
-
-      <style>
-        .animate.grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-
-        @media (min-width: 768px) {
-          .animate.grid {
-            grid-template-columns: repeat(3, 1fr);
-          }
-        }
-      </style>
-
-      <script>
-        // handle grid item animations
-        document.addEventListener('astro:page-load', () => {
-          const grid = document.querySelector('.grid')
-          if (!grid) return
-
-          const items = grid.querySelectorAll<HTMLElement>('[data-index]')
-          items.forEach((item, index) => {
-            const delay = Math.min(index * 50, 300)
-            item.style.opacity = '0'
-            item.style.transform = 'translateY(10px)'
-            item.style.transition =
-              'opacity 0.2s ease-out, transform 0.2s ease-out'
-
-            setTimeout(() => {
-              item.style.opacity = '1'
-              item.style.transform = 'translateY(0)'
-            }, delay)
-          })
-        })
-      </script>
     </div>
 
     <!-- spotify section -->
-    <section class='animate space-y-12 pb-12'>
-      <div class='flex items-center justify-between'>
-        <Subheader
-          title='Featured Playlist'
-          subtitle='my favorite music on Spotify'
-          headingLevel='h2'
-        />
+    <section class='space-y-12 pb-12'>
+      <Heading
+        title='Featured Playlist'
+        subtitle='my favorite music on Spotify'
+        headingLevel='h2'>
         <Link
+          slot='link'
+          icon={true}
           href={`https://open.spotify.com/playlist/${PLAYLIST_ID}`}
-          class='inline-flex items-center gap-2 text-sm'
-          externalInNewTab={true}
-        >
+          externalInNewTab={true}>
           Listen on Spotify
-          <Icon name='lucide:external-link' class='size-4' />
         </Link>
-      </div>
+      </Heading>
 
       <div
         id='customView'
-        class='space-y-4 rounded-xl border border-base-content/25 p-4 shadow-md hover:shadow-lg'
-      >
+        class='space-y-4 rounded-xl border border-theme-border p-4 shadow-md'>
         {
           playlist && (
-            <div class='animate space-y-4'>
+            <div class='space-y-4'>
               <div class='flex gap-6'>
                 {/* playlist thumbnail artwork image */}
                 <div class='relative h-[150px] w-[149.5px] flex-shrink-0'>
@@ -350,7 +307,7 @@ const bandcampAlbums = await getCollection('music')
                     height={259}
                     widths={[129, 259]}
                     sizes='149px'
-                    class='absolute inset-0 h-full w-full rounded-lg border border-base-content/15 object-cover shadow-md'
+                    class='absolute inset-0 h-full w-full rounded-lg border border-theme-border/50 object-cover shadow-md'
                     style={{
                       aspectRatio: '1/1',
                       objectFit: 'cover',
@@ -359,43 +316,44 @@ const bandcampAlbums = await getCollection('music')
                   />
                 </div>
                 <div class='flex flex-col justify-center'>
-                  <h3 class='font-brand text-xl font-bold'>{playlist.name}</h3>
+                  <h3 class='font-brand text-xl font-bold uppercase'>
+                    {playlist.name}
+                  </h3>
                   <p
-                    class='text-base-content/75'
+                    class='text-theme-content-weak'
                     set:html={playlist.description}
                   />
                 </div>
               </div>
 
-              <div class='divider' />
+              <Divider />
 
               <div class='h-[200px] space-y-2 overflow-y-auto pr-2'>
                 {playlist.tracks.map((track: any) => (
                   <Link
                     href={track.external_url}
-                    class='group flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-base-300'
+                    class='group flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-theme-darkest'
                     underline={false}
-                    externalInNewTab={true}
-                  >
+                    externalInNewTab={true}>
                     <Image
                       src={track.image}
                       alt={track.name}
                       width={48}
                       height={48}
-                      class='size-12 rounded border border-base-content/25 object-cover shadow-sm'
+                      class='size-12 rounded border border-theme-border object-cover shadow-sm hover:border-theme-primary/50'
                       loading='lazy'
                     />
                     <div class='min-w-0 flex-1'>
-                      <h4 class='line-clamp-1 font-medium group-hover:text-primary'>
+                      <h4 class='line-clamp-1 font-medium group-hover:text-theme-primary'>
                         {track.name}
                       </h4>
-                      <p class='line-clamp-1 text-sm text-base-content/80'>
+                      <p class='line-clamp-1 text-sm text-theme-secondary'>
                         {track.artist}
                       </p>
                     </div>
-                    <span class='text-sm text-base-content/60'>
+                    <span class='text-sm text-theme-content-weak'>
                       {`${Math.floor(track.duration / 60000)}:${String(
-                        Math.floor((track.duration % 60000) / 1000)
+                        Math.floor((track.duration % 60000) / 1000),
                       ).padStart(2, '0')}`}
                     </span>
                   </Link>
