@@ -1,0 +1,13 @@
+name: Schedule Cloudflare Pages Build Hook Trigger
+
+on:
+  schedule:
+    - cron: '0 0 */3 * *' # run every 3 days
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cloudflare Pages build hook request
+        run: curl -X POST -d {} ${{ secrets.BUILD_HOOK }}
