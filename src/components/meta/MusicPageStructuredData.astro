@@ -61,36 +61,36 @@ const schema = {
       ...(album.data.description && { description: album.data.description }),
     })),
     // spotify playlist if available
-    ...(playlist
-      ? [
-          {
-            '@type': 'MusicPlaylist',
-            '@id': `${pageUrl.toString()}#spotify-playlist`,
-            name: playlist.name,
-            description: playlist.description,
-            numTracks: playlist.tracks.length,
-            url: `https://open.spotify.com/playlist/${playlist.id}`,
-            track: playlist.tracks.map((track: any) => ({
-              '@type': 'MusicRecording',
-              name: track.name,
-              byArtist: {
-                '@type': 'MusicGroup',
-                name: track.artist,
+    ...(playlist ?
+      [
+        {
+          '@type': 'MusicPlaylist',
+          '@id': `${pageUrl.toString()}#spotify-playlist`,
+          name: playlist.name,
+          description: playlist.description,
+          numTracks: playlist.tracks.length,
+          url: `https://open.spotify.com/playlist/${playlist.id}`,
+          track: playlist.tracks.map((track: any) => ({
+            '@type': 'MusicRecording',
+            name: track.name,
+            byArtist: {
+              '@type': 'MusicGroup',
+              name: track.artist,
+            },
+            duration: `PT${Math.floor(track.duration / 60000)}M${Math.floor(
+              (track.duration % 60000) / 1000,
+            )}S`,
+            url: track.external_url,
+            ...(track.image && {
+              image: {
+                '@type': 'ImageObject',
+                url: track.image,
               },
-              duration: `PT${Math.floor(track.duration / 60000)}M${Math.floor(
-                (track.duration % 60000) / 1000
-              )}S`,
-              url: track.external_url,
-              ...(track.image && {
-                image: {
-                  '@type': 'ImageObject',
-                  url: track.image,
-                },
-              }),
-            })),
-          },
-        ]
-      : []),
+            }),
+          })),
+        },
+      ]
+    : []),
     // lastfm profile
     {
       '@type': 'ProfilePage',
@@ -105,9 +105,9 @@ const schema = {
         '@type': 'Thing',
         name: 'Music Listening History',
         description: `Last.fm statistics showing ${Number(
-          lastFmData.userInfo.playcount
+          lastFmData.userInfo.playcount,
         ).toLocaleString()} total plays since ${new Date(
-          lastFmData.userInfo.registered.unixtime * 1000
+          lastFmData.userInfo.registered.unixtime * 1000,
         ).getFullYear()}`,
       },
     },

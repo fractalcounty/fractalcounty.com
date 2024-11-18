@@ -14,23 +14,20 @@ export async function customOgMediaLayout({
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
-      }}
-    >
+      }}>
       <div style={twj('flex flex-col items-start text-left pl-20')}>
         <h1
           style={{
             ...twj('text-[60px] text-white uppercase mb-[-10px]'),
             fontFamily: 'AlteHaasGroteskBold, Arial, sans-serif',
-          }}
-        >
+          }}>
           FRACTAL COUNTY
         </h1>
         <h2
           style={{
             ...twj('text-[40px] text-white uppercase'),
             fontFamily: 'AlteHaasGroteskRegular, Arial, sans-serif',
-          }}
-        >
+          }}>
           {title}
         </h2>
       </div>

@@ -47,7 +47,7 @@ async function getMediaActions(): Promise<MediaAction[]> {
   // find convertible images
   const imagesToConvert = await glob(
     `${CONTENT_DIR}/**/*.{${IMAGE_EXTENSIONS.join(',')}}`,
-    { nodir: true, absolute: true }
+    { nodir: true, absolute: true },
   )
 
   // add conversion actions
@@ -56,7 +56,7 @@ async function getMediaActions(): Promise<MediaAction[]> {
       type: 'convert' as const,
       source: file,
       destination: file.replace(/\.[^.]+$/, '.webp'),
-    }))
+    })),
   )
 
   // find media to sync
@@ -71,7 +71,7 @@ async function getMediaActions(): Promise<MediaAction[]> {
       type: 'sync' as const,
       source: file,
       destination: path.join(PUBLIC_DIR, path.relative(CONTENT_DIR, file)),
-    }))
+    })),
   )
 
   return actions
@@ -90,7 +90,7 @@ async function displayActions(actions: MediaAction[], spinner: Ora) {
         kleur.yellow('• ') +
           kleur.white(sourceName) +
           kleur.dim(' → ') +
-          kleur.green(destName)
+          kleur.green(destName),
       )
     })
     if (conversions.length > 3)
@@ -106,7 +106,7 @@ async function displayActions(actions: MediaAction[], spinner: Ora) {
         kleur.yellow('• ') +
           kleur.white(sourcePath) +
           kleur.dim(' → ') +
-          kleur.green(destPath)
+          kleur.green(destPath),
       )
     })
     if (syncs.length > 3)
@@ -118,7 +118,7 @@ async function displayActions(actions: MediaAction[], spinner: Ora) {
 async function executeActions(
   actions: MediaAction[],
   spinner: Ora | SilentSpinner,
-  force = false
+  force = false,
 ): Promise<ProcessStats> {
   const stats: ProcessStats = { converted: 0, skipped: 0, synced: 0 }
 
@@ -157,13 +157,13 @@ async function executeActions(
         const errorMessage =
           error instanceof Error ? error.message : 'unknown error'
         spinner.warn(
-          kleur.yellow(`failed to convert ${action.source}: ${errorMessage}`)
+          kleur.yellow(`failed to convert ${action.source}: ${errorMessage}`),
         )
       }
 
       if ((index + 1) % 10 === 0 || index === conversions.length - 1) {
         spinner.text = kleur.blue(
-          `converting... ${index + 1}/${conversions.length}`
+          `converting... ${index + 1}/${conversions.length}`,
         )
       }
     }
@@ -204,8 +204,9 @@ interface SilentSpinner {
 }
 
 export async function processMedia(silent = false, force = false) {
-  const spinner: Ora | SilentSpinner = silent
-    ? {
+  const spinner: Ora | SilentSpinner =
+    silent ?
+      {
         start: () => {},
         info: () => {},
         succeed: () => {},
@@ -237,15 +238,15 @@ export async function processMedia(silent = false, force = false) {
             stats.converted > 0 ? `converted ${stats.converted} images ` : ''
           }${stats.synced > 0 ? `synced ${stats.synced} new files ` : ''}${
             stats.skipped > 0 ? `skipped ${stats.skipped} existing files` : ''
-          }`
-        )
+          }`,
+        ),
       )
     }
   } catch (err) {
     if (!silent) {
       spinner.fail(kleur.red('error processing media:'))
       console.error(
-        kleur.red(err instanceof Error ? err.message : 'unknown error')
+        kleur.red(err instanceof Error ? err.message : 'unknown error'),
       )
     }
     process.exit(1)

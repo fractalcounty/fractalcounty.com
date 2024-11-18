@@ -26,7 +26,11 @@ body {
 body {
   @apply font-sans subpixel-antialiased;
   @apply flex flex-col;
-  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;

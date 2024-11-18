@@ -80,7 +80,7 @@ interface SpotifyPlaylistResponse {
 // get spotify auth token
 export async function getSpotifyToken(): Promise<string> {
   const basic = Buffer.from(
-    `${import.meta.env.SPOTIFY_CLIENT_ID}:${import.meta.env.SPOTIFY_CLIENT_SECRET}`
+    `${import.meta.env.SPOTIFY_CLIENT_ID}:${import.meta.env.SPOTIFY_CLIENT_SECRET}`,
   ).toString('base64')
 
   const response = await fetch('https://accounts.spotify.com/api/token', {
@@ -99,7 +99,7 @@ export async function getSpotifyToken(): Promise<string> {
 // get artist image from spotify
 export async function getSpotifyArtistImage(
   artistName: string,
-  token: string
+  token: string,
 ): Promise<string | null> {
   try {
     const response = await fetch(
@@ -108,7 +108,7 @@ export async function getSpotifyArtistImage(
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     )
     const data = (await response.json()) as SpotifyArtistResponse
     return data.artists?.items[0]?.images[0]?.url ?? null
@@ -122,7 +122,7 @@ export async function getSpotifyArtistImage(
 export async function getSpotifyTrackInfo(
   trackName: string,
   artistName: string,
-  token: string
+  token: string,
 ): Promise<SpotifyTrackInfo> {
   try {
     const response = await fetch(
@@ -131,7 +131,7 @@ export async function getSpotifyTrackInfo(
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     )
     const data = (await response.json()) as SpotifyTrackResponse
     return {
@@ -148,7 +148,7 @@ export async function getSpotifyTrackInfo(
 export async function getSpotifyAlbumInfo(
   albumName: string,
   artistName: string,
-  token: string
+  token: string,
 ): Promise<string | null> {
   try {
     const response = await fetch(
@@ -157,7 +157,7 @@ export async function getSpotifyAlbumInfo(
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     )
     const data = (await response.json()) as SpotifyAlbumResponse
     return data.albums?.items[0]?.images[0]?.url ?? null
@@ -170,7 +170,7 @@ export async function getSpotifyAlbumInfo(
 // get playlist details from spotify
 export async function getPlaylistDetails(
   playlistId: string,
-  token: string
+  token: string,
 ): Promise<SpotifyPlaylist | null> {
   try {
     const response = await fetch(
@@ -179,7 +179,7 @@ export async function getPlaylistDetails(
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     )
     const data = (await response.json()) as SpotifyPlaylistResponse
     return {

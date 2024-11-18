@@ -75,7 +75,7 @@ interface LastFmUserInfo {
 export async function fetchLastFmData(
   username: string,
   apiKey: string,
-  spotifyToken: string
+  spotifyToken: string,
 ): Promise<{
   userInfo: LastFmUserInfo
   artists: LastFmArtist[]
@@ -86,19 +86,19 @@ export async function fetchLastFmData(
     const [topArtists, topAlbums, userInfo, topTracks] = await Promise.all([
       // get top artists
       fetch(
-        `https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=${username}&api_key=${apiKey}&period=overall&limit=5&format=json&extended=1`
+        `https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=${username}&api_key=${apiKey}&period=overall&limit=5&format=json&extended=1`,
       ).then(async (res) => res.json() as Promise<LastFmResponse>),
       // get top albums
       fetch(
-        `https://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=${username}&api_key=${apiKey}&period=overall&limit=5&format=json`
+        `https://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=${username}&api_key=${apiKey}&period=overall&limit=5&format=json`,
       ).then(async (res) => res.json() as Promise<LastFmResponse>),
       // get user info
       fetch(
-        `https://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=${username}&api_key=${apiKey}&format=json`
+        `https://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=${username}&api_key=${apiKey}&format=json`,
       ).then(async (res) => res.json() as Promise<LastFmResponse>),
       // get top tracks
       fetch(
-        `https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${username}&api_key=${apiKey}&limit=12&extended=1&format=json`
+        `https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${username}&api_key=${apiKey}&limit=12&extended=1&format=json`,
       ).then(async (res) => res.json() as Promise<LastFmResponse>),
     ])
 
@@ -106,14 +106,14 @@ export async function fetchLastFmData(
     const tracksWithAlbumArt = await Promise.all(
       topTracks.toptracks.track.map(async (track: LastFmTrack) => {
         const trackInfo = await fetch(
-          `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&user=${username}&api_key=${apiKey}&artist=${encodeURIComponent(track.artist.name)}&track=${encodeURIComponent(track.name)}&format=json`
+          `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&user=${username}&api_key=${apiKey}&artist=${encodeURIComponent(track.artist.name)}&track=${encodeURIComponent(track.name)}&format=json`,
         ).then(async (res) => res.json() as Promise<LastFmTrackInfoResponse>)
 
         return {
           ...track,
           albumArt: trackInfo?.track?.album?.image?.[3]?.['#text'] ?? null,
         }
-      })
+      }),
     )
 
     // filter and enhance tracks with spotify data
@@ -122,7 +122,7 @@ export async function fetchLastFmData(
         .reduce((acc: LastFmTrack[], track: LastFmTrack) => {
           if (acc.length >= 6) return acc
           const artistExists = acc.some(
-            (t) => t.artist.name === track.artist.name
+            (t) => t.artist.name === track.artist.name,
           )
           if (!artistExists) {
             acc.push(track)
@@ -133,7 +133,7 @@ export async function fetchLastFmData(
           const spotifyInfo = await getSpotifyTrackInfo(
             track.name,
             track.artist.name,
-            spotifyToken
+            spotifyToken,
           )
           return {
             ...track,
@@ -154,7 +154,7 @@ export async function fetchLastFmData(
             })(),
             previewUrl: spotifyInfo?.previewUrl ?? null,
           }
-        })
+        }),
     )
 
     // enhance artists with spotify images
@@ -162,21 +162,21 @@ export async function fetchLastFmData(
       topArtists.topartists.artist.map(async (artist: LastFmArtist) => {
         const spotifyImage = await getSpotifyArtistImage(
           artist.name,
-          spotifyToken
+          spotifyToken,
         )
         return {
           ...artist,
           image: artist.image.map((img: LastFmImage, i: number) => ({
             ...img,
             '#text':
-              i === 3
-                ? spotifyImage !== null
-                  ? spotifyImage
-                  : img['#text']
-                : img['#text'],
+              i === 3 ?
+                spotifyImage !== null ?
+                  spotifyImage
+                : img['#text']
+              : img['#text'],
           })),
         }
-      })
+      }),
     )
 
     // enhance albums with spotify images
@@ -185,21 +185,21 @@ export async function fetchLastFmData(
         const spotifyAlbumArt = await getSpotifyAlbumInfo(
           album.name,
           album.artist.name,
-          spotifyToken
+          spotifyToken,
         )
         return {
           ...album,
           image: album.image.map((img: LastFmImage, i: number) => ({
             ...img,
             '#text':
-              i === 3
-                ? spotifyAlbumArt !== null
-                  ? spotifyAlbumArt
-                  : img['#text']
-                : img['#text'],
+              i === 3 ?
+                spotifyAlbumArt !== null ?
+                  spotifyAlbumArt
+                : img['#text']
+              : img['#text'],
           })),
         }
-      })
+      }),
     )
 
     return {
@@ -227,12 +227,12 @@ export async function fetchTopTracks(
   username: string,
   apiKey: string,
   spotifyToken: string,
-  uniqueArtists: boolean = false
+  uniqueArtists: boolean = false,
 ): Promise<LastFmTrack[]> {
   try {
     // increase limit to ensure we have enough tracks after filtering
     const response = await fetch(
-      `https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${username}&api_key=${apiKey}&period=1month&limit=20&format=json&extended=1`
+      `https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${username}&api_key=${apiKey}&period=1month&limit=20&format=json&extended=1`,
     )
 
     // handle potential json parse error
@@ -274,23 +274,23 @@ export async function fetchTopTracks(
           const spotifyInfo = await getSpotifyTrackInfo(
             track.name,
             track.artist.name,
-            spotifyToken
+            spotifyToken,
           )
           return {
             ...track,
             image: track.image.map((img: LastFmImage, i: number) => ({
               ...img,
               '#text':
-                i === 2
-                  ? (spotifyInfo?.albumArt ?? img['#text'])
-                  : img['#text'],
+                i === 2 ?
+                  (spotifyInfo?.albumArt ?? img['#text'])
+                : img['#text'],
             })),
           }
         } catch (error) {
           console.error(`Error fetching Spotify data for ${track.name}:`, error)
           return track
         }
-      })
+      }),
     )
 
     return enhancedTracks

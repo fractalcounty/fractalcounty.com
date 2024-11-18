@@ -50,9 +50,9 @@ const schema = {
   contentUrl: contentUrl || (typeof video === 'object' ? video.src : video),
   embedUrl:
     embedUrl ||
-    (isYouTube(video)
-      ? `https://www.youtube.com/embed/${typeof video === 'object' ? video.src : video}`
-      : undefined),
+    (isYouTube(video) ?
+      `https://www.youtube.com/embed/${typeof video === 'object' ? video.src : video}`
+    : undefined),
   author: {
     '@id': SCHEMA_IDS.PERSON,
   },

@@ -359,7 +359,7 @@ export const websiteSchema = {
 function getPublicImagePath(
   imageSrc: string,
   collection?: string,
-  id?: string
+  id?: string,
 ): string {
   if (imageSrc.startsWith('/_astro/')) {
     const filename = imageSrc
@@ -370,16 +370,16 @@ function getPublicImagePath(
 
     // explicitly handle nullish/empty cases for collection and id
     const relativePath =
-      (collection ?? '') && (id ?? '')
-        ? `/images/${collection}/${id}/${filename}.webp`
-        : `/images/${filename}.webp`
+      (collection ?? '') && (id ?? '') ?
+        `/images/${collection}/${id}/${filename}.webp`
+      : `/images/${filename}.webp`
 
     // make url absolute
     return new URL(relativePath, site.url).toString()
   }
-  return imageSrc.startsWith('http')
-    ? imageSrc
-    : new URL(imageSrc, site.url).toString()
+  return imageSrc.startsWith('http') ? imageSrc : (
+      new URL(imageSrc, site.url).toString()
+    )
 }
 
 // Enhanced art schema generation with automatic image metadata handling
@@ -387,8 +387,9 @@ export function generateArtSchema(entry: CollectionEntry<'art'>, url: URL) {
   const { title, description, publishDate, updatedDate, type } = entry.data
 
   // get the primary image from the entry
-  const primaryImage = Array.isArray(entry.data.images)
-    ? entry.data.images[0]
+  const primaryImage =
+    Array.isArray(entry.data.images) ?
+      entry.data.images[0]
     : entry.data.thumbnail
 
   if (!primaryImage) {
@@ -439,42 +440,41 @@ export function generateArtSchema(entry: CollectionEntry<'art'>, url: URL) {
   const schema = {
     ...baseSchema,
     '@type':
-      type === 'webcomic'
-        ? ['ComicStory', 'CreativeWork']
-        : ['VisualArtwork', 'CreativeWork'],
+      type === 'webcomic' ?
+        ['ComicStory', 'CreativeWork']
+      : ['VisualArtwork', 'CreativeWork'],
     encodingFormat: 'image/webp',
     thumbnailUrl: publicPath,
     accessMode: ['visual'],
     accessibilityFeature: ['alternativeText'],
     accessibilityHazard: ['noFlashingHazard'],
     // add associated media for additional images
-    ...(Array.isArray(entry.data.images) && entry.data.images.length > 1
-      ? {
-          associatedMedia: entry.data.images
-            .slice(1)
-            .map((img: ImageMetadata, index: number) => ({
-              '@type': 'ImageObject',
-              '@id': `${url.toString()}#image-${index + 1}`,
-              url: img.src,
-              width: img.width,
-              height: img.height,
-              caption: `${title} - Image ${index + 2}`,
-            })),
-        }
-      : {}),
-    ...(type === 'webcomic'
-      ? {
-          numberOfPages: Array.isArray(entry.data.images)
-            ? entry.data.images.length
-            : 1,
-          genre: 'webcomic',
-        }
-      : {
-          artform: type === 'animation' ? 'Animation' : 'Drawing',
-          artMedium: 'Digital',
-          artworkSurface: 'Digital Canvas',
-          genre: type === 'animation' ? 'Animation' : 'Digital Art',
-        }),
+    ...(Array.isArray(entry.data.images) && entry.data.images.length > 1 ?
+      {
+        associatedMedia: entry.data.images
+          .slice(1)
+          .map((img: ImageMetadata, index: number) => ({
+            '@type': 'ImageObject',
+            '@id': `${url.toString()}#image-${index + 1}`,
+            url: img.src,
+            width: img.width,
+            height: img.height,
+            caption: `${title} - Image ${index + 2}`,
+          })),
+      }
+    : {}),
+    ...(type === 'webcomic' ?
+      {
+        numberOfPages:
+          Array.isArray(entry.data.images) ? entry.data.images.length : 1,
+        genre: 'webcomic',
+      }
+    : {
+        artform: type === 'animation' ? 'Animation' : 'Drawing',
+        artMedium: 'Digital',
+        artworkSurface: 'Digital Canvas',
+        genre: type === 'animation' ? 'Animation' : 'Digital Art',
+      }),
     copyrightHolder: {
       '@id': SCHEMA_IDS.PERSON,
     },
@@ -490,22 +490,22 @@ export function generateArtSchema(entry: CollectionEntry<'art'>, url: URL) {
 export function generateArticleSchema(
   entry: CollectionEntry<'blog'>,
   url: URL,
-  imageUrl?: string
+  imageUrl?: string,
 ) {
   const { title, description, publishDate, updatedDate, tags } = entry.data
 
   // create image schema if we have a valid image url
   const imageSchema =
-    typeof imageUrl === 'string' && imageUrl.length > 0
-      ? {
-          '@type': 'ImageObject',
-          '@id': `${url.toString()}#primaryimage`,
-          url: imageUrl,
-          width: 1200, // opengraph images are always this size
-          height: 630,
-          caption: title,
-        }
-      : null
+    typeof imageUrl === 'string' && imageUrl.length > 0 ?
+      {
+        '@type': 'ImageObject',
+        '@id': `${url.toString()}#primaryimage`,
+        url: imageUrl,
+        width: 1200, // opengraph images are always this size
+        height: 630,
+        caption: title,
+      }
+    : null
 
   return {
     '@type': 'Article',
@@ -547,7 +547,7 @@ export function generateCollectionSchema(
   type: 'blog' | 'art',
   url: URL,
   title: string,
-  description: string
+  description: string,
 ) {
   return {
     '@type': 'CollectionPage',
@@ -591,16 +591,16 @@ export function generateBreadcrumbSchema(items: BreadcrumbItem[]) {
       '@type': 'ListItem',
       position: index + 1,
       name: item.name,
-      ...(isLastItem
-        ? {}
-        : {
-            item: {
-              '@type': 'WebPage',
-              '@id': item.item,
-              name: item.name,
-              url: item.item,
-            },
-          }),
+      ...(isLastItem ?
+        {}
+      : {
+          item: {
+            '@type': 'WebPage',
+            '@id': item.item,
+            name: item.name,
+            url: item.item,
+          },
+        }),
     }
   })
 
@@ -664,12 +664,12 @@ export function generateImageSchema({
       '@id': SCHEMA_IDS.PERSON,
     },
     contentLocation:
-      contentLocation != null && contentLocation.length > 0
-        ? {
-            '@type': 'Place',
-            name: contentLocation,
-          }
-        : undefined,
+      contentLocation != null && contentLocation.length > 0 ?
+        {
+          '@type': 'Place',
+          name: contentLocation,
+        }
+      : undefined,
     keywords: keywords?.join(', '),
     datePublished,
     dateModified,

@@ -15,7 +15,7 @@ const basePostSchema = ({ image }: SchemaContext) =>
         z.object({
           label: z.string(),
           url: z.string(),
-        })
+        }),
       )
       .optional(),
     thumbnail: image().optional(),

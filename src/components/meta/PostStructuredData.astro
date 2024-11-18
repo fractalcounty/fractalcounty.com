@@ -20,7 +20,7 @@ const pageUrl = new URL(Astro.url.pathname, Astro.site)
 // construct the opengraph image url - it will be next to the index.html
 const ogImageUrl = new URL(
   `${Astro.url.pathname}/index.png`,
-  Astro.site
+  Astro.site,
 ).toString()
 
 // create breadcrumb trail

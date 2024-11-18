@@ -49,9 +49,9 @@ function getPublicPath(src: string, collection?: string, id?: string) {
     const cleanId = id?.replace(/\/index(\.mdx)?$/, '')
 
     const relativePath =
-      collection && cleanId
-        ? `/images/${collection}/${cleanId}/${filename}`
-        : `/images/${filename}`
+      collection && cleanId ?
+        `/images/${collection}/${cleanId}/${filename}`
+      : `/images/${filename}`
 
     return new URL(relativePath, Astro.site).toString()
   }
