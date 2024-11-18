@@ -31,6 +31,7 @@ const configSchema = z.object({
     }),
     defaultTags: z.array(z.string()),
     pages: z.record(z.string(), pageSchema),
+    titleTemplate: z.string().default('%s | %site%'),
   }),
 })
 

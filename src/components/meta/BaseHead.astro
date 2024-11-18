@@ -1,0 +1,165 @@
+---
+import '@/global.css'
+
+// basic head elements that are used globally and don't contain page-specific data
+---
+
+<Fragment>
+  <!-- global meta -->
+  <meta charset='utf-8' />
+  <meta name='viewport' content='width=device-width,initial-scale=1' />
+  <meta name='generator' content={Astro.generator} />
+  <meta name='format-detection' content='telephone=no' />
+  <meta
+    name='theme-color'
+    content='#1A1B26'
+    media='(prefers-color-scheme: dark)'
+  />
+  <meta
+    name='theme-color'
+    content='#e6e7ed'
+    media='(prefers-color-scheme: light)'
+  />
+  <meta property='content-language' content='en-US' />
+  <meta name='robots' content='index,follow' />
+  <meta name='googlebot' content='index,follow' />
+  <meta name='author' content={site.author.name} />
+  <meta name='format-detection' content='telephone=no' />
+
+  <!-- favicons -->
+  <link rel='icon' type='image/png' href='/favicon-96x96.png' sizes='96x96' />
+  <link rel='shortcut icon' type='image/x-icon' href='/favicon.ico' />
+  <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+  <link rel='apple-touch-icon' sizes='180x180' href='/apple-touch-icon.png' />
+
+  <!-- global links -->
+  <link rel='sitemap' href='/sitemap-index.xml' />
+  <link rel='sitemap' href='/sitemap-0.xml' />
+  <link
+    rel='alternate'
+    type='application/rss+xml'
+    title={`${site.name} RSS Feed`}
+    href='/rss.xml'
+  />
+  <link rel='preload' href='/global.css' as='style' />
+
+  <!-- scripts for scroll handling and theme management -->
+  <script>
+    import type { TransitionBeforeSwapEvent } from 'astro:transitions/client'
+
+    document.addEventListener('astro:before-swap', (e) =>
+      [
+        ...(e as TransitionBeforeSwapEvent).newDocument.head.querySelectorAll(
+          'link[as="font"]',
+        ),
+      ].forEach((link) => link.remove()),
+    )
+  </script>
+
+  <script is:inline>
+    function init() {
+      onScroll()
+
+      const backToTop = document.getElementById('back-to-top')
+      backToTop?.addEventListener('click', (event) => scrollToTop(event))
+
+      const backToPrev = document.getElementById('back-to-prev')
+      backToPrev?.addEventListener('click', () => window.history.back())
+
+      document.addEventListener('scroll', onScroll, { passive: true })
+    }
+
+    function onScroll() {
+      // Debounce scroll events for better performance
+      if (!window.requestAnimationFrame) {
+        return requestAnimationFrame(() => {
+          updateScrollState()
+        })
+      }
+      updateScrollState()
+    }
+
+    function updateScrollState() {
+      const shouldShowButton = window.scrollY > 0
+      // Add a data attribute to track scroll state
+      document.documentElement.dataset.scrolled =
+        shouldShowButton ? 'true' : 'false'
+    }
+
+    // Handle scroll state during transitions
+    document.addEventListener('astro:before-swap', () => {
+      // Reset scroll state before swap
+      document.documentElement.dataset.scrolled = 'false'
+    })
+
+    document.addEventListener('astro:after-swap', () => {
+      // Update scroll state after swap
+      updateScrollState()
+    })
+
+    function scrollToTop(event) {
+      event.preventDefault()
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      })
+    }
+
+    document.addEventListener('DOMContentLoaded', () => init())
+    document.addEventListener('astro:after-swap', () => init())
+
+    // enforce laramie theme during transitions
+    document.addEventListener('astro:before-swap', () => {
+      document.documentElement.setAttribute('data-theme', 'laramie')
+    })
+
+    document.addEventListener('astro:after-swap', () => {
+      document.documentElement.setAttribute('data-theme', 'laramie')
+    })
+
+    // ensure theme on initial load
+    document.documentElement.setAttribute('data-theme', 'laramie')
+  </script>
+
+  <script>
+    document.addEventListener('astro:page-load', () => {
+      // announce page changes to screen readers
+      const title = document.title
+      const announcement = document.createElement('div')
+      announcement.setAttribute('role', 'status')
+      announcement.setAttribute('aria-live', 'polite')
+      // Add styles to visually hide the element while keeping it accessible
+      announcement.style.cssText = `
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    `
+      announcement.textContent = `Navigated to ${title}`
+      document.body.appendChild(announcement)
+      setTimeout(() => announcement.remove(), 1000)
+    })
+  </script>
+
+  <script>
+    // handle scroll restoration
+    if (history.scrollRestoration) {
+      history.scrollRestoration = 'manual'
+    }
+
+    // reset scroll position on page transitions
+    document.addEventListener('astro:before-swap', () => {
+      window.scrollTo(0, 0)
+    })
+
+    // ensure theme persistence
+    document.addEventListener('astro:after-swap', () => {
+      document.documentElement.setAttribute('data-theme', 'laramie')
+    })
+  </script>
+</Fragment>

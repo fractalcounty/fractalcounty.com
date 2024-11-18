@@ -1,0 +1,109 @@
+---
+import { formatDateForOpenGraph, getCanonicalUrl } from '@/lib/utils'
+import { getImagePath } from 'astro-opengraph-images'
+
+interface Props {
+  title: string
+  description: string
+  image?: string
+  type?: 'website' | 'article'
+  publishDate?: string
+  updatedDate?: string
+  tags?: string[]
+  languageAlternates?: Array<{ href: string; hrefLang: string }>
+}
+
+const {
+  title,
+  description,
+  image,
+  type = 'website',
+  publishDate,
+  updatedDate,
+  tags = [],
+  languageAlternates = [],
+} = Astro.props
+
+const openGraphImageUrl =
+  image || getImagePath({ url: Astro.url, site: Astro.site })
+const combinedTags = Array.from(new Set([...tags, ...site.defaultTags]))
+const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
+const formattedTitle = site.titleTemplate
+  .replace('%s', title)
+  .replace('%site%', site.name)
+---
+
+<Fragment>
+  <!-- open graph -->
+  <meta property='og:title' content={formattedTitle} />
+  <meta property='og:type' content={type} />
+  <meta property='og:url' content={canonicalUrl} />
+  <meta property='og:image' content={openGraphImageUrl} />
+  <meta property='og:description' content={description} />
+  <meta property='og:site_name' content={site.name} />
+  <meta property='og:locale' content='en_US' />
+  {
+    languageAlternates.map((alt) => (
+      <meta property='og:locale:alternate' content={alt.hrefLang} />
+    ))
+  }
+
+  <!-- open graph image -->
+  <meta property='og:image:url' content={openGraphImageUrl} />
+  <meta property='og:image:secure_url' content={openGraphImageUrl} />
+  <meta property='og:image:type' content='image/png' />
+  <meta property='og:image:width' content='1200' />
+  <meta property='og:image:height' content='630' />
+  <meta
+    property='og:image:alt'
+    content={`White text on a black background that says ${site.name} followed by ${title}`}
+  />
+
+  <!-- article metadata -->
+  {
+    type === 'article' && publishDate && (
+      <Fragment>
+        <meta
+          property='article:published_time'
+          content={formatDateForOpenGraph(publishDate)}
+        />
+        <meta
+          property='article:modified_time'
+          content={
+            updatedDate ?
+              formatDateForOpenGraph(updatedDate)
+            : formatDateForOpenGraph(publishDate)
+          }
+        />
+        <meta property='article:author' content={site.author.name} />
+        {combinedTags.map((tag) => (
+          <meta property='article:tag' content={tag} />
+        ))}
+        <meta property='article:author' content={`${site.url}/#person`} />
+      </Fragment>
+    )
+  }
+
+  <!-- twitter -->
+  <meta name='twitter:card' content='summary_large_image' />
+  <meta name='twitter:site' content={site.author.username} />
+  <meta name='twitter:creator' content={site.author.username} />
+  <meta name='twitter:title' content={title} />
+  <meta name='twitter:description' content={description} />
+  <meta name='twitter:image' content={openGraphImageUrl} />
+  <meta
+    name='twitter:image:alt'
+    content={`White text on a black background that says ${site.name} followed by ${title}`}
+  />
+  <meta name='twitter:url' content={canonicalUrl} />
+
+  <!-- misc meta tags -->
+  <meta name='application-name' content={site.name} />
+  <meta name='apple-mobile-web-app-capable' content='yes' />
+  <meta name='apple-mobile-web-app-status-bar-style' content='default' />
+  <meta name='apple-mobile-web-app-title' content={site.name} />
+  <meta name='format-detection' content='telephone=no' />
+  <meta name='mobile-web-app-capable' content='yes' />
+  <meta name='msapplication-TileColor' content='#1A1B26' />
+  <meta name='msapplication-tap-highlight' content='no' />
+</Fragment>

@@ -1,6 +1,7 @@
 site:
   name: FRACTAL COUNTY
   url: https://fractalcounty.com
+  titleTemplate: '%s | %site%'
   defaultTags:
     - chippledipple
     - fractal
