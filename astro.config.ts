@@ -9,6 +9,7 @@ import compressor from 'astro-compressor'
 import astroBreakpoints from 'astro-devtool-breakpoints'
 import icon from 'astro-icon'
 import opengraphImages from 'astro-opengraph-images'
+import purgeCSS from 'astro-purgecss'
 import AutoImport from 'unplugin-auto-import/astro'
 import config from './src/config'
 import { customOgMediaLayout } from './src/ogRenderer'
@@ -180,6 +181,7 @@ export default defineConfig({
         ],
       },
     }),
+    purgeCSS(),
     (await import('@playform/inline')).default({
       Path: './dist',
     }),

@@ -22,7 +22,7 @@
     "astro-breadcrumbs": "^3.2.0",
     "astro-capo": "^0.0.1",
     "astro-compressor": "^0.4.1",
-    "astro-purgecss": "^4.6.2",
+    "astro-purgecss": "^4.8.0",
     "purgecss": "^6.0.0",
     "sharp": "^0.33.5",
     "spotify-url-info": "^3.2.17",
