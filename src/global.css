@@ -3,12 +3,8 @@
 @tailwind utilities;
 
 @layer base {
-  html {
-    @apply antialiased;
-  }
-
   body {
-    @apply bg-base-100 text-base-content;
+    @apply bg-base-100 text-base-content antialiased;
   }
 
   h1,
@@ -21,17 +17,12 @@
     @apply font-bold;
   }
 
-  .font-brand {
-    @apply subpixel-antialiased;
-    @apply uppercase;
-  }
-
   article {
     @apply prose prose-headings:font-bold prose-headings:text-neutral-content prose-p:text-base-content prose-code:text-base-content;
     @apply prose-strong:text-neutral-content;
     @apply prose-code:text-base-content;
     @apply prose max-w-full prose-img:mx-auto prose-img:my-auto;
-    @apply prose-headings:font-bold prose-p:font-serif;
+    @apply prose-headings:font-bold;
   }
 
   #main-content {
@@ -96,24 +87,32 @@ body {
 body {
   @apply font-sans subpixel-antialiased;
   @apply flex flex-col;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
 }
 
 footer {
   @apply py-5 text-sm;
 }
 
+/* optimize animation performance */
 .animate {
+  /* use transform: translate3d to trigger GPU acceleration */
+  transform: translate3d(0, 10px, 0);
   opacity: 0;
-  transform: translateY(10px);
-  transition:
-    opacity 0.3s ease-out,
-    transform 0.3s ease-out;
-  will-change: opacity, transform;
+  /* use will-change to hint browser about animation */
+  will-change: transform, opacity;
+  /* reduce transition duration */
+  transition: all 0.2s ease-out;
+  /* add backface-visibility to reduce memory usage */
+  backface-visibility: hidden;
 }
 
 .animate.show {
+  transform: translate3d(0, 0, 0);
   opacity: 1;
-  transform: translateY(0);
 }
 
 .animate-fast {

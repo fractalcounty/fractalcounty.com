@@ -47,6 +47,17 @@ export default defineConfig({
       }),
     },
   },
+  vite: {
+    resolve: {
+      alias: {
+        '@config': '/src/config.ts',
+        '@': '/src',
+      },
+    },
+    build: {
+      assetsInlineLimit: 0,
+    },
+  },
   markdown: {},
   image: {
     domains: ['i.scdn.co', 'lastfm.freetls.fastly.net'],
@@ -67,14 +78,6 @@ export default defineConfig({
             effort: 6,
           },
         },
-      },
-    },
-  },
-  vite: {
-    resolve: {
-      alias: {
-        '@config': '/src/config.ts',
-        '@': '/src',
       },
     },
   },

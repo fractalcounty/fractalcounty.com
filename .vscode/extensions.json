@@ -9,7 +9,8 @@
     "bradlc.vscode-tailwindcss",
     "redhat.vscode-yaml",
     "astro-build.astro-vscode",
-    "unifiedjs.vscode-mdx"
+    "unifiedjs.vscode-mdx",
+    "formulahendry.auto-rename-tag"
   ],
   "unwantedRecommendations": []
 }

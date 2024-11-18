@@ -1,7 +1,6 @@
 ---
 import { formatDateForOpenGraph, getCanonicalUrl } from '@lib/utils'
 import { ClientRouter } from 'astro:transitions'
-import { AstroFont } from 'astro-font'
 import { getImagePath } from 'astro-opengraph-images'
 import { SEO } from 'astro-seo'
 import '@/global.css'
@@ -169,43 +168,29 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
   }}
 />
 
-<AstroFont
-  config={[
-    {
-      name: 'Inter',
-      src: [
-        {
-          style: 'normal',
-          weight: '100 900',
-          path: './public/fonts/Inter.woff2',
-        },
-        {
-          style: 'italic',
-          weight: '100 900',
-          path: './public/fonts/InterItalic.woff2',
-        },
-      ],
-      preload: true,
-      display: 'swap',
-      selector: 'body',
-      fallback: 'sans-serif',
-    },
-    {
-      name: 'AlteHaasGrotesk',
-      src: [
-        {
-          style: 'normal',
-          weight: '700',
-          path: './public/fonts/AlteHaasGroteskBold.woff2',
-        },
-      ],
-      preload: true,
-      display: 'optional',
-      selector: '.font-brand',
-      fallback: 'sans-serif',
-    },
-  ]}
-/>
+<Fragment>
+  <link rel='preload' href='/global.css' as='style' />
+  <link rel='preconnect' href='https://fonts.googleapis.com' />
+  <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
+  <link
+    rel='preload'
+    as='style'
+    href='https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap'
+  />
+  <link
+    rel='stylesheet'
+    href='https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap'
+    media='print'
+    onload="this.media='all'"
+  />
+
+  <noscript>
+    <link
+      href='https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap'
+      rel='stylesheet'
+    />
+  </noscript>
+</Fragment>
 
 <ClientRouter
   fallback='swap'
@@ -260,10 +245,10 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
 
   function animate() {
     const animateElements = document.querySelectorAll('.animate')
-    const MAX_DELAY = 300 // maximum total animation delay in ms
+    const MAX_DELAY = 150 // maximum total animation delay in ms
 
     animateElements.forEach((element, index) => {
-      const delay = Math.min(index * 50, MAX_DELAY)
+      const delay = Math.min(index * 25, MAX_DELAY)
       setTimeout(() => {
         element.classList.add('show')
       }, delay)
