@@ -181,10 +181,10 @@ export default defineConfig({
         ],
       },
     }),
-    purgeCSS(),
     (await import('@playform/inline')).default({
       Path: './dist',
     }),
+    purgeCSS(),
     compressor(),
   ],
 })
