@@ -1,0 +1,42 @@
+---
+// branding font component for AlteHaasGrotesk Bold
+// used for key branding elements above the fold on content pages
+---
+
+<Fragment>
+  <!-- inject into head slot -->
+  <slot name='head'>
+    <style is:inline>
+      /* define font-face inline to avoid FOUT */
+      @font-face {
+        font-family: 'AlteHaasGrotesk';
+        src: url('/fonts/AlteHaasGroteskBold.woff2') format('woff2');
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      /* define utility class */
+      .font-brand {
+        font-family:
+          'AlteHaasGrotesk',
+          system-ui,
+          -apple-system,
+          sans-serif;
+        font-weight: 700;
+      }
+    </style>
+
+    <!-- preload font for critical above-fold content -->
+    <link
+      rel='preload'
+      href='/fonts/AlteHaasGroteskBold.woff2'
+      as='font'
+      type='font/woff2'
+      crossorigin='anonymous'
+    />
+  </slot>
+
+  <!-- optional default slot for content -->
+  <slot />
+</Fragment>

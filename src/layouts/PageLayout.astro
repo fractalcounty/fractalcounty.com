@@ -51,6 +51,9 @@ const titleTemplate = site.titleTemplate
     <BaseHead />
     <InterFont />
 
+    <!-- page-specific fonts -->
+    <slot name='head' />
+
     <!-- page-specific meta -->
     <title>{titleTemplate}</title>
     <meta name='description' content={description} />

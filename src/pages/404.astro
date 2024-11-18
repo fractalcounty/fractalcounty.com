@@ -1,5 +1,6 @@
 ---
 import Button from '@/components/Button.astro'
+import BrandFont from '@/components/fonts/BrandFont.astro'
 import Link from '@/components/Link.astro'
 import Prose from '@/components/Prose.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
@@ -9,6 +10,7 @@ import { Icon } from 'astro-icon/components'
 <PageLayout
   title={site.pages['404'].title}
   description={site.pages['404'].description}>
+  <BrandFont slot='head' />
   <section
     class='relative flex flex-col items-center justify-center gap-y-8 pt-12 text-center'>
     <div class='relative flex items-center justify-center'>
