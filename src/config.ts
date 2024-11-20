@@ -11,9 +11,10 @@ const socialSchema = z.object({
 
 // platform integration schemas
 const integrationsSchema = z.object({
-  mastodon: z
+  fediverse: z
     .object({
-      url: z.string().url(),
+      instance: z.string().url(),
+      username: z.string().regex(/^@/, 'Username must start with @'),
     })
     .optional(),
   discord: z

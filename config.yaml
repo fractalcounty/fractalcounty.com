@@ -9,8 +9,9 @@ site:
     - art
     - gamedev
   integrations:
-    mastodon:
-      url: https://mastodon.social/@fractalcounty
+    fediverse:
+      instance: https://mastodon.social
+      username: '@fractalcounty'
     discord:
       verificationHash: 94155bc5f157d9da952f0d43a038a7f63cca519b
   author:
