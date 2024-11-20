@@ -2,11 +2,25 @@ import { readFileSync } from 'node:fs'
 import { parse } from 'yaml'
 import { z } from 'zod'
 
-// schema for social media links
+// basic social media profile schema
 const socialSchema = z.object({
   name: z.string(),
   url: z.string().url(),
   showInContact: z.boolean().default(true),
+})
+
+// platform integration schemas
+const integrationsSchema = z.object({
+  mastodon: z
+    .object({
+      url: z.string().url(),
+    })
+    .optional(),
+  discord: z
+    .object({
+      verificationHash: z.string(),
+    })
+    .optional(),
 })
 
 // schema for page metadata
@@ -27,8 +41,9 @@ const configSchema = z.object({
       username: z.string(),
       email: z.string().email(),
       bio: z.string().optional(),
-      socials: z.array(socialSchema).optional(), // array of social links
+      socials: z.array(socialSchema).optional(),
     }),
+    integrations: integrationsSchema.optional(),
     defaultTags: z.array(z.string()),
     pages: z.record(z.string(), pageSchema),
     titleTemplate: z.string().default('%s | %site%'),
@@ -38,7 +53,7 @@ const configSchema = z.object({
 // infer type from schema
 type Config = z.infer<typeof configSchema>
 
-// read and parse yaml config with type safety
+// read and parse yaml config
 const configFile = readFileSync('./config.yaml', 'utf8')
 const configData = parse(configFile) as unknown
 const config = configSchema.parse(configData)
@@ -48,7 +63,7 @@ export const { site } = config
 export default config
 export type { Config }
 
-// helper to get nav items from pages
+// helper to get nav items
 export const getNavItems = () => {
   return Object.entries(site.pages)
     .filter(([_, page]) => page.showInNav)
@@ -58,3 +73,4 @@ export const getNavItems = () => {
       external: page.external ?? false,
     }))
 }
+

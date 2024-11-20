@@ -1,5 +1,5 @@
 ---
-// basic head elements that are used globally and don't contain page-specific data
+
 ---
 
 <Fragment>
@@ -39,6 +39,13 @@
     title={`${site.name} RSS Feed`}
     href='/rss.xml'
   />
+
+  <!-- mastodon verification, if configured in config.yaml -->
+  {
+    site.integrations?.mastodon && (
+      <link rel='me' href={site.integrations.mastodon.url} />
+    )
+  }
 
   <!-- scripts for scroll handling and theme management -->
   <script>

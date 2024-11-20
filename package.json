@@ -5,7 +5,7 @@
   "scripts": {
     "predev": "bun run scripts/process-media.ts --force",
     "dev": "astro sync && (bun run scripts/watch-media.ts & bunx --bun astro dev)",
-    "prebuild": "bun run scripts/process-media.ts --force",
+    "prebuild": "bun run scripts/process-media.ts --force && bun run scripts/generate-discord-verification.ts",
     "build": "bun install --force && astro sync && bunx --bun astro build",
     "preview": "bunx --bun astro preview",
     "check": "bunx --bun astro check",

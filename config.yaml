@@ -8,6 +8,11 @@ site:
     - county
     - art
     - gamedev
+  integrations:
+    mastodon:
+      url: https://mastodon.social/@fractalcounty
+    discord:
+      verificationHash: 94155bc5f157d9da952f0d43a038a7f63cca519b
   author:
     name: Chip Fractalcounty
     email: chip@fractalcounty.com
@@ -22,8 +27,13 @@ site:
         url: https://github.com/fractalcounty
       - name: Instagram
         url: https://www.instagram.com/fractalcounty/
+      - name: Discord
+        url: https://discord.com/users/1307319436885098569
       - name: YouTube
         url: https://www.youtube.com/@fractalcounty
+        showInContact: false
+      - name: Mastodon
+        url: https://mastodon.social/@fractalcounty
         showInContact: false
   pages:
     home:
