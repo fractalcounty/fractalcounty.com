@@ -3,6 +3,7 @@ import InterFont from '@/components/fonts/InterFont.astro'
 import Footer from '@/components/Footer.astro'
 import Header from '@/components/Header.astro'
 import BaseHead from '@/components/meta/BaseHead.astro'
+import FediverseMeta from '@/components/meta/FediverseMeta.astro'
 import OpenGraph from '@/components/meta/OpenGraph.astro'
 import { getCanonicalUrl } from '@/lib/utils'
 import { ClientRouter } from 'astro:transitions'
@@ -28,6 +29,7 @@ const {
   updatedDate,
   tags = [],
   languageAlternates = [],
+  isContentPage = false,
 } = Astro.props
 
 const publishDateString = publishDate?.toISOString()
@@ -50,6 +52,7 @@ const titleTemplate = site.titleTemplate
     <!-- global meta -->
     <BaseHead />
     <InterFont />
+    <FediverseMeta isContentPage={isContentPage} />
 
     <!-- page-specific fonts -->
     <slot name='head' />

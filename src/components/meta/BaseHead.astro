@@ -40,16 +40,6 @@
     href='/rss.xml'
   />
 
-  <!-- fediverse verification, if configured in config.yaml -->
-  {
-    site.integrations?.fediverse && (
-      <link
-        rel='me'
-        href={`${site.integrations.fediverse.instance}/${site.integrations.fediverse.username}`}
-      />
-    )
-  }
-
   <!-- scripts for scroll handling and theme management -->
   <script>
     import type { TransitionBeforeSwapEvent } from 'astro:transitions/client'

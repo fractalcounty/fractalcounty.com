@@ -1,0 +1,26 @@
+---
+interface Props {
+  isContentPage?: boolean
+}
+
+const { isContentPage = false } = Astro.props
+---
+
+{
+  site.integrations?.fediverse && (
+    <>
+      <link
+        rel='me'
+        href={`${site.integrations.fediverse.instance}/${site.integrations.fediverse.username}`}
+      />
+      {isContentPage && (
+        <meta
+          name='fediverse:creator'
+          content={`${site.integrations.fediverse.username}@${
+            new URL(site.integrations.fediverse.instance).host
+          }`}
+        />
+      )}
+    </>
+  )
+}

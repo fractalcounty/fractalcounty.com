@@ -14,7 +14,7 @@ const integrationsSchema = z.object({
   fediverse: z
     .object({
       instance: z.string().url(),
-      username: z.string().regex(/^@/, 'Username must start with @'),
+      username: z.string().regex(/^@\w+$/, 'Username must start with @'),
     })
     .optional(),
   discord: z
@@ -73,5 +73,21 @@ export const getNavItems = () => {
       name: page.title,
       external: page.external ?? false,
     }))
+}
+
+// add helper function to normalize fediverse username
+export const getFediverseUsername = (username: string) => {
+  return username.startsWith('@') ? username : `@${username}`
+}
+
+// add helper to get full fediverse url
+export const getFediverseUrl = (instance: string, username: string) => {
+  const normalizedUsername = getFediverseUsername(username)
+  return `${instance}/${normalizedUsername.slice(1)}`
+}
+
+export const getFediverseHandle = (instance: string, username: string) => {
+  const normalizedUsername = getFediverseUsername(username)
+  return `${normalizedUsername}@${new URL(instance).host}`
 }
 

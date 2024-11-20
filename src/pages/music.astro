@@ -32,7 +32,8 @@ const bandcampAlbums = await getCollection('music')
 
 <PageLayout
   title={site.pages.music.title}
-  description={site.pages.music.description}>
+  description={site.pages.music.description}
+  isContentPage={true}>
   <MusicPageStructuredData
     slot='structured-data'
     lastFmData={lastFmData}
