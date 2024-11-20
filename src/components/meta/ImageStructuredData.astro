@@ -31,39 +31,28 @@ const {
   datePublished,
   dateModified,
   license = `${site.url}/unlicense`,
-  collection,
-  id,
 } = Astro.props
 
 const pageUrl = typeof url === 'string' ? new URL(url) : url
 
 // Simplify path handling to match ContentImage
-function getPublicPath(src: string, collection?: string, id?: string) {
+function getPublicPath(src: string) {
   if (src.startsWith('/_astro/')) {
-    const filename = src
-      .split('/')
-      .pop()! // get last segment
-      .replace(/\.[a-z0-9|-]+(_[a-z0-9|-]+)*\./i, '.') // remove all hash variations
-
-    // Clean the id by removing /index and .mdx
-    const cleanId = id?.replace(/\/index(\.mdx)?$/, '')
-
-    const relativePath =
-      collection && cleanId ?
-        `/images/${collection}/${cleanId}/${filename}`
-      : `/images/${filename}`
-
-    return new URL(relativePath, Astro.site).toString()
+    return new URL(src, Astro.site).toString()
   }
-  return src.startsWith('http') ? src : new URL(src, Astro.site).toString()
+  const filename = src.split('/').pop()!
+  return new URL(`/_astro/${filename}`, Astro.site).toString()
 }
 
-const publicPath = getPublicPath(image.src, collection, id)
+const publicPath = getPublicPath(image.src)
+
+// Generate unique ID for each image instance
+const imageId = `${pageUrl.toString()}#image-${Math.random().toString(36).slice(2, 11)}`
 
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'ImageObject',
-  '@id': `${pageUrl.toString()}#image`,
+  '@id': imageId,
   name: title,
   description: description || caption || title,
   url: publicPath,
@@ -99,6 +88,10 @@ const schema = {
     '@id': SCHEMA_IDS.PERSON,
   },
   copyrightNotice: `Unlicensed. ${new Date().getFullYear()} ${site.author.name}`,
+  uploadDate: datePublished || new Date().toISOString(),
+  expires: 'never',
+  accessMode: ['visual'],
+  accessModeSufficient: ['visual'],
 }
 ---
 

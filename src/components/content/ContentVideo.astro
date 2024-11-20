@@ -1,6 +1,5 @@
 ---
 import type { VideoMetadata, VideoSize } from '@/types/video'
-import Link from '@/components/Link.astro'
 import VideoStructuredData from '@/components/meta/VideoStructuredData.astro'
 import { cn } from '@/lib/utils'
 import { YouTube } from '@astro-community/astro-embed-youtube'
@@ -25,7 +24,6 @@ interface Props {
   muted?: boolean
   controls?: boolean
   posterImage?: string
-  enableFullResLink?: boolean
 }
 
 const {
@@ -40,7 +38,6 @@ const {
   muted = true,
   controls = true,
   posterImage,
-  enableFullResLink = true,
 } = Astro.props
 
 // helper to detect if src is youtube
@@ -62,27 +59,6 @@ const getYouTubeId = (src: string): string => {
   return match?.[1] || src
 }
 
-// add helper to get public url for local videos
-const getPublicUrl = (videoSrc: string | VideoMetadata): string | undefined => {
-  // only handle local webm files
-  if (typeof videoSrc === 'object' && videoSrc.format !== 'webm')
-    return undefined
-  if (typeof videoSrc === 'string' && !videoSrc.endsWith('.webm'))
-    return undefined
-
-  const segments = Astro.url.pathname.split('/').filter(Boolean)
-  const collection = segments[0]
-  const post = segments[1]
-
-  // get filename from src
-  const filename =
-    typeof videoSrc === 'object' ?
-      videoSrc.src.split('/').pop()
-    : videoSrc.split('/').pop()
-
-  return `/images/${collection}/${post}/${filename}`
-}
-
 // add helper to get youtube thumbnail url
 const getYouTubeThumbnail = (
   src: string | VideoMetadata,
@@ -92,7 +68,6 @@ const getYouTubeThumbnail = (
   return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
 }
 
-const publicUrl = getPublicUrl(src)
 const youtubeThumbnail = getYouTubeThumbnail(src)
 
 const { width, scale } = PRESET_SIZES[size]
@@ -146,21 +121,7 @@ const { width, scale } = PRESET_SIZES[size]
     {
       title && (
         <figcaption class='-mb-3 mt-2 text-center text-sm italic text-theme-content/75'>
-          {enableFullResLink && publicUrl ?
-            <Link
-              href={publicUrl}
-              underline={false}
-              title={`Full resolution video: ${title}`}
-              externalInNewTab={false}
-              prefetch={false}
-              role='link'
-              aria-label={title}>
-              Download original:{' '}
-              {typeof src === 'object' ?
-                src.src.split('/').pop()
-              : src.split('/').pop()}
-            </Link>
-          : title}
+          {title}
         </figcaption>
       )
     }

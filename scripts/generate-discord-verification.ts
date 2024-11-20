@@ -13,4 +13,4 @@ if (hash) {
   mkdirSync(wellKnownPath, { recursive: true })
   writeFileSync(discordFile, `dh=${hash}\n`)
   console.log('✓ Generated Discord verification file')
-} 
+}

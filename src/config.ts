@@ -90,4 +90,3 @@ export const getFediverseHandle = (instance: string, username: string) => {
   const normalizedUsername = getFediverseUsername(username)
   return `${normalizedUsername}@${new URL(instance).host}`
 }
-

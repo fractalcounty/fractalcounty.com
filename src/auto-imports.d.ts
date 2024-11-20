@@ -6,6 +6,6 @@
 // biome-ignore lint: disable
 export {}
 declare global {
-  const config: typeof import('@/config')['config']
-  const site: typeof import('@/config')['site']
+  const config: (typeof import('@/config'))['config']
+  const site: (typeof import('@/config'))['site']
 }

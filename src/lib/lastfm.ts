@@ -150,7 +150,7 @@ export async function fetchLastFmData(
               ) {
                 return track.albumArt
               }
-              return '/images/music/album-placeholder.webp'
+              return 'images/album.webp'
             })(),
             previewUrl: spotifyInfo?.previewUrl ?? null,
           }

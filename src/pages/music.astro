@@ -206,7 +206,7 @@ const bandcampAlbums = await getCollection('music')
                     src={
                       artist.image[3]['#text'] ||
                       artist.image[2]['#text'] ||
-                      '/images/music/album-placeholder.webp'
+                      '/images/album.webp'
                     }
                     alt={`${artist.name}`}
                     width={48}
@@ -250,10 +250,7 @@ const bandcampAlbums = await getCollection('music')
                   underline={false}
                   externalInNewTab={true}>
                   <Image
-                    src={
-                      album.image[2]['#text'] ||
-                      '/images/music/album-placeholder.webp'
-                    }
+                    src={album.image[2]['#text'] || '/images/album.webp'}
                     alt={`${album.name} by ${album.artist.name}`}
                     width={48}
                     height={48}
@@ -308,6 +305,8 @@ const bandcampAlbums = await getCollection('music')
                     height={259}
                     widths={[129, 259]}
                     sizes='149px'
+                    formats={['avif']}
+                    fallbackFormat='webp'
                     class='absolute inset-0 h-full w-full rounded-lg border border-theme-border/50 object-cover shadow-md'
                     style={{
                       aspectRatio: '1/1',

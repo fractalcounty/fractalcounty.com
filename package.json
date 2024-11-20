@@ -3,14 +3,12 @@
   "type": "module",
   "version": "1.0.0",
   "scripts": {
-    "predev": "bun run scripts/process-media.ts --force",
-    "dev": "astro sync && (bun run scripts/watch-media.ts & bunx --bun astro dev)",
-    "prebuild": "bun run scripts/process-media.ts --force && bun run scripts/generate-discord-verification.ts",
+    "dev": "astro sync && bunx --bun astro dev",
+    "prebuild": "bun run scripts/generate-discord-verification.ts",
     "build": "bun install --force && astro sync && bunx --bun astro build",
     "preview": "bunx --bun astro preview",
     "check": "bunx --bun astro check",
-    "lint": "eslint . --flag unstable_ts_config --fix && prettier --write .",
-    "debug-spotify-art": "bun run scripts/debug-spotify-art.ts"
+    "lint": "eslint . --flag unstable_ts_config --fix && prettier --write ."
   },
   "dependencies": {
     "@astrojs/mdx": "4.0.0-beta.3",

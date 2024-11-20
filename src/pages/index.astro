@@ -113,16 +113,14 @@ const topTracks = await fetchTopTracks(
             underline={false}
             externalInNewTab={true}>
             <Picture
-              src={
-                track.image[2]['#text'] ||
-                '/images/music/album-placeholder.webp'
-              }
+              src={track.image[2]['#text'] || '/images/album.webp'}
               alt={`Album artwork for ${track.name} by ${track.artist}`}
               width={64}
               height={64}
               widths={[64]}
               sizes='64px'
-              formats={['avif', 'webp']}
+              formats={['avif']}
+              fallbackFormat='webp'
               loading='lazy'
               class='size-16 rounded-lg border border-theme-border object-cover shadow-md'
             />
@@ -164,12 +162,16 @@ const topTracks = await fetchTopTracks(
       <ul class='not-prose flex flex-wrap gap-2 text-theme-content'>
         {
           site.integrations?.fediverse && (
-            <li class='sr-only'>
-              <a
+            <li class='sr-only flex gap-x-2 text-nowrap lowercase'>
+              <Link
                 rel='me'
-                href={`${site.integrations.fediverse.instance}/${site.integrations.fediverse.username}`}>
+                href={`${site.integrations.fediverse.instance}/${site.integrations.fediverse.username}`}
+                title='Mastodon'
+                class='lowercase'
+                externalInNewTab={true}>
                 Mastodon
-              </a>
+              </Link>
+              /
             </li>
           )
         }

@@ -1,7 +1,6 @@
 ---
 import Image from '@/components/content/ContentImage.astro'
 import Heading from '@/components/Heading.astro'
-import ArtworkStructuredData from '@/components/meta/ArtworkStructuredData.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
 import { getCollection, render } from 'astro:content'
 
@@ -28,7 +27,6 @@ const { Content } = await render(post)
   updatedDate={post.data.updatedDate}
   tags={post.data.tags}
   isContentPage={true}>
-  <ArtworkStructuredData slot='structured-data' art={post} />
   <section>
     <Heading
       title={post.data.title}

@@ -1,15 +1,23 @@
 ---
+import type { ImageMetadata } from 'astro'
 import type { JSX } from 'astro/jsx-runtime'
 import ContentImage from '@/components/content/ContentImage.astro'
 
 interface Props {
   author: string
   content: (string | JSX.Element)[]
-  avatar?: string
+  avatar?: string | ImageMetadata
   date?: string
+  messageId?: string
 }
 
-const { author, content, avatar = '/default-avatar.png', date } = Astro.props
+const {
+  author,
+  content,
+  avatar = './default-avatar.webp',
+  date,
+  messageId,
+} = Astro.props
 
 function formatDate(dateString: string) {
   try {
@@ -27,12 +35,12 @@ function formatDate(dateString: string) {
 <div
   class='discord-message group'
   role='listitem'
-  aria-label={`Discord message from ${author}`}>
+  aria-label={`Discord message from ${author}`}
+  data-message-id={messageId}>
   <div class='avatar-wrapper' role='img' aria-label={`${author}'s avatar`}>
     <ContentImage
       src={avatar}
       alt={`${author}'s avatar`}
-      size='sm'
       style={false}
       class='avatar !m-0'
       imageClass='w-full h-full object-cover rounded-full'

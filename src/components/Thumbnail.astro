@@ -1,135 +1,41 @@
 ---
 import type { ImageMetadata } from 'astro'
-import type { CollectionEntry } from 'astro:content'
-import ImageStructuredData from '@/components/meta/ImageStructuredData.astro'
 import { Picture } from 'astro:assets'
 
 interface Props {
-  art: CollectionEntry<'art'>
-  size?: 'sm' | 'md' | 'lg'
+  image: ImageMetadata
+  alt: string
   index?: number
 }
 
-function getPublicUrl(
-  image: ImageMetadata,
-  collection?: string,
-  id?: string,
-): string {
-  const filename = image.src
-    .split('/')
-    .pop()!
-    .replace(/\.[a-z0-9|-]+(_[a-z0-9|-]+)*\./i, '.')
+const { image, alt, index = 0 }: Props = Astro.props
 
-  return collection && id ?
-      `/images/${collection}/${id}/${filename}`
-    : `/images/${filename}`
+function isAnimatedWebp(image: ImageMetadata): boolean {
+  return image.src.includes('.animated')
 }
 
-const { art, size = 'md', index = 0 }: Props = Astro.props
-
-// update sizes to match actual display dimensions across breakpoints
-const sizes = {
-  // mobile: 151.5px, tablet: 193.33px, desktop: 193.33px
-  sm: [152, 194, 194],
-  // adjust md/lg sizes similarly based on actual display dimensions
-  md: [300, 400, 400],
-  lg: [400, 500, 500],
-} as const
-
-// convert readonly tuple to mutable array when passing to Picture
-const widthsArray = [...sizes[size]]
-
-// calculate dimensions based on size
-const dimensions = {
-  width: sizes[size][0],
-  height: sizes[size][0], // square aspect ratio
-}
-
-// Get the thumbnail or first image
-const image =
-  art.data.thumbnail ??
-  (Array.isArray(art.data.images) ? art.data.images[0] : art.data.images)
-
-if (!image) {
-  throw new Error(`No image found for art: ${art.id}`)
-}
-
-// improve accessibility
-const imgTitle = `${art.data.title} - ${art.data.description}`
-
-// handle animated images
-const formats =
-  art.data.type === 'animation' ?
-    ['webp'] // important: use webp for animations to not break the thumbnail
-  : ['avif', 'webp'] // use either for static images
-
-// calculate row and column position
-const row = Math.floor(index / 3) // 3 columns
-const isAboveFold = row < 3 // first 3 rows are above fold
-
-// strict loading strategy based on row position
+const isAnimated = isAnimatedWebp(image)
+const formats = isAnimated ? ['webp'] : ['avif']
+const row = Math.floor(index / 3)
+const isAboveFold = row < 3
 const loading = isAboveFold ? 'eager' : 'lazy'
-
-const publicUrl = getPublicUrl(image as ImageMetadata, 'art', art.id)
 ---
 
-<ImageStructuredData
-  image={image as ImageMetadata}
-  title={imgTitle}
-  caption={art.data.thumbnailCaption}
-  url={new URL(`/art/${art.id}`, Astro.site)}
-  collection='art'
-  id={art.id}
-  isRepresentative={index === 0}
-  datePublished={art.data.publishDate.toISOString()}
-  dateModified={art.data.updatedDate?.toISOString()}
-  keywords={art.data.tags}
-  type={art.data.type}
-/>
-<figure
-  class='group relative h-full w-full overflow-hidden'
-  itemscope
-  itemtype='http://schema.org/ImageObject'>
+<div class='relative aspect-square w-full overflow-hidden'>
   <Picture
-    src={image as ImageMetadata}
-    alt={imgTitle}
-    title={imgTitle}
-    formats={formats as ('avif' | 'webp')[]}
-    format={art.data.type === 'animation' ? 'webp' : 'png'}
-    fallbackFormat={art.data.type === 'animation' ? 'webp' : 'png'}
-    width={dimensions.width}
-    height={dimensions.height}
-    widths={widthsArray}
+    src={image}
+    alt={alt}
+    title={alt}
+    formats={formats}
+    format={isAnimated ? 'webp' : 'avif'}
+    fallbackFormat={isAnimated ? 'webp' : 'avif'}
     sizes={`
-      (max-width: 640px) ${sizes[size][0]}px,
-      (max-width: 1024px) ${sizes[size][1]}px,
-      ${sizes[size][2]}px
+      (max-width: 640px) 152px,
+      (max-width: 1024px) 194px,
+      194px
     `}
-    class='h-full w-full object-cover shadow-md transition-transform duration-500 hover:shadow-lg group-hover:scale-105'
-    loading={loading as 'eager' | 'lazy'}
+    class='absolute inset-0 h-full w-full object-cover shadow-md transition-transform duration-500 hover:shadow-lg group-hover:scale-105'
+    loading={loading}
     decoding={loading === 'eager' ? 'sync' : 'async'}
-    itemprop='image'
   />
-
-  {/* add metadata */}
-  <meta itemprop='name' content={art.data.title} />
-  <meta itemprop='description' content={art.data.description} />
-  <meta itemprop='width' content={(image as ImageMetadata).width.toString()} />
-  <meta
-    itemprop='height'
-    content={(image as ImageMetadata).height.toString()}
-  />
-  <meta
-    itemprop='encodingFormat'
-    content={`image/${(image as ImageMetadata).format}`}
-  />
-  <meta
-    itemprop='representativeOfPage'
-    content={index === 0 ? 'true' : 'false'}
-  />
-  <meta itemprop='license' content={`${site.url}/unlicense`} />
-  <meta itemprop='url' content={new URL(`/art/${art.id}`, Astro.site)} />
-  <meta itemprop='contentUrl' content={publicUrl} />
-  <meta itemprop='creator' content={site.author.name} />
-  <meta itemprop='creditText' content={site.author.name} />
-</figure>
+</div>

@@ -1,5 +1,6 @@
 ---
-import Image from '@components/content/ContentImage.astro'
+import type { ImageMetadata } from 'astro'
+import ContentImage from '@components/content/ContentImage.astro'
 import ChirpFont from '@components/fonts/ChirpFont.astro'
 import Link from '@components/Link.astro'
 import { Icon } from 'astro-icon/components'
@@ -8,16 +9,16 @@ interface QuotedTweet {
   name: string
   handle: string
   text?: string
-  pfp: string
-  imageUrl?: string
+  pfp: string | ImageMetadata
+  imageUrl?: string | ImageMetadata
 }
 
 interface Props {
   name?: string
   handle?: string
-  pfp?: string
+  pfp?: string | ImageMetadata
   text?: string
-  imageUrl?: string
+  imageUrl?: string | ImageMetadata
   hashtags?: string
   retweets?: string
   replies?: string
@@ -30,7 +31,7 @@ interface Props {
 const {
   name = 'chip',
   handle = 'chippledipple',
-  pfp = 'blog/smpearth/chip-pfp.webp',
+  pfp = './chip-pfp.webp',
   text,
   imageUrl,
   retweets = '100k',
@@ -61,11 +62,10 @@ const formatTwitterDate = (date: Date | string | undefined) => {
   <div class='header flex items-start pr-2'>
     <div
       class='avatar mr-[16px] size-12 flex-shrink-0 overflow-hidden rounded-full'>
-      <Image
+      <ContentImage
         src={pfp}
         alt={`${name}'s avatar`}
         style={false}
-        size='sm'
         class='h-full w-full'
         imageClass='w-full h-full object-cover'
         captionType='hidden'
@@ -105,11 +105,10 @@ const formatTwitterDate = (date: Date | string | undefined) => {
       {
         imageUrl && (
           <div class={`tweet-image ${text ? '-mt-3' : ''} -my-4 -mt-6`}>
-            <Image
+            <ContentImage
               src={imageUrl}
               alt='Tweet media'
               style={true}
-              size='auto'
               class='w-full'
               imageClass='w-full h-auto object-cover rounded-lg'
               captionType='hidden'
@@ -127,11 +126,10 @@ const formatTwitterDate = (date: Date | string | undefined) => {
             aria-label={`Quoted tweet by ${quotedTweet.name}`}>
             <div class='flex items-center gap-2'>
               <span class='quoted-pfp size-6 flex-shrink-0 overflow-hidden rounded-full'>
-                <Image
+                <ContentImage
                   src={quotedTweet.pfp}
                   alt={`${quotedTweet.name}'s avatar`}
                   style={false}
-                  size='sm'
                   class='h-full w-full'
                   imageClass='w-full h-full object-cover'
                   captionType='hidden'
@@ -154,13 +152,13 @@ const formatTwitterDate = (date: Date | string | undefined) => {
             {quotedTweet.text && (
               <p class='body text-theme-content'>{quotedTweet.text}</p>
             )}
+
             {quotedTweet.imageUrl && (
               <div class={`tweet-image ${quotedTweet.text ? 'mt-2' : ''} mb-2`}>
-                <Image
+                <ContentImage
                   src={quotedTweet.imageUrl}
                   alt='Quoted tweet media'
                   style={true}
-                  size='auto'
                   class='w-full'
                   imageClass='w-full h-auto object-cover rounded-lg'
                   captionType='hidden'
