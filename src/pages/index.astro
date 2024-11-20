@@ -162,6 +162,16 @@ const topTracks = await fetchTopTracks(
         reach out on social media or send me an email.
       </p>
       <ul class='not-prose flex flex-wrap gap-2 text-theme-content'>
+        <!-- mastodon verification link - invisible but accessible -->
+        {
+          site.integrations?.mastodon && (
+            <li class='sr-only'>
+              <a rel='me' href={site.integrations.mastodon.url}>
+                Mastodon
+              </a>
+            </li>
+          )
+        }
         {
           site.author.socials
             ?.filter((social) => social.showInContact)
