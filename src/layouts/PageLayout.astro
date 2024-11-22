@@ -74,28 +74,6 @@ const titleTemplate = site.titleTemplate
     />
     <ClientRouter fallback='swap' transition:persist='theme,scroll' />
 
-    <!-- temporary: cache busting service worker -->
-    <script>
-      // register service worker
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js', {
-          scope: '/',
-          type: 'module',
-        })
-      }
-
-      // clear cache on page load
-      window.addEventListener('load', () => {
-        if (caches) {
-          caches.keys().then((names) => {
-            names.forEach((name) => {
-              caches.delete(name)
-            })
-          })
-        }
-      })
-    </script>
-
     <!-- structured data -->
     <slot name='structured-data' />
   </Head>
