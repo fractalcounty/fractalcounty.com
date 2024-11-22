@@ -39,6 +39,13 @@ export default defineConfig({
     },
     build: {
       assetsInlineLimit: 0,
+      rollupOptions: {
+        output: {
+          entryFileNames: `[name].[hash].${Date.now()}.js`,
+          chunkFileNames: `chunks/[name].[hash].${Date.now()}.js`,
+          assetFileNames: `assets/[name].[hash].${Date.now()}.[ext]`
+        }
+      }
     },
   },
   markdown: {

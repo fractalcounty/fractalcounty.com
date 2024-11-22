@@ -39,6 +39,7 @@
     "@types/eslint__js": "^8.42.3",
     "@types/prompts": "^2.4.9",
     "@types/react": "^18.3.12",
+    "@types/serviceworker": "^0.0.105",
     "@typescript-eslint/eslint-plugin": "^8.13.0",
     "@typescript-eslint/parser": "^8.13.0",
     "astro-devtool-breakpoints": "^0.3.0",
