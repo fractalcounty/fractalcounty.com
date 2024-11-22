@@ -112,13 +112,18 @@ const shouldPrefetch =
   prefetch && typeof href === 'string' && href.startsWith('/')
 // const isExternal =
 //   typeof href === 'string' && (href.startsWith('http') || href.startsWith('//'))
+
+// calculate final rel value by combining custom rel with default external link attributes
+const finalRel = [rel, externalInNewTab ? 'noopener' : null]
+  .filter(Boolean)
+  .join(' ')
 ---
 
 <AstroLink
   href={href}
   title={title}
   role={role}
-  rel={rel}
+  rel={finalRel}
   externalInNewTab={externalInNewTab}
   data-astro-prefetch={shouldPrefetch ? 'hover' : undefined}
   class={cn(
