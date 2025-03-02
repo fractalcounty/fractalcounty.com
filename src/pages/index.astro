@@ -50,17 +50,19 @@ const topTracks = await fetchTopTracks(
   <ProfilePageStructuredData slot='structured-data' />
 
   <Prose class='main-content space-y-4'>
-    <Heading title="Hello, I'm Chip" />
+    <Heading title="Hello, I'm Chip " />
     <p>
-      I make things on the internet— usually silly things, but occasionally
-      normal things as well. This is my personal dumping grounds for my thoughts
-      on art, games, and software that I couldn't fit on my <Link
+      I make rotten things on the internet.
+      <br />
+      <br />
+      This website serves as my personal blog for my various thoughts on art, games,
+      and software that I couldn't fit on my <Link
         href='https://x.com/fractalcounty'
         title='X'
         externalInNewTab={true}
-        >Twitter,
-      </Link> as well as my artwork, webcomics, music, and other creative endeavors
-      from over the years.
+        >Twitter.
+      </Link> It's also an archive of my artwork, webcomics, music, and other creative
+      endeavors from over the years.
     </p>
   </Prose>
 
@@ -107,7 +109,7 @@ const topTracks = await fetchTopTracks(
         topTracks.map((track: any, index: number) => (
           <Link
             href={track.url}
-            class={`group flex h-auto w-full items-center gap-4 rounded-lg border border-theme-border bg-transparent p-3 shadow-md transition-all duration-200 hover:border-theme-primary/50 hover:bg-theme-neutral hover:shadow-lg ${
+            class={`group flex h-auto w-full items-center gap-4 rounded-lg bg-theme-800 p-3 shadow-md outline outline-theme-500 transition-all duration-200 hover:bg-theme-700 hover:text-theme-200 hover:shadow-lg hover:outline hover:outline-theme-accent/75 ${
               index === 3 ? 'hidden sm:flex' : ''
             }`}
             underline={false}
@@ -122,13 +124,13 @@ const topTracks = await fetchTopTracks(
               formats={['avif']}
               fallbackFormat='webp'
               loading='lazy'
-              class='size-16 rounded-lg border border-theme-border object-cover shadow-md'
+              class='size-16 rounded-lg object-cover shadow-md outline outline-theme-500 transition-all duration-200 group-hover:outline-theme-accent/40'
             />
             <div class='min-w-0 flex-1'>
-              <h3 class='line-clamp-1 font-medium group-hover:text-theme-primary'>
+              <h3 class='line-clamp-1 font-medium text-theme-200 transition-all duration-200 group-hover:text-theme-100'>
                 {track.name}
               </h3>
-              <p class='line-clamp-1 text-sm text-theme-content/80'>
+              <p class='line-clamp-1 text-sm text-theme-300 transition-all duration-200 group-hover:text-theme-200'>
                 {track.artist.name} • {Number(track.playcount).toLocaleString()}{' '}
                 plays
               </p>

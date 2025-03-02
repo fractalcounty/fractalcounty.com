@@ -1,11 +1,11 @@
 ---
-import Divider from '@/components/Divider.astro'
 import Heading from '@/components/Heading.astro'
 import Link from '@/components/Link.astro'
 import CollectionPageStructuredData from '@/components/meta/CollectionPageStructuredData.astro'
 import MusicPageStructuredData from '@/components/meta/MusicPageStructuredData.astro'
 import ProfilePageStructuredData from '@/components/meta/ProfilePageStructuredData.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
+
 import { Image, Picture } from 'astro:assets'
 import { getCollection } from 'astro:content'
 
@@ -48,10 +48,10 @@ const bandcampAlbums = await getCollection('music')
   />
   <ProfilePageStructuredData slot='structured-data' />
 
-  <section>
-    <div class='mb-12'>
+  <!-- Albums section -->
+  <section class='mb-16'>
+    <div class='mb-8'>
       <Heading
-        class='mb-12 space-y-12'
         headingLevel='h1'
         title='Music'
         subtitle='my released albums & music projects'>
@@ -63,37 +63,167 @@ const bandcampAlbums = await getCollection('music')
           Listen on Bandcamp
         </Link>
       </Heading>
+    </div>
 
-      <div class='grid grid-cols-2 gap-6 md:grid-cols-3'>
+    <div class='grid grid-cols-2 gap-6 md:grid-cols-3'>
+      {
+        bandcampAlbums.map((album: any, index: number) => (
+          <Link
+            href={album.data.url}
+            class={`group relative aspect-square overflow-hidden rounded-xl bg-base-300 shadow-md transition-all duration-150 hover:shadow-lg hover:outline hover:outline-2 hover:outline-theme-accent/75 ${index >= 2 ? 'hidden md:block' : ''}`}
+            underline={false}
+            externalInNewTab={true}>
+            <Image
+              src={album.data.coverArt}
+              alt={`${album.data.title} album art`}
+              width={300}
+              height={300}
+              loading='eager'
+              class='h-full w-full object-cover transition-transform duration-300 group-hover:scale-105'
+            />
+            <div
+              class='absolute inset-0 bg-gradient-to-t from-theme-800/70 via-theme-800/30 to-transparent opacity-0 transition-opacity duration-300 sm:group-hover:opacity-100'
+              role='presentation'>
+              <div class='absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-theme-800/70 via-theme-800/30 to-transparent p-4'>
+                <div class='space-y-0'>
+                  <span class='inline-flex items-center gap-x-1 text-xs font-bold text-theme-100 opacity-100'>
+                    {new Date(album.data.releaseDate).getFullYear()}
+                  </span>
+                  <h2 class='text-lg font-semibold text-theme-100'>
+                    {album.data.title}
+                  </h2>
+                  {album.data.description && (
+                    <p class='mt-2 text-sm text-theme-200'>
+                      {album.data.description}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </Link>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- last.fm section -->
+  <section class='mb-16 space-y-12'>
+    <Heading
+      title='last.fm'
+      subtitle='my listening stats from last.fm'
+      metadataPosition='bottom'
+      headingLevel='h2'
+      metadata={[
         {
-          bandcampAlbums.map((album: any, index: number) => (
+          label: 'total plays',
+          value: Number(userInfo?.playcount).toLocaleString(),
+        },
+        {
+          label: 'scrobbling since',
+          value: new Date(userInfo?.registered.unixtime * 1000).getFullYear(),
+        },
+        {
+          label: 'profile',
+          value: `@${LASTFM_USERNAME}`,
+          url: `https://last.fm/user/${LASTFM_USERNAME}`,
+        },
+      ]}
+    />
+
+    <!-- loved songs (this month) -->
+    <div class='space-y-6'>
+      <Heading headingLevel='h3' title='Loved Songs (This Month)'>
+        <Link
+          slot='link'
+          icon={true}
+          class='text-theme-300'
+          href={`https://www.last.fm/user/${LASTFM_USERNAME}/library/tracks?date_preset=LAST_30_DAYS`}
+          externalInNewTab={true}>
+          View All
+        </Link>
+      </Heading>
+
+      <div class='grid grid-cols-1 gap-4 sm:grid-cols-2'>
+        {
+          topTracks.slice(0, 6).map((track: any) => (
             <Link
-              href={album.data.url}
-              class={`group relative aspect-square overflow-hidden rounded-xl bg-base-300 shadow-md transition-all duration-150 hover:shadow-lg ${index >= 2 ? 'hidden md:block' : ''}`}
+              href={track.url}
+              class='group flex h-auto w-full items-center gap-4 rounded-lg bg-theme-800 p-3 shadow-md outline outline-theme-500 transition-all duration-200 hover:bg-theme-700 hover:text-theme-200 hover:shadow-lg hover:outline hover:outline-theme-accent/75'
               underline={false}
               externalInNewTab={true}>
               <Image
-                src={album.data.coverArt}
-                alt={`${album.data.title} album art`}
+                src={track.albumArt || '/images/album.webp'}
+                alt={`Album artwork for ${track.name} by ${track.artist.name}`}
+                width={64}
+                height={64}
+                inferSize
+                loading='lazy'
+                class='size-16 rounded-lg object-cover shadow-md outline outline-theme-500'
+              />
+              <div class='min-w-0 flex-1'>
+                <h4 class='line-clamp-1 font-medium text-theme-200 transition-all duration-200 group-hover:text-theme-100'>
+                  {track.name}
+                </h4>
+                <p class='line-clamp-1 text-sm text-theme-300 transition-all duration-200 group-hover:text-theme-200'>
+                  {track.artist.name} •{' '}
+                  {Number(track.playcount).toLocaleString()} plays
+                </p>
+              </div>
+            </Link>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- top albums grid -->
+    <div class='space-y-6'>
+      <Heading headingLevel='h3' title='Top Albums'>
+        <Link
+          slot='link'
+          icon={true}
+          class='text-theme-300'
+          href={`https://www.last.fm/user/${LASTFM_USERNAME}/library/albums`}
+          externalInNewTab={true}>
+          View All
+        </Link>
+      </Heading>
+
+      <div class='grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4'>
+        {
+          albums.map((album: any, index: number) => (
+            <Link
+              href={album.url}
+              class='group relative aspect-square overflow-hidden rounded-xl bg-base-300 shadow-md transition-all duration-150 hover:shadow-lg hover:outline hover:outline-2 hover:outline-theme-accent/75'
+              underline={false}
+              externalInNewTab={true}
+              data-index={index}>
+              <Image
+                src={
+                  album.image[3]['#text'] ||
+                  album.image[2]['#text'] ||
+                  '/images/album.webp'
+                }
+                alt={`Album art for ${album.name} by ${album.artist.name}`}
                 width={300}
                 height={300}
+                inferSize
                 loading='eager'
                 class='h-full w-full object-cover transition-transform duration-300 group-hover:scale-105'
               />
-              <div class='absolute inset-0 bg-gradient-to-t from-theme-base/90 via-theme-base/50 to-transparent transition-all duration-300 group-hover:from-theme-base/95 group-hover:via-theme-base/60'>
-                <div class='absolute inset-0 flex flex-col justify-end p-4'>
-                  <div class='-space-y-0'>
-                    <span class='inline-flex items-center gap-x-1 text-xs font-semibold text-theme-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100'>
-                      {new Date(album.data.releaseDate).getFullYear()}
+              <div
+                class='absolute inset-0 bg-gradient-to-t from-theme-800/70 via-theme-800/30 to-transparent transition-all duration-200'
+                role='presentation'>
+                <div class='absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-theme-800/70 via-theme-800/30 to-transparent p-3 transition-all duration-200'>
+                  <div class='space-y-0'>
+                    <span class='inline-flex items-center gap-x-1 text-xs font-bold opacity-0 transition-all duration-200 group-hover:text-theme-accent group-hover:opacity-100'>
+                      {Number(album.playcount).toLocaleString()} plays
                     </span>
-                    <h2 class='text-lg font-bold text-theme-content lg:text-sm'>
-                      {album.data.title}
-                    </h2>
-                    {album.data.description && (
-                      <p class='mt-1 text-sm text-theme-content-weak'>
-                        {album.data.description}
-                      </p>
-                    )}
+                    <h4 class='line-clamp-2 text-lg font-semibold text-theme-100 sm:text-sm'>
+                      {album.name}
+                    </h4>
+                    <p class='line-clamp-1 text-xs text-theme-200'>
+                      {album.artist.name}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -103,75 +233,48 @@ const bandcampAlbums = await getCollection('music')
       </div>
     </div>
 
-    <!-- last.fm section -->
-    <div class='space-y-12'>
-      <Heading
-        title='last.fm'
-        subtitle='my listening stats from last.fm'
-        metadataPosition='bottom'
-        headingLevel='h2'
-        metadata={[
-          {
-            label: 'total plays',
-            value: Number(userInfo?.playcount).toLocaleString(),
-          },
-          {
-            label: 'scrobbling since',
-            value: new Date(userInfo?.registered.unixtime * 1000).getFullYear(),
-          },
-          {
-            label: 'profile',
-            value: `@${LASTFM_USERNAME}`,
-            url: `https://last.fm/user/${LASTFM_USERNAME}`,
-          },
-        ]}
-      />
-
-      <!-- top tracks sub-section -->
-      <div class='space-y-4'>
-        <Heading headingLevel='h3' title='Top Tracks'>
+    <!-- top artists and tracks columns -->
+    <div class='grid w-full grid-cols-1 gap-8 md:grid-cols-2'>
+      <!-- top artists sub-section -->
+      <div class='w-full space-y-6'>
+        <Heading headingLevel='h3' title='Top Artists'>
           <Link
             slot='link'
             icon={true}
-            class='text-theme-content-weak'
-            href={`https://www.last.fm/user/${LASTFM_USERNAME}/library/tracks`}
+            class='text-theme-300'
+            href={`https://www.last.fm/user/${LASTFM_USERNAME}/library/artists`}
             externalInNewTab={true}>
             View All
           </Link>
         </Heading>
 
-        <div class='grid grid-cols-2 gap-6 md:grid-cols-3'>
+        <div class='space-y-3'>
           {
-            topTracks.map((track: any, index: number) => (
+            artists.map((artist: any) => (
               <Link
-                href={track.url}
-                class='group relative aspect-square overflow-hidden rounded-xl bg-base-300 shadow-md transition-all duration-150 hover:shadow-lg'
+                href={artist.url}
+                class='group flex h-auto w-full items-center gap-4 rounded-lg bg-theme-800 p-3 shadow-md outline outline-theme-500 transition-all duration-200 hover:bg-theme-700 hover:text-theme-200 hover:shadow-lg hover:outline hover:outline-theme-accent/75'
                 underline={false}
-                externalInNewTab={true}
-                data-index={index}>
+                externalInNewTab={true}>
                 <Image
-                  src={track.albumArt}
-                  alt={`Album art for ${track.name} by ${track.artist.name}`}
-                  width={300}
-                  height={300}
+                  src={
+                    artist.image[3]['#text'] ||
+                    artist.image[2]['#text'] ||
+                    '/images/album.webp'
+                  }
+                  alt={`${artist.name}`}
+                  width={48}
+                  height={48}
                   inferSize
-                  loading='eager'
-                  class='h-full w-full object-cover transition-transform duration-300 group-hover:scale-105'
+                  class='size-12 flex-shrink-0 rounded-lg object-cover'
                 />
-                <div class='absolute inset-0 bg-gradient-to-t from-theme-base/90 via-theme-base/50 to-transparent transition-all duration-300 group-hover:from-theme-base/95 group-hover:via-theme-base/60'>
-                  <div class='absolute inset-0 flex flex-col justify-end p-4'>
-                    <div class='-space-y-0'>
-                      <span class='inline-flex items-center gap-x-1 text-xs font-semibold text-theme-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100'>
-                        {track.playcount} plays
-                      </span>
-                      <h4 class='text-lg font-semibold text-theme-content lg:text-sm'>
-                        {track.name}
-                      </h4>
-                      <p class='mt-1 text-sm text-theme-content-weak'>
-                        {track.artist.name}
-                      </p>
-                    </div>
-                  </div>
+                <div class='min-w-0 flex-1'>
+                  <h4 class='line-clamp-1 font-semibold text-theme-200 transition-all duration-200 group-hover:text-theme-100'>
+                    {artist.name}
+                  </h4>
+                  <p class='line-clamp-1 text-sm font-normal text-theme-300 transition-all duration-200 group-hover:text-theme-300'>
+                    {Number(artist.playcount).toLocaleString()} plays
+                  </p>
                 </div>
               </Link>
             ))
@@ -179,135 +282,105 @@ const bandcampAlbums = await getCollection('music')
         </div>
       </div>
 
-      <!-- top artists and albums columns sub-sections -->
-      <div class='grid w-full grid-cols-1 gap-6 md:grid-cols-2'>
-        <!-- top artists sub-section (left column) -->
-        <div class='w-full space-y-4'>
-          <Heading headingLevel='h3' title='Top Artists'>
-            <Link
-              slot='link'
-              icon={true}
-              class='text-theme-content-weak'
-              href={`https://www.last.fm/user/${LASTFM_USERNAME}/library/artists`}
-              externalInNewTab={true}>
-              View All
-            </Link>
-          </Heading>
+      <!-- top tracks sub-section -->
+      <div class='w-full space-y-6'>
+        <Heading headingLevel='h3' title='Top Tracks'>
+          <Link
+            slot='link'
+            icon={true}
+            class='text-theme-300'
+            href={`https://www.last.fm/user/${LASTFM_USERNAME}/library/tracks`}
+            externalInNewTab={true}>
+            View All
+          </Link>
+        </Heading>
 
-          <div class='space-y-3'>
-            {
-              artists.map((artist: any) => (
-                <Link
-                  href={artist.url}
-                  class='group flex h-[76px] w-full items-center gap-4 rounded-lg border border-theme-border bg-transparent p-3 shadow-md transition-all duration-200 hover:border-theme-primary/50 hover:bg-theme-neutral hover:shadow-lg'
-                  underline={false}
-                  externalInNewTab={true}>
-                  <Image
-                    src={
-                      artist.image[3]['#text'] ||
-                      artist.image[2]['#text'] ||
-                      '/images/album.webp'
-                    }
-                    alt={`${artist.name}`}
-                    width={48}
-                    height={48}
-                    inferSize
-                    class='size-12 flex-shrink-0 rounded-lg object-cover'
-                  />
-                  <div class='min-w-0 flex-1'>
-                    <h4 class='line-clamp-1 font-semibold group-hover:text-theme-primary'>
-                      {artist.name}
-                    </h4>
-                    <p class='line-clamp-1 text-sm text-theme-secondary'>
-                      {Number(artist.playcount).toLocaleString()} plays
-                    </p>
-                  </div>
-                </Link>
-              ))
-            }
-          </div>
-        </div>
-
-        <!-- top albums sub-section (right column) -->
-        <div class='mb-12 w-full space-y-4'>
-          <Heading headingLevel='h3' title='Top Albums'>
-            <Link
-              slot='link'
-              icon={true}
-              class='text-theme-content-weak'
-              href={`https://www.last.fm/user/${LASTFM_USERNAME}/library/albums`}
-              externalInNewTab={true}>
-              View All
-            </Link>
-          </Heading>
-
-          <div class='space-y-3'>
-            {
-              albums.map((album: any) => (
-                <Link
-                  href={album.url}
-                  class='group flex h-[76px] w-full items-center gap-4 rounded-lg border border-theme-border bg-transparent p-3 shadow-md transition-all duration-200 hover:border-theme-primary/50 hover:bg-theme-neutral hover:shadow-lg'
-                  underline={false}
-                  externalInNewTab={true}>
-                  <Image
-                    src={album.image[2]['#text'] || '/images/album.webp'}
-                    alt={`${album.name} by ${album.artist.name}`}
-                    width={48}
-                    height={48}
-                    inferSize
-                    class='size-12 flex-shrink-0 rounded-lg object-cover'
-                  />
-                  <div class='min-w-0 flex-1'>
-                    <h4 class='line-clamp-1 font-medium group-hover:text-theme-primary'>
-                      {album.name}
-                    </h4>
-                    <p class='line-clamp-1 text-sm text-theme-secondary'>
-                      {album.artist.name} •{' '}
-                      {Number(album.playcount).toLocaleString()} plays
-                    </p>
-                  </div>
-                </Link>
-              ))
-            }
-          </div>
+        <div class='space-y-3'>
+          {
+            topTracks.map((track: any) => (
+              <Link
+                href={track.url}
+                class='group flex h-auto w-full items-center gap-4 rounded-lg bg-theme-800 p-3 shadow-md outline outline-theme-500 transition-all duration-200 hover:bg-theme-700 hover:text-theme-200 hover:shadow-lg hover:outline hover:outline-theme-accent/75'
+                underline={false}
+                externalInNewTab={true}>
+                <Image
+                  src={track.albumArt || '/images/album.webp'}
+                  alt={`${track.name} by ${track.artist.name}`}
+                  width={48}
+                  height={48}
+                  inferSize
+                  class='size-12 flex-shrink-0 rounded-lg object-cover'
+                />
+                <div class='min-w-0 flex-1'>
+                  <h4 class='line-clamp-1 font-medium text-theme-200 transition-all duration-200 group-hover:text-theme-100'>
+                    {track.name}
+                  </h4>
+                  <p class='line-clamp-1 text-sm text-theme-300 transition-all duration-200 group-hover:text-theme-200'>
+                    {track.artist.name} •{' '}
+                    {Number(track.playcount).toLocaleString()} plays
+                  </p>
+                </div>
+              </Link>
+            ))
+          }
         </div>
       </div>
     </div>
+  </section>
 
-    <!-- spotify section -->
-    <section class='space-y-12 pb-12'>
-      <Heading
-        title='Featured Playlist'
-        subtitle='my favorite music on Spotify'
-        headingLevel='h2'>
-        <Link
-          slot='link'
-          icon={true}
-          href={`https://open.spotify.com/playlist/${PLAYLIST_ID}`}
-          externalInNewTab={true}>
-          Listen on Spotify
-        </Link>
-      </Heading>
+  <!-- spotify section -->
+  <section class='mb-16 space-y-8'>
+    <Heading
+      title='Featured Playlist'
+      subtitle='my favorite music on Spotify'
+      headingLevel='h2'>
+      <Link
+        slot='link'
+        icon={true}
+        href={`https://open.spotify.com/playlist/${PLAYLIST_ID}`}
+        externalInNewTab={true}>
+        Listen on Spotify
+      </Link>
+    </Heading>
 
-      <div
-        id='customView'
-        class='space-y-4 rounded-xl border border-theme-border p-4 shadow-md'>
-        {
-          playlist && (
-            <div class='space-y-4'>
-              <div class='flex gap-6'>
-                {/* playlist thumbnail artwork image */}
-                <div class='relative h-[150px] w-[149.5px] flex-shrink-0'>
+    <div
+      id='customView'
+      class='relative overflow-hidden rounded-xl border border-theme-500 bg-theme-800 shadow-md'>
+      {
+        playlist && (
+          <div>
+            {/* absolute positioned spotify play button in top right corner */}
+            <Link
+              href={`https://open.spotify.com/playlist/${PLAYLIST_ID}`}
+              class='absolute right-4 top-4 z-10 text-theme-300 transition-all duration-200 hover:text-theme-100'
+              underline={false}
+              externalInNewTab={true}
+              aria-label='Play on Spotify'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                class='size-6'
+                viewBox='0 0 24 24'
+                fill='currentColor'>
+                <path d='M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM16.5576 16.6753C16.3329 17.0494 15.8557 17.1517 15.4816 16.9269C13.3292 15.6499 10.6751 15.3158 7.34181 16.0741C6.91541 16.1695 6.49846 15.9068 6.40307 15.4804C6.30768 15.054 6.5704 14.637 6.9968 14.5416C10.6661 13.7085 13.6754 14.0961 16.1059 15.5444C16.48 15.7691 16.5823 16.2464 16.3576 16.6205L16.5576 16.6753ZM17.7377 13.9453C17.4525 14.4109 16.8585 14.5359 16.3929 14.2508C13.9289 12.7733 10.3783 12.2656 7.02778 13.1959C6.49768 13.336 5.96217 13.0105 5.82209 12.4804C5.68201 11.9503 6.00746 11.4148 6.53756 11.2747C10.3783 10.2032 14.3666 10.7771 17.2271 12.5005C17.6928 12.7856 17.8178 13.3797 17.5326 13.8453L17.7377 13.9453ZM17.8229 11.1721C14.9129 9.47372 9.78287 9.27276 6.79677 10.3599C6.16716 10.526 5.51407 10.1455 5.34792 9.51586C5.18177 8.88626 5.56233 8.23317 6.19193 8.06702C9.65246 6.81113 15.3792 7.04859 18.7948 9.04519C19.3599 9.36957 19.5891 10.0928 19.2648 10.6579C18.9404 11.223 18.2171 11.4522 17.652 11.1279L17.8229 11.1721Z' />
+              </svg>
+            </Link>
+
+            {/* playlist header */}
+            <div class='relative'>
+              {/* content */}
+              <div class='-mb-2 flex items-center gap-6 p-5'>
+                {/* playlist thumbnail with subtle hover effect */}
+                <div class='relative h-[160px] w-[160px] flex-shrink-0 transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg'>
                   <Picture
                     src={playlist.image}
                     alt={playlist.name}
-                    width={259}
-                    height={259}
-                    widths={[129, 259]}
-                    sizes='149px'
+                    width={320}
+                    height={320}
+                    widths={[160, 320]}
+                    sizes='160px'
                     formats={['avif']}
                     fallbackFormat='webp'
-                    class='absolute inset-0 h-full w-full rounded-lg border border-theme-border/50 object-cover shadow-md'
+                    class='h-full w-full rounded-lg border border-theme-500/50 object-cover shadow-md'
                     style={{
                       aspectRatio: '1/1',
                       objectFit: 'cover',
@@ -315,43 +388,84 @@ const bandcampAlbums = await getCollection('music')
                     loading='lazy'
                   />
                 </div>
-                <div class='flex flex-col justify-center'>
-                  <h3 class='font-brand text-xl font-bold uppercase'>
-                    {playlist.name}
-                  </h3>
-                  <p
-                    class='text-theme-content-weak'
-                    set:html={playlist.description}
-                  />
+
+                <div class='flex h-[160px] flex-1 flex-col justify-center'>
+                  <div>
+                    <div class='mb-1 flex flex-row items-center gap-2'>
+                      <span class='text-xs uppercase tracking-wider text-theme-300'>
+                        Playlist
+                      </span>
+                      <span class='text-theme-500'>•</span>
+                      <span class='text-xs text-theme-300'>
+                        {playlist.tracks.length} tracks
+                      </span>
+                    </div>
+                    <h3 class='font-brand mb-2 text-2xl font-bold leading-tight text-theme-100'>
+                      {playlist.name}
+                    </h3>
+                    <p
+                      class='line-clamp-3 text-sm text-theme-200'
+                      set:html={playlist.description}
+                    />
+                  </div>
                 </div>
               </div>
+            </div>
 
-              <Divider />
+            {/* subtle divider between header and track list */}
+            {/* <div class='border-theme-600/40 mx-4 border-t' /> */}
 
-              <div class='h-[200px] space-y-2 overflow-y-auto pr-2'>
-                {playlist.tracks.map((track: any) => (
+            {/* tracks list with improved scrolling */}
+            <div class='scrollbar-thin scrollbar-track-theme-700 scrollbar-thumb-theme-500 max-h-[350px] overflow-y-auto px-4 pb-4'>
+              <div class='mb-2 grid grid-cols-[auto_1fr_auto] items-center gap-4 border-b border-theme-600 px-2 pb-2 text-xs uppercase tracking-wider text-theme-300'>
+                <div class='w-8 text-center'>#</div>
+                <div>Title</div>
+                <div>Duration</div>
+              </div>
+
+              <div class='space-y-1'>
+                {playlist.tracks.map((track: any, index: number) => (
                   <Link
                     href={track.external_url}
-                    class='group flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-theme-darkest'
+                    class='group grid grid-cols-[auto_1fr_auto] items-center gap-4 rounded-lg p-2 transition-all duration-200 hover:bg-theme-700'
                     underline={false}
                     externalInNewTab={true}>
-                    <Image
-                      src={track.image}
-                      alt={track.name}
-                      width={48}
-                      height={48}
-                      class='size-12 rounded border border-theme-border object-cover shadow-sm hover:border-theme-primary/50'
-                      loading='lazy'
-                    />
-                    <div class='min-w-0 flex-1'>
-                      <h4 class='line-clamp-1 font-medium group-hover:text-theme-primary'>
-                        {track.name}
-                      </h4>
-                      <p class='line-clamp-1 text-sm text-theme-secondary'>
-                        {track.artist}
-                      </p>
+                    <div class='w-8 text-center text-sm text-theme-400 group-hover:text-theme-300'>
+                      {index + 1}
                     </div>
-                    <span class='text-sm text-theme-content-weak'>
+
+                    <div class='flex min-w-0 items-center gap-3'>
+                      <div class='relative'>
+                        <Image
+                          src={track.image}
+                          alt={track.name}
+                          width={40}
+                          height={40}
+                          class='size-10 rounded border border-theme-600/50 object-cover shadow-sm transition-all duration-200 group-hover:border-theme-500/80 group-hover:shadow-md'
+                          loading='lazy'
+                        />
+                        <div class='absolute inset-0 flex items-center justify-center rounded bg-black/60 opacity-0 transition-opacity duration-200 group-hover:opacity-100'>
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            viewBox='0 0 24 24'
+                            fill='currentColor'
+                            class='size-5 text-white'>
+                            <path d='M8 5V19L19 12L8 5Z' />
+                          </svg>
+                        </div>
+                      </div>
+
+                      <div class='min-w-0 flex-1'>
+                        <h4 class='line-clamp-1 font-medium text-theme-200 transition-all duration-200 group-hover:text-theme-100'>
+                          {track.name}
+                        </h4>
+                        <p class='line-clamp-1 text-sm text-theme-400 transition-all duration-200 group-hover:text-theme-300'>
+                          {track.artist}
+                        </p>
+                      </div>
+                    </div>
+
+                    <span class='text-sm tabular-nums text-theme-400 transition-all duration-200 group-hover:text-theme-300'>
                       {`${Math.floor(track.duration / 60000)}:${String(
                         Math.floor((track.duration % 60000) / 1000),
                       ).padStart(2, '0')}`}
@@ -360,9 +474,9 @@ const bandcampAlbums = await getCollection('music')
                 ))}
               </div>
             </div>
-          )
-        }
-      </div>
-    </section>
+          </div>
+        )
+      }
+    </div>
   </section>
 </PageLayout>

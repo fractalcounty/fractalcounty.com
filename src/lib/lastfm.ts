@@ -84,13 +84,13 @@ export async function fetchLastFmData(
 }> {
   try {
     const [topArtists, topAlbums, userInfo, topTracks] = await Promise.all([
-      // get top artists
+      // get top artists - increasing from 5 to 6
       fetch(
-        `https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=${username}&api_key=${apiKey}&period=overall&limit=5&format=json&extended=1`,
+        `https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=${username}&api_key=${apiKey}&period=overall&limit=6&format=json&extended=1`,
       ).then(async (res) => res.json() as Promise<LastFmResponse>),
-      // get top albums
+      // get top albums - increasing from 5 to 8 to fill grid
       fetch(
-        `https://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=${username}&api_key=${apiKey}&period=overall&limit=5&format=json`,
+        `https://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=${username}&api_key=${apiKey}&period=overall&limit=12&format=json`,
       ).then(async (res) => res.json() as Promise<LastFmResponse>),
       // get user info
       fetch(

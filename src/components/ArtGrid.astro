@@ -41,15 +41,18 @@ function getImageData(art: CollectionEntry<'art'>) {
       return (
         <Link
           href={`/art/${art.id}`}
-          class='group relative aspect-square overflow-hidden rounded-xl bg-base-300 shadow-md transition-all duration-150 hover:shadow-lg'
+          class='group relative aspect-square overflow-hidden rounded-xl bg-base-300 shadow-md transition-all duration-150 hover:shadow-lg hover:outline hover:outline-2 hover:outline-theme-accent/75'
           underline={false}
           data-index={index}>
           <Thumbnail image={image as ImageMetadata} alt={alt} index={index} />
-          <div class='absolute inset-0 bg-gradient-to-t from-theme-base/70 via-theme-base/30 to-transparent opacity-100 transition-opacity duration-300 sm:opacity-0 sm:group-hover:opacity-100'>
-            <div class='absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-theme-base/60 via-theme-base/30 to-transparent p-4'>
-              <div class='-space-y-0'>
+
+          <div
+            class='absolute inset-0 bg-gradient-to-t from-theme-800/70 via-theme-800/30 to-transparent opacity-0 transition-opacity duration-300 sm:group-hover:opacity-100'
+            role='presentation'>
+            <div class='absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-theme-800/70 via-theme-800/30 to-transparent p-4'>
+              <div class='space-y-0'>
                 {isMultiImage && (
-                  <span class='inline-flex items-center gap-x-1 text-xs font-semibold text-theme-primary'>
+                  <span class='inline-flex items-center gap-x-1 text-xs font-bold text-theme-100'>
                     {art.data.type === 'webcomic' ?
                       <Icon name='lucide:file-text' size={'1rem'} />
                     : art.data.type === 'animation' ?
@@ -63,10 +66,10 @@ function getImageData(art: CollectionEntry<'art'>) {
                     : 'images'}
                   </span>
                 )}
-                <h2 class='text-lg font-semibold text-theme-content lg:text-sm'>
+                <h2 class='text-lg font-semibold text-theme-100'>
                   {art.data.title}
                 </h2>
-                <p class='mt-2 hidden text-sm text-theme-content sm:block'>
+                <p class='mt-2 text-sm text-theme-200'>
                   {art.data.description}
                 </p>
               </div>

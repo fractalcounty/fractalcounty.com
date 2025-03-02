@@ -52,7 +52,7 @@ const visibleSegments = pathSegments.slice(-2)
     <span slot='index' class='inline-flex items-center'>
       <Icon
         name='lucide:house'
-        class='stroke-[5] text-theme-content decoration-theme-primary/50 transition-all duration-200 hover:text-theme-primary hover:underline hover:decoration-2'
+        class='stroke-[5] text-theme-content decoration-theme-100/50 transition-all duration-200 hover:text-theme-100 hover:underline hover:decoration-2'
         size='0.85rem'
         aria-hidden='true'
       />
@@ -78,26 +78,26 @@ const visibleSegments = pathSegments.slice(-2)
 
 <style>
   :global(.c-breadcrumbs) {
-    @apply text-xs text-theme-content;
+    @apply text-xs text-theme-300;
   }
 
   :global(.c-breadcrumbs__link) {
-    @apply relative text-theme-content underline decoration-theme-primary/50 decoration-2 transition-colors duration-200 hover:text-theme-primary;
+    @apply relative text-theme-300 underline decoration-theme-400 decoration-2 transition-colors duration-200 hover:text-theme-400;
   }
 
   :global(.c-breadcrumbs__link) {
-    @apply after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-theme-primary after:opacity-0 after:transition-opacity after:duration-200;
+    @apply after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:text-theme-400 after:opacity-0 after:transition-opacity after:duration-200;
   }
 
   :global(.c-breadcrumbs__link:hover) {
-    @apply text-theme-primary after:opacity-100;
+    @apply text-theme-400 after:opacity-100;
   }
 
   :global(.c-breadcrumbs__crumb:last-child) {
-    @apply text-theme-content;
+    @apply text-theme-300;
   }
 
   :global(.c-breadcrumbs__truncated-button) {
-    @apply transition-colors duration-200 hover:text-theme-primary;
+    @apply transition-colors duration-200 hover:text-theme-400;
   }
 </style>

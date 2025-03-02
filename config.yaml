@@ -40,7 +40,7 @@ site:
     home:
       path: /
       title: Home
-      description: "Hi, I'm Chip (@fractalcounty). This is my personal website and blog where I dump my thoughts on art, games, and software, as well as my artwork, webcomics, music, and other projects."
+      description: "Hi, I'm Chip (@fractalcounty). I make rotten things on the internet. This is my personal website and blog where I dump my thoughts on art, games, and software, as well as my artwork, webcomics, music, and other projects."
       showInNav: false
     blog:
       path: /blog
@@ -50,7 +50,7 @@ site:
     art:
       path: /art
       title: Art
-      description: "I'm Chip (@fractalcounty) and this is my archived gallery of my art, illustrations and webcomics from over the years."
+      description: "I'm Chip (@fractalcounty) and this is my archived gallery of my art, illustrations, webcomics, and other rotten endeavors from over the years."
       showInNav: true
     music:
       path: /music

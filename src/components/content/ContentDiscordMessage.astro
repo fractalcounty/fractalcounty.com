@@ -50,18 +50,16 @@ function formatDate(dateString: string) {
   </div>
   <div class='message-content'>
     <div class='message-header'>
-      <span class='author font-semibold text-theme-content-strong'
-        >{author}</span
-      >
+      <span class='author font-semibold text-theme-200'>{author}</span>
       {
         date && (
-          <time class='date text-theme-secondary' datetime={formatDate(date)}>
+          <time class='date text-theme-400' datetime={formatDate(date)}>
             {date}
           </time>
         )
       }
     </div>
-    <div class='message-blocks prose text-theme-content'>
+    <div class='message-blocks prose text-theme-200'>
       {
         content.map((item) => (
           <div class='content'>

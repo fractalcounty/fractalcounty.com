@@ -26,7 +26,7 @@ const {
 
 <Link
   href={href || `/`}
-  class={`group relative flex flex-nowrap items-center rounded-lg border border-theme-border hover:border-theme-primary/50 bg-transparent px-4 py-4 pr-10 shadow-md transition-all duration-200 hover:bg-theme-neutral hover:shadow-lg ${className}`}
+  class={`group relative flex flex-nowrap items-center rounded-lg outline-theme-500 hover:outline-theme-accent/75 hover:text-theme-100 px-4 py-4 pr-10 shadow-md transition-all duration-200 bg-theme-800 hover:bg-theme-700 text-theme-200 outline hover:shadow-lg ${className}`}
   underline={false}
   externalInNewTab={externalInNewTab}>
   <!-- Icon -->
@@ -35,18 +35,19 @@ const {
   <!-- Title and description -->
   <div class='flex flex-1 flex-col truncate'>
     <div class='flex items-center gap-2'>
-      <span class='font-semibold group-hover:text-theme-primary'>
+      <span class='font-semibold'>
         {title}
       </span>
       {
         date && (
-          <span class='text-sm opacity-75'>
+          <span class='text-sm text-theme-300 transition-all duration-200 group-hover:text-theme-200'>
             • <Date date={date} />
           </span>
         )
       }
     </div>
-    <div class='truncate text-sm'>
+    <div
+      class='truncate text-sm text-theme-300 transition-all duration-200 group-hover:text-theme-200'>
       {description}
     </div>
   </div>
@@ -55,7 +56,7 @@ const {
   <svg
     xmlns='http://www.w3.org/2000/svg'
     viewBox='0 0 24 24'
-    class='absolute right-2 top-1/2 size-5 -translate-y-1/2 fill-none stroke-current stroke-2 transition-colors duration-300 ease-in-out group-hover:stroke-theme-primary'>
+    class='absolute right-2 top-1/2 size-5 -translate-y-1/2 fill-none stroke-current stroke-2 transition-colors duration-300 ease-in-out group-hover:stroke-theme-accent'>
     <line
       x1='5'
       y1='12'

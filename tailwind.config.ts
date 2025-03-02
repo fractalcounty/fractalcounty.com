@@ -11,37 +11,34 @@ export default {
     createThemes(
       {
         laramie: {
-          // dark theme
           'theme-primary': '#7aa2f7',
-          'theme-darkest': '#151621', // 950
-          'theme-base': '#1A1B29', // 900
-          'theme-panel': '#24283b', // 800, tweet bg
-          'theme-neutral': '#2D3149', // 700
-          'theme-border': '#373C58', // 600
-          'theme-accent': '#414868', // 500
-          // #555F87 400
-          'theme-secondary': '#6C79A3', // 300, sub-subtitles
-          'theme-content-weak': '#8B96B7', // 200, subtitles
-          'theme-content': '#a9b1d6', // 100
-          'theme-content-strong': '#c0caf5', // 50
+          'theme-darkest': '#1b1e2e',
+          'theme-base': '#1b1e2e',
+          'theme-panel': '#24283b',
+          'theme-neutral': '#292e42',
+          'theme-border': '#292e42',
+          'theme-accent': '#1b1e2e',
+          'theme-secondary': '#414868',
+          'theme-content-weak': '#a9b1d6',
+          'theme-content': '#a9b1d6',
+          'theme-content-strong': '#a9b1d6',
         },
-        casper: {
-          // light theme
-          'theme-primary': '#34548a',
-          'theme-darkest': '#d5d6db',
-          'theme-base': '#d5d6db',
-          'theme-panel': '#e5e6eb',
-          'theme-neutral': '#9699a3',
-          'theme-border': '#565a6e',
-          'theme-accent': '#565a6e',
-          'theme-secondary': '#4A4D63',
-          'theme-content-weak': '#4A4D63',
-          'theme-content': '#343b58',
-          'theme-content-strong': '#0f0f14',
+        woofwoof: {
+          'theme-accent': '#7aa2f7', // Primary blue accent for interactive elements
+          'theme-accent-dim': '#6881C0', // Primary blue accent for interactive elements
+          'theme-100': '#c0caf5',    // Brightest foreground text
+          'theme-200': '#a9b1d6',    // Primary text
+          'theme-300': '#8089b3',    // Secondary text
+          'theme-400': '#545c7e',    // Tertiary text, comments
+          'theme-500': '#41496b',    // Subtle UI elements
+          'theme-600': '#2f344d',    // Borders, separators
+          'theme-700': '#24283b',    // Primary background
+          'theme-800': '#1f2335',    // Deep background, sidebar
+          'theme-900': '#1b1e2e',    // Darkest background
         },
       },
       {
-        defaultTheme: 'laramie',
+        defaultTheme: 'woofwoof',
       },
     ),
   ],
@@ -58,23 +55,21 @@ export default {
   daisyui: {
     themes: [
       {
-        // dark theme
-        laramie: {
+        woofwoof: {
           primary: '#7aa2f7',
-          secondary: '#bb9af7',
-          info: '#2AC3DE',
-          success: '#9ECE6A',
-          warning: '#FF9E64',
-          error: '#F7768E',
-          'base-100': '#1A1B26',
+          secondary: '#7aa2f7',
+          info: '#7aa2f7',
+          success: '#7aa2f7',
+          warning: '#7aa2f7',
+          error: '#7aa2f7',
+          'base-100': '#1b1e2e',
           'base-content': '#a9b1d6',
           neutral: '#24283b',
-          'neutral-content': '#9aa5ce',
-          accent: '#565f89',
-          'accent-content': '#c0caf5',
+          'neutral-content': '#8089b3',
+          accent: '#3d59a1',
+          'accent-content': '#a9b1d6',
         },
       },
     ],
   },
-  // darkMode: ['class', '[data-theme="laramie"]'],
 } satisfies Config

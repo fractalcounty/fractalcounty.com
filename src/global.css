@@ -21,6 +21,7 @@ html {
 html,
 body {
   @apply size-full;
+  @apply bg-theme-900;
 }
 
 body {
@@ -34,6 +35,11 @@ body {
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
+}
+
+/* Special styling for 404 page */
+html[data-page-404="true"] body {
+  @apply overflow-hidden;
 }
 
 footer {

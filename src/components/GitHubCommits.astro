@@ -83,14 +83,18 @@ const commits = await getLatestCommits('fractalcounty')
         <li>
           <Link
             href={commit.html_url}
-            class='group flex flex-col items-start gap-1 rounded-lg border border-theme-border bg-transparent p-3 shadow-md transition-all duration-200 hover:border-theme-primary/50 hover:bg-theme-neutral hover:shadow-lg'
+            class='group flex flex-col items-start gap-1 rounded-lg bg-theme-800 p-3 shadow-md outline outline-theme-500 transition-all duration-200 hover:bg-theme-700 hover:shadow-lg hover:outline-theme-accent/75'
             externalInNewTab={true}
             underline={false}>
-            <div class='flex items-center gap-2 text-sm text-theme-content'>
-              <Icon name='lucide:code' size='1rem' />
-              <span class='font-medium'>
+            <div class='flex items-center gap-2 text-sm text-theme-200 transition-all duration-200 hover:text-theme-100'>
+              <Icon
+                name='lucide:code'
+                size='1rem'
+                class='text-theme-300 transition-all duration-200 group-hover:text-theme-200'
+              />
+              <span class='font-medium text-theme-200 transition-all duration-200 group-hover:text-theme-100'>
                 {commit.repository.name.split('/')[1]} •
-                <span class='font-normal opacity-75'>
+                <span class='font-normal text-theme-300 transition-all duration-200 group-hover:text-theme-200'>
                   <Date
                     date={new globalThis.Date(commit.date)}
                     format='short'
@@ -98,7 +102,9 @@ const commits = await getLatestCommits('fractalcounty')
                 </span>
               </span>
             </div>
-            <p class='line-clamp-2 text-sm'>{commit.message}</p>
+            <p class='line-clamp-2 text-sm text-theme-300 transition-all duration-200 group-hover:text-theme-200'>
+              {commit.message}
+            </p>
           </Link>
         </li>
       ))

@@ -23,7 +23,7 @@ const {
 } = Astro.props
 
 const baseStyles =
-  'relative group flex items-center justify-center rounded-lg border border-theme-border hover:border-theme-primary/50 bg-transparent hover:bg-theme-neutral text-theme-content duration-200 ease-in-out'
+  'relative group flex items-center justify-center rounded-lg border border-theme-500 hover:border-theme-accent/75 bg-transparent hover:bg-theme-neutral text-theme-200 duration-200 ease-in-out'
 
 // modify padding logic to consider responsive prop
 const paddingClass =
@@ -58,7 +58,7 @@ const rotationClass = (
         xmlns='http://www.w3.org/2000/svg'
         viewBox='0 0 24 24'
         class:list={[
-          'absolute left-2 top-1/2 size-4 -translate-y-1/2 fill-none stroke-current stroke-2 transition-colors duration-300 ease-in-out group-hover:stroke-theme-primary',
+          'absolute left-2 top-1/2 size-4 -translate-y-1/2 fill-none stroke-current stroke-2 transition-colors duration-300 ease-in-out group-hover:stroke-theme-100',
           rotationClass,
           arrowClass,
         ]}>
@@ -77,7 +77,7 @@ const rotationClass = (
     )
   }
   <div
-    class='text-sm transition-colors duration-300 ease-in-out group-hover:text-theme-primary'>
+    class='text-sm transition-colors duration-300 ease-in-out group-hover:text-theme-100'>
     <slot />
   </div>
 </Component>

@@ -3,26 +3,58 @@ import Button from '@/components/Button.astro'
 import BrandFont from '@/components/fonts/BrandFont.astro'
 import Link from '@/components/Link.astro'
 import Prose from '@/components/Prose.astro'
+import { site } from '@/config'
 import PageLayout from '@/layouts/PageLayout.astro'
 import { Icon } from 'astro-icon/components'
 ---
 
 <PageLayout
   title={site.pages['404'].title}
-  description={site.pages['404'].description}>
+  description={site.pages['404'].description}
+  is404={true}>
   <BrandFont slot='head' />
+  <svg
+    class='noise-filter'
+    viewBox='0 0 200 200'
+    xmlns='http://www.w3.org/2000/svg'>
+    <filter id='noiseFilter'>
+      <feTurbulence
+        type='fractalNoise'
+        baseFrequency='0.65'
+        numOctaves='3'
+        stitchTiles='stitch'></feTurbulence>
+      <feColorMatrix
+        type='matrix'
+        values='1 0 0 0 0
+                0 1 0 0 0
+                0 0 1 0 0
+                0 0 0 0.5 0'
+      ></feColorMatrix>
+    </filter>
+    <rect width='100%' height='100%' filter='url(#noiseFilter)'></rect>
+  </svg>
+
+  <!-- Background container with proper z-index -->
+  <div class='cosmic-background'>
+    <div class='stars page-bg-element'></div>
+    <div class='stars2 page-bg-element'></div>
+    <div class='stars3 page-bg-element'></div>
+    <div class='noise-overlay page-bg-element'></div>
+    <div class='cosmic-overlay page-bg-element'></div>
+  </div>
+
   <section
     class='relative flex flex-col items-center justify-center gap-y-8 pt-12 text-center'>
     <div class='relative flex items-center justify-center'>
       <p
-        class='font-brand !text-[12rem] !font-bold !text-theme-content/25'
-        style='font-size: 12rem !important; line-height: 1 !important; color: oklch(var(--n))'>
+        class='font-brand gradient-text !text-[12rem] !font-bold'
+        style='font-size: 12rem !important; line-height: 1 !important;'>
         404
       </p>
       <Icon
         name='octangula'
         size='10rem'
-        class='error-icon absolute z-10 text-theme-primary'
+        class='error-icon absolute z-10 text-theme-100'
       />
     </div>
 
@@ -77,18 +109,274 @@ import { Icon } from 'astro-icon/components'
     customElements.define('error-message', ErrorMessage)
   </script>
 
-  <style>
+  <style is:global>
+    /* Apply cosmic style to root elements */
+    html,
+    body {
+      background-color: #1b1e2e; /* Set the base color immediately */
+      isolation: isolate;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Container for cosmic background elements */
+    .cosmic-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -100; /* Lower z-index to ensure it stays behind all content */
+      pointer-events: none;
+    }
+
+    /* Page background elements fade-in animation */
+    .page-bg-element {
+      animation: fade-in 0.3s ease-in-out forwards;
+    }
+
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* SVG noise filter styling */
+    .noise-filter {
+      position: absolute;
+      width: 0;
+      height: 0;
+      visibility: hidden;
+    }
+
+    /* Noise overlay to reduce banding */
+    .noise-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -5;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='4' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.12;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+    }
+
+    /* Overlay for the cosmic gradient background */
+    .cosmic-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -10;
+      /* updated gradient to match #1b1e2e (theme-900) at the edges */
+      background: radial-gradient(
+        circle at 50% 37%,
+        oklch(28.19% 0.0355 274.75) 0%,
+        oklch(26% 0.03 276) 20%,
+        oklch(24% 0.025 278) 30%,
+        oklch(22.63% 0.0214 280.49) 50%,
+        oklch(21% 0.03 270) 70%,
+        oklch(19.5% 0.03 265) 85%,
+        oklch(16.5% 0.03 260) 100%
+      );
+      background-attachment: fixed;
+      /* apply additional filters to reduce banding */
+      filter: contrast(105%) url('#dither-filter');
+    }
+
+    /* Add a second noise overlay with different characteristics for better dithering */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -6;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grainFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.25' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grainFilter)'/%3E%3C/svg%3E");
+      opacity: 0.04;
+      mix-blend-mode: color-burn;
+      pointer-events: none;
+      animation: fade-in 0.3s ease-in-out forwards;
+    }
+
+    /* Ensure the page body has a proper dark background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -20;
+      background-color: #1b1e2e; /* Updated to exact theme-900 hex */
+    }
+
+    /* Gradient text for 404 */
+    .gradient-text {
+      background: linear-gradient(
+        135deg,
+        oklch(28% 0.03 275 / 0.3) 0%,
+        oklch(40% 0.08 270 / 0.4) 25%,
+        oklch(71.76% 0.1575 268.17 / 0.5) 50%,
+        oklch(49% 0.05 223 / 0.4) 75%,
+        oklch(23% 0.03 223 / 0.3) 100%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: pulse 8s ease-in-out infinite;
+      text-shadow: 0 0 15px oklch(71.76% 0.1575 268.17 / 0.3);
+    }
+
     .error-icon {
       animation: float 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 8px oklch(71.76% 0.1575 268.17 / 0.7));
+    }
+
+    /* Star field animations */
+    .stars,
+    .stars2,
+    .stars3 {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      opacity: 0.75;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .stars {
+      background: radial-gradient(
+          1px 1px at 50% 10%,
+          oklch(90% 0.02 270),
+          transparent 100%
+        ),
+        radial-gradient(
+          1px 1px at 20% 30%,
+          oklch(95% 0.01 280),
+          transparent 100%
+        ),
+        radial-gradient(
+          1.5px 1.5px at 70% 60%,
+          oklch(86% 0.07 270),
+          transparent 100%
+        ),
+        radial-gradient(
+          1px 1px at 90% 80%,
+          oklch(98% 0.01 270),
+          transparent 100%
+        );
+      background-size: 1000px 1000px;
+      animation: stars-animation 80s linear infinite;
+    }
+
+    .stars2 {
+      background: radial-gradient(
+          1px 1px at 30% 20%,
+          oklch(95% 0.01 270),
+          transparent 100%
+        ),
+        radial-gradient(
+          1px 1px at 80% 30%,
+          oklch(98% 0.02 280),
+          transparent 100%
+        ),
+        radial-gradient(
+          1px 1px at 50% 70%,
+          oklch(86% 0.07 270),
+          transparent 100%
+        ),
+        radial-gradient(
+          1.5px 1.5px at 10% 90%,
+          oklch(80% 0.1 270),
+          transparent 100%
+        );
+      background-size: 1200px 1200px;
+      animation: stars-animation 120s linear infinite;
+    }
+
+    .stars3 {
+      background: radial-gradient(
+          1px 1px at 10% 10%,
+          oklch(98% 0.01 270),
+          transparent 100%
+        ),
+        radial-gradient(
+          1.5px 1.5px at 60% 40%,
+          oklch(95% 0.02 280),
+          transparent 100%
+        ),
+        radial-gradient(
+          1px 1px at 30% 70%,
+          oklch(90% 0.05 270),
+          transparent 100%
+        ),
+        radial-gradient(
+          2px 2px at 90% 15%,
+          oklch(85% 0.08 270),
+          transparent 100%
+        );
+      background-size: 1500px 1500px;
+      animation: stars-animation 160s linear infinite;
+    }
+
+    @keyframes stars-animation {
+      0% {
+        transform: rotate(0deg) translateZ(0);
+      }
+      100% {
+        transform: rotate(360deg) translateZ(0);
+      }
     }
 
     @keyframes float {
       0%,
       100% {
         transform: translateY(10px);
+        filter: drop-shadow(0 5px 15px oklch(71.76% 0.1575 268.17 / 0.5));
       }
       50% {
         transform: translateY(-10px);
+        filter: drop-shadow(0 15px 10px oklch(49% 0.05 230 / 0.3));
+      }
+    }
+
+    @keyframes pulse {
+      0%,
+      100% {
+        opacity: 0.4;
+      }
+      50% {
+        opacity: 0.7;
+      }
+    }
+
+    @media (prefers-reduced-motion) {
+      .stars,
+      .stars2,
+      .stars3 {
+        animation: none;
+      }
+      .error-icon {
+        animation: none;
+      }
+      .gradient-text {
+        animation: none;
+      }
+      .page-bg-element {
+        animation: none;
       }
     }
   </style>

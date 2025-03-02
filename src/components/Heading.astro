@@ -53,7 +53,7 @@ const isSubHeader = ['h3', 'h4', 'h5', 'h6'].includes(headingLevel)
     (() => {
       const metadataContent =
         isPost && publishDate ?
-          <div class='flex items-center gap-1.5 text-sm text-theme-content-weak'>
+          <div class='flex items-center gap-1.5 text-sm text-theme-300'>
             <Date date={publishDate} />
 
             {updatedDate && (
@@ -89,15 +89,15 @@ const isSubHeader = ['h3', 'h4', 'h5', 'h6'].includes(headingLevel)
                   </span>
                 )}
                 <div class='flex items-center gap-1.5'>
-                  <span class='text-theme-secondary'>{item.label}:</span>
+                  <span class='text-theme-400'>{item.label}:</span>
                   {item.url ?
                     <Link
                       href={item.url}
-                      class='text-theme-content-weak hover:text-theme-primary'
+                      class='text-theme-300 hover:text-theme-100'
                       underline={false}>
                       {item.value}
                     </Link>
-                  : <span class='text-theme-content-weak'>{item.value}</span>}
+                  : <span class='text-theme-300'>{item.value}</span>}
                 </div>
               </>
             ))}
@@ -116,7 +116,7 @@ const isSubHeader = ['h3', 'h4', 'h5', 'h6'].includes(headingLevel)
                   <Heading
                     class:list={[
                       'whitespace-nowrap font-semibold uppercase',
-                      'text-theme-content-weak', // weaker text for sub-headings
+                      'text-theme-300', // weaker text for sub-headings
                     ]}>
                     {title}
                   </Heading>
@@ -136,7 +136,7 @@ const isSubHeader = ['h3', 'h4', 'h5', 'h6'].includes(headingLevel)
                   return (
                     <Heading
                       class:list={[
-                        'font-brand font-bold',
+                        'font-brand font-bold text-theme-200',
                         isPost ? 'text-xl normal-case' : 'text-base uppercase',
                       ]}>
                       {title}
@@ -167,9 +167,7 @@ const isSubHeader = ['h3', 'h4', 'h5', 'h6'].includes(headingLevel)
             </div>
           }
 
-          {subtitle && (
-            <p class='text-sm text-theme-content-weak'>{subtitle}</p>
-          )}
+          {subtitle && <p class='text-sm text-theme-300'>{subtitle}</p>}
 
           {metadataPosition === 'bottom' && metadataContent}
 

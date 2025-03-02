@@ -73,13 +73,13 @@ const carouselDescription = 'Scroll horizontally to view more artwork'
                 />
 
                 <div
-                  class='absolute inset-0 bg-gradient-to-t from-theme-base/70 via-theme-base/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100'
+                  class='absolute inset-0 bg-gradient-to-t from-theme-800/70 via-theme-800/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100'
                   role='presentation'>
-                  <div class='absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-theme-base/70 via-theme-base/30 to-transparent p-4'>
+                  <div class='absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-theme-800/70 via-theme-800/30 to-transparent p-4'>
                     <div class='space-y-0'>
                       {isMultiImage && (
                         <span
-                          class='inline-flex items-center gap-x-1 text-xs font-bold text-theme-primary'
+                          class='inline-flex items-center gap-x-1 text-xs font-bold text-theme-100'
                           aria-label={`Contains ${imageCount} ${art.data.type === 'webcomic' ? 'pages' : 'images'}`}>
                           <svg
                             xmlns='http://www.w3.org/2000/svg'
@@ -105,10 +105,10 @@ const carouselDescription = 'Scroll horizontally to view more artwork'
                           {art.data.type === 'webcomic' ? 'pages' : 'images'}
                         </span>
                       )}
-                      <h3 class='text-lg font-semibold text-theme-content-strong'>
+                      <h3 class='text-lg font-semibold text-theme-100'>
                         {art.data.title}
                       </h3>
-                      <p class='mt-2 text-sm text-theme-content'>
+                      <p class='mt-2 text-sm text-theme-200'>
                         {art.data.description}
                       </p>
                     </div>
@@ -126,7 +126,7 @@ const carouselDescription = 'Scroll horizontally to view more artwork'
     showSwipeIndicator && (
       <>
         <div
-          class='pointer-events-none absolute right-0 top-0 z-10 h-full w-16 bg-gradient-to-l from-theme-base/90 to-transparent opacity-0 transition-opacity duration-300 sm:w-24'
+          class='pointer-events-none absolute right-0 top-0 z-10 h-full w-16 bg-gradient-to-l from-theme-900 to-transparent opacity-0 transition-opacity duration-300 sm:w-24'
           data-carousel-gradient='right'
           data-carousel-id={carouselId}
           role='presentation'

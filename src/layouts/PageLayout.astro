@@ -18,6 +18,7 @@ type Props = {
   updatedDate?: Date
   tags?: string[]
   isContentPage?: boolean
+  is404?: boolean
   languageAlternates?: Array<{ href: string; hrefLang: string }>
 }
 
@@ -30,6 +31,7 @@ const {
   tags = [],
   languageAlternates = [],
   isContentPage = false,
+  is404 = false,
 } = Astro.props
 
 const publishDateString = publishDate?.toISOString()
@@ -45,9 +47,10 @@ const titleTemplate = site.titleTemplate
 <!doctype html>
 <html
   lang='en'
-  data-theme='laramie'
+  data-theme='woofwoof'
   transition:persist='theme'
-  class='bg-theme-base text-theme-content'>
+  class='bg-theme-900 text-theme-300'
+  data-page-404={is404 ? 'true' : null}>
   <Head>
     <!-- global meta -->
     <BaseHead />
@@ -79,7 +82,7 @@ const titleTemplate = site.titleTemplate
   </Head>
 
   <body class='relative mx-auto max-w-[42rem] px-5'>
-    <Header />
+    <Header is404={is404} />
     <main id='main' class='mb-6 mt-24 space-y-12' transition:animate='fade'>
       <slot />
     </main>
