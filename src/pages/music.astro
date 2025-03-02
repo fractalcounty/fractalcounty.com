@@ -6,12 +6,12 @@ import MusicPageStructuredData from '@/components/meta/MusicPageStructuredData.a
 import ProfilePageStructuredData from '@/components/meta/ProfilePageStructuredData.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
 
-import { Image, Picture } from 'astro:assets'
-import { getCollection } from 'astro:content'
-
 // replace the spotify and lastfm functions with imports
 import { fetchLastFmData } from '@/lib/lastfm'
 import { getPlaylistDetails, getSpotifyToken } from '@/lib/spotify'
+
+import { Image, Picture } from 'astro:assets'
+import { getCollection } from 'astro:content'
 
 const LASTFM_USERNAME = 'fractalcounty'
 const PLAYLIST_ID = '6mcNUOZBJVOl38rvUS5suh'
@@ -49,7 +49,7 @@ const bandcampAlbums = await getCollection('music')
   <ProfilePageStructuredData slot='structured-data' />
 
   <!-- Albums section -->
-  <section class='mb-16'>
+  <section id='my-albums' class='mb-16'>
     <div class='mb-8'>
       <Heading
         headingLevel='h1'
@@ -107,7 +107,7 @@ const bandcampAlbums = await getCollection('music')
   </section>
 
   <!-- last.fm section -->
-  <section class='mb-16 space-y-12'>
+  <section id='lastfm' class='mb-16 space-y-12'>
     <Heading
       title='last.fm'
       subtitle='my listening stats from last.fm'
@@ -131,7 +131,7 @@ const bandcampAlbums = await getCollection('music')
     />
 
     <!-- loved songs (this month) -->
-    <div class='space-y-6'>
+    <div id='loved-songs' class='space-y-6'>
       <Heading headingLevel='h3' title='Loved Songs (This Month)'>
         <Link
           slot='link'
@@ -176,7 +176,7 @@ const bandcampAlbums = await getCollection('music')
     </div>
 
     <!-- top albums grid -->
-    <div class='space-y-6'>
+    <div id='top-albums' class='space-y-6'>
       <Heading headingLevel='h3' title='Top Albums'>
         <Link
           slot='link'
@@ -329,7 +329,7 @@ const bandcampAlbums = await getCollection('music')
   </section>
 
   <!-- spotify section -->
-  <section class='mb-16 space-y-8'>
+  <section id='spotify-playlist' class='mb-16 space-y-8'>
     <Heading
       title='Featured Playlist'
       subtitle='my favorite music on Spotify'
