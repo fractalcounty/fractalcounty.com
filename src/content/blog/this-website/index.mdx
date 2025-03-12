@@ -1,0 +1,67 @@
+---
+title: 'This Website'
+description: 'A brief overview of how I built this website and the tech that powers it'
+publishDate: '2025-04-11'
+tags:
+  - website
+  - astro
+  - development
+links:
+  - label: 'github repository'
+    url: 'https://github.com/fractalcounty/fractalcounty.com'
+icon: 'lucide:code'
+thumbnail: './astro.webp'
+thumbnailStyle: true
+thumbnailCaption: 'Built with Astro, Tailwind, and modern web technologies'
+thumbnailCaptionType: 'hidden'
+---
+
+This website was built using a heavily modified version of the [astro-nano](https://github.com/markhorn-dev/astro-nano) starter template for the excellent [Astro](https://astro.build/) framework. While only visual elements from the original template remain, full credit goes to [Mark Horn](https://github.com/markhorn-dev) for the initial inspiration.
+
+## Tech stack
+
+Here's an overview of the technologies I used to build this website:
+
+- **Framework**: [Astro](https://astro.build/) - great for static site generation and content-focused sites
+- **Runtime**: [Bun](https://bun.sh/) - fast, modern runtime
+- **UI**: [Tailwind CSS](https://tailwindcss.com/) (and [DaisyUI](https://daisyui.com/) for a few non-custom components)
+- **Language**: [TypeScript](https://www.typescriptlang.org/) - type safety or whatever
+- **Content**: [MDX](https://mdxjs.com/) - enabling rich, interactive content posts
+- **Style**: [ESLint](https://eslint.org/) + [Prettier](https://prettier.io/) via [antfu config](https://github.com/antfu/eslint-config) - maintaining code consistency
+- **Deployment**: [Cloudflare Pages](https://pages.cloudflare.com/) - fast, global CDN and serverless functions
+- **IDE**: [Cursor](https://www.cursor.com/) - AI-powered IDE
+
+## Overview
+
+The website is entirely static, meaning it's built and served from a single [GitHub repository](https://github.com/fractalcounty/fractalcounty.com) as a collection of files. Aside from built-in Astro page routing functionality, no javascript is sent to the client. As a result, the site is pretty fast and simple to host. To account for pages that rely on dynamic content (such as my last.fm statistics on the [music](/music) page), I simply use a GitHub action to rebuild the site and redeploy it to [Cloudflare Pages](https://pages.cloudflare.com/) on a regular schedule.
+
+Another somewhat interesting aspect of this website is that I try to define reusable metadata and global site options within a single global `config.yaml` file. Here's a  snippet of it:
+
+```yaml
+site:
+  name: FRACTAL COUNTY
+  url: https://fractalcounty.com
+  titleTemplate: '%s | %site%'
+  defaultTags:
+    - chippledipple
+    - fractal
+    - county
+    - art
+    - gamedev
+  integrations:
+    fediverse:
+      instance: https://mastodon.social
+      username: '@fractalcounty'
+    discord:
+      verificationHash: [redacted]
+  author:
+    name: Chip Fractalcounty
+    email: chip@fractalcounty.com
+    username: '@fractalcounty'
+    bio: Amateur software developer and occasional artist
+  # [..etc]
+```
+
+This website was my first real attempt at building a proper website, so it's far from perfect. Regardless, it fits my needs for now and I'm sure I'll continue to improve it as time goes on.
+
+If you're interested in the code or brave enough to try using it as a starting point for your own website, feel free to check out the [repository](https://github.com/fractalcounty/fractalcounty.com) over on GitHub.

@@ -1,0 +1,111 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# fractalcounty.com Project Overview
+
+## Summary
+
+Personal website/portfolio for Chip (@fractalcounty, formerly known as @chippledipple), built with Astro framework. Functions as a blog, art gallery, and music showcase.
+
+## Tech stack
+
+- Framework: Astro 5.0 (beta)
+- Runtime: Bun
+- UI: Tailwind CSS + DaisyUI
+- Language: TypeScript
+- Content: MDX
+- Style: ESLint + Prettier (antfu)
+- Host: Cloudflare Pages (static)
+
+See full list of dependencies at [package.json](mdc:package.json)
+
+## Features
+
+- `fractalcounty.com`: Index homepage w/ previews of recent content from each collection
+- `fractalcounty.com/blog`: Blog content collection for posts written using traditional prose in MDX article format
+- `fractalcounty.com/art`: Art content collection for visual media such as images, animations, and webcomics
+- `fractalcounty.com/music`: Music page displaying Spotify playlist and last.fm metadata/history via API, as well as my own released albums
+- `fractalcounty.com/404`: Fancy custom 404 page
+- `fractalcounty.com/unlicense`: Opinionated license page
+- Outstandingly accessible and responsive design with mobile-first layout
+- Optimized SEO w/ semantic HTML, breadcrumbs, aria/alt tags, extensive json-ld structured data for rich results
+- Neurotically optimized bundle size for 10/10 Lighthouse scores w/ compression and CSS purging
+- Config-based design where as many constants as possible are defined in a single config file with full type/schema
+
+## Structure
+
+```
+fractalcounty.com
+├── .cursor # Cursor IDE-specific files; i.e rules for LLMs
+├── .github 
+│   └── workflows
+│       └── schedule-build.yml # Github action to automatically trigger CF Pages rebuild every week or so to update dynamic data; i.e Last.fm stats
+├── .gitignore # Ignored git files
+├── .vscode # VSCode & Cursor IDE-specific files; i.e workspace settings and reccomended extensions
+├── public
+│   ├── .well-known
+│   │   └── discord # Contains key for Discord's website/domain verification functionality; generated from `scripts/generate-discord-verification.ts`
+│   ├── favicon.ico
+│   ├── fonts
+│   │   ├── AlteHaasGroteskBold.woff2 # Bold brand font; i.e for titles, headings and logos
+│   │   ├── AlteHaasGroteskRegular.woff2 # Bold regular font
+│   │   ├── Inter.woff2 # General website font used for most things; i.e website body tet
+│   │   └── InterItalic.woff2 # Italic version of general website font used for most things
+│   ├── icons # Directory for custom .svg icons
+│   └── images # Static image placeholders; i.e generic fallback album artwork and user avatar thumbnails
+├── scripts
+│   └── generate-discord-verification.ts: Generates `public/.well-known/discord` file from hash value specified in global `config.yaml`
+├── src
+│   ├── auto-imports.d.ts # Automatically imports global config.yaml into .astro files
+│   ├── components # 
+│   │   ├── content # Content-specific components used primarily within MDX files, i.e ContentImage, ContentYoutube, ContentTweet, etc.
+│   │   ├── fonts # All-in-one components for loading fonts in optimized ways, i.e BrandFont, InterFont, etc
+│   │   ├── meta # Components for constructing metadata/SEO stuff, i.e BaseHead, OpenGraph, WebsiteStructuredData, etc
+│   │   ├── Breadcrumbs.astro # Site navigation breadcrumbs component
+│   │   ├── Footer.astro # Site footer component
+│   │   ├── Link.astro # Generic text-based link component
+│   │   ├── Heading.astro # Generic heading component for sections and whatnot
+│   │   ├── Prose.astro # Gemeric markdown text prose component, i.e for article bodies and blocks of text
+│   │   └── Card.astro # Generic card UI component
+│   ├── config.ts # Global site config.yaml zod schema and bootstrapping
+│   ├── content # 
+│   │   ├── art # Art content collection
+│   │   │   └── art-post-example
+│   │   │       ├── index.mdx
+│   │   │       └── art-post-example.webp
+│   │   ├── blog # Blog content collection
+│   │   ├── music # Music content collection
+│   │   └── config.ts # Global content collection config; astro content schemas and whatnot
+│   ├── env.d.ts # Mostly for sensitive .env vars at buildtime, i.e LASTFM_API_KEY and whatnot
+│   ├── global.css # Global stylesheet
+│   ├── layouts
+│   │   └── PageLayout.astro # Global page layout used on every page
+│   ├── lib
+│   │   ├── lastfm.ts # Last.fm API fetching logic and whatnot for music page
+│   │   ├── schema.ts # Structured data JSON generation logic for all pages
+│   │   ├── spotify.ts # Spotify API fetching logic and whatnot for music page
+│   │   └── utils.ts # Misc. typescript utilities, i.e data formatting and conversion
+│   ├── ogRenderer.tsx # Custom per-page OpenGraph image generator
+│   ├── pages
+│   │   ├── art # Art content collection/content post page stuff
+│   │   ├── blog
+│   │   │   ├── [...slug].astro # Blog content post page 
+│   │   │   └── index.astro # Blog index collection page (archive)
+│   │   ├── 404.astro # Static 404 page
+│   │   ├── unlicense.astro # Static license page
+│   │   ├── music.astro # Music collection page (doesn't need folder structure since it's all contained on one page)
+│   │   ├── robots.txt.ts # Robots generation stuff
+│   │   └── rss.xml.ts # RSS xml feed generation stuff
+│   └── types # Only used for a single video.ts for embedded Youtube video metadata
+├── astro.config.ts 
+├── config.yaml # Global site config
+├── eslint.config.mjs
+├── package.json [package.json](mdc:package.json)
+├── prettier.config.mjs
+├── tailwind.config.ts
+├── .env # for LASTFM_API_KEY, SPOTIFY_CLIENT_ID, and SPOTIFY_CLIENT_SECRET
+└── tsconfig.json
+```

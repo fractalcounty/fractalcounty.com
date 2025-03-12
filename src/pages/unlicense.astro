@@ -1,5 +1,6 @@
 ---
 import Video from '@/components/content/ContentVideo.astro'
+import Divider from '@/components/Divider.astro'
 import Heading from '@/components/Heading.astro'
 import Link from '@/components/Link.astro'
 import Prose from '@/components/Prose.astro'
@@ -11,6 +12,7 @@ import PageLayout from '@/layouts/PageLayout.astro'
   description={site.pages.unlicense.description}>
   <Prose class='space-y-8'>
     <Heading title='Unlicense' />
+
     <p>
       This is free and unencumbered software released into the public domain.
     </p>
@@ -48,5 +50,30 @@ import PageLayout from '@/layouts/PageLayout.astro'
       src='IeTybKL1pM4'
       title='"Copying Is Not Theft" by Question Copyright'
     />
+    <Divider />
+    <Heading title='Attributions' headingLevel='h2' />
+    <ul class='list-disc pl-6'>
+      <li>
+        Thank you to <Link href='https://github.com/markhorn-dev/astro-nano'>
+          Mark Horn
+        </Link>
+        for the excellent
+        <Link href='https://github.com/markhorn-dev/astro-nano'>
+          astro-nano
+        </Link>
+        starter template that I heavily modified as the foundation of this site.
+      </li>
+      <li>
+        Special thanks to the <Link
+          href='https://github.com/tokyo-night/tokyo-night-vscode-theme'>
+          Tokyo Night VSCode theme
+        </Link>
+        for providing inspiration for this site's color scheme.
+      </li>
+      <li>
+        For more information about the technologies used to build this site,
+        please refer to my <Link href='/blog/this-site'>blog post</Link> about it.
+      </li>
+    </ul>
   </Prose>
 </PageLayout>

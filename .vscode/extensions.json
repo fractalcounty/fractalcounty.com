@@ -1,7 +1,6 @@
 {
   "recommendations": [
     "esbenp.prettier-vscode",
-    "aaron-bond.better-comments",
     "naumovs.color-highlight",
     "mikestead.dotenv",
     "dbaeumer.vscode-eslint",
