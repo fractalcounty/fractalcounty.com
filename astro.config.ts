@@ -1,16 +1,13 @@
-import fs from 'node:fs'
 import mdx from '@astrojs/mdx'
 import sitemap from '@astrojs/sitemap'
 import tailwind from '@astrojs/tailwind'
 import compressor from 'astro-compressor'
 import astroBreakpoints from 'astro-devtool-breakpoints'
 import icon from 'astro-icon'
-import opengraphImages from 'astro-opengraph-images'
 import purgeCSS from 'astro-purgecss'
 import { defineConfig, envField } from 'astro/config'
 import AutoImport from 'unplugin-auto-import/astro'
 import config from './src/config'
-import { customOgMediaLayout } from './src/ogRenderer'
 
 export default defineConfig({
   site: config.site.url,
@@ -95,25 +92,6 @@ export default defineConfig({
     tailwind(),
     icon({
       iconDir: 'public/icons',
-    }),
-    opengraphImages({
-      render: customOgMediaLayout,
-      options: {
-        fonts: [
-          {
-            name: 'AlteHaasGroteskRegular',
-            weight: 400,
-            style: 'normal',
-            data: fs.readFileSync('public/fonts/AlteHaasGroteskRegular.woff'),
-          },
-          {
-            name: 'AlteHaasGroteskBold',
-            weight: 700,
-            style: 'normal',
-            data: fs.readFileSync('public/fonts/AlteHaasGroteskBold.woff'),
-          },
-        ],
-      },
     }),
     (await import('@playform/inline')).default({
       Path: './dist',

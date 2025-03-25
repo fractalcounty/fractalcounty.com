@@ -17,11 +17,8 @@ interface Props {
 const { entry } = Astro.props
 const pageUrl = new URL(Astro.url.pathname, Astro.site)
 
-// construct the opengraph image url - it will be next to the index.html
-const ogImageUrl = new URL(
-  `${Astro.url.pathname}/index.png`,
-  Astro.site,
-).toString()
+// Use the static OpenGraph image instead of dynamically generated ones
+const ogImageUrl = new URL('/images/ogimage.png', Astro.site).toString()
 
 // create breadcrumb trail
 const breadcrumbItems = [

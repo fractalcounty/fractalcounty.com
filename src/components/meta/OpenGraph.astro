@@ -1,6 +1,5 @@
 ---
 import { formatDateForOpenGraph, getCanonicalUrl } from '@/lib/utils'
-import { getImagePath } from 'astro-opengraph-images'
 
 interface Props {
   title: string
@@ -24,8 +23,7 @@ const {
   languageAlternates = [],
 } = Astro.props
 
-const openGraphImageUrl =
-  image || getImagePath({ url: Astro.url, site: Astro.site })
+const openGraphImageUrl = image || `${site.url}/images/ogimage.png`
 const combinedTags = Array.from(new Set([...tags, ...site.defaultTags]))
 const canonicalUrl = getCanonicalUrl(Astro.url.pathname)
 const formattedTitle = site.titleTemplate
@@ -56,7 +54,7 @@ const formattedTitle = site.titleTemplate
   <meta property='og:image:height' content='630' />
   <meta
     property='og:image:alt'
-    content={`White text on a black background that says ${site.name} followed by ${title}`}
+    content={`Open Graph image for ${site.name}: ${title}`}
   />
 
   <!-- article metadata -->
@@ -93,7 +91,7 @@ const formattedTitle = site.titleTemplate
   <meta name='twitter:image' content={openGraphImageUrl} />
   <meta
     name='twitter:image:alt'
-    content={`White text on a black background that says ${site.name} followed by ${title}`}
+    content={`Open Graph image for ${site.name}: ${title}`}
   />
   <meta name='twitter:url' content={canonicalUrl} />
 

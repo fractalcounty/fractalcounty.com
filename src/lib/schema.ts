@@ -1,6 +1,9 @@
 import type { CollectionEntry } from 'astro:content'
 import { site } from '@config'
 
+// Static OpenGraph image URL to use across the site
+export const STATIC_OG_IMAGE = `${site.url}/images/ogimage.png`
+
 // Add type definitions for all schemas
 export interface BaseSchema {
   '@context': 'https://schema.org'
@@ -359,22 +362,19 @@ export const websiteSchema = {
 export function generateArticleSchema(
   entry: CollectionEntry<'blog'>,
   url: URL,
-  imageUrl?: string,
+  imageUrl: string = STATIC_OG_IMAGE,
 ) {
   const { title, description, publishDate, updatedDate, tags } = entry.data
 
-  // create image schema if we have a valid image url
-  const imageSchema =
-    typeof imageUrl === 'string' && imageUrl.length > 0 ?
-      {
-        '@type': 'ImageObject',
-        '@id': `${url.toString()}#primaryimage`,
-        url: imageUrl,
-        width: 1200, // opengraph images are always this size
-        height: 630,
-        caption: title,
-      }
-    : null
+  // Create image schema
+  const imageSchema = {
+    '@type': 'ImageObject',
+    '@id': `${url.toString()}#primaryimage`,
+    url: imageUrl,
+    width: 1200, // standard OpenGraph image size
+    height: 630,
+    caption: title,
+  }
 
   return {
     '@type': 'Article',
@@ -407,7 +407,7 @@ export function generateArticleSchema(
       '@id': SCHEMA_IDS.PERSON,
     },
     license: `${site.url}/unlicense`,
-    ...(imageSchema && { image: imageSchema }),
+    image: imageSchema,
   }
 }
 
