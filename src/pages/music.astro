@@ -103,7 +103,8 @@ const bandcampAlbums = await getCollection('music')
       <Heading
         headingLevel='h1'
         title='Music'
-        subtitle='my released albums & music projects'>
+        subtitle='my released albums & music projects'
+        id='my-music'>
         <Link
           slot='link'
           href='https://fractalcounty.bandcamp.com'
@@ -164,6 +165,7 @@ const bandcampAlbums = await getCollection('music')
         subtitle={`my listening stats from last.fm`}
         metadataPosition='bottom'
         headingLevel='h2'
+        id='lastfm-stats'
         metadata={[
           {
             label: 'plays',
@@ -188,7 +190,12 @@ const bandcampAlbums = await getCollection('music')
     <!-- top albums grid -->
     <div id='top-albums' class='space-y-6'>
       <div class='flex items-center justify-between gap-4'>
-        <Heading headingLevel='h3' title='Top Albums' class='mb-0' />
+        <Heading
+          headingLevel='h3'
+          title='Top Albums'
+          class='mb-0'
+          id='top-albums'
+        />
         <PeriodSelector
           period={sectionPeriods['top-albums']}
           periodMap={periodMap}
@@ -247,7 +254,12 @@ const bandcampAlbums = await getCollection('music')
     <!-- loved songs (this month) -->
     <div id='loved-songs' class='space-y-6'>
       <div class='flex items-center justify-between gap-4'>
-        <Heading headingLevel='h3' title='Loved Songs' class='mb-0' />
+        <Heading
+          headingLevel='h3'
+          title='Loved Songs'
+          class='mb-0'
+          id='loved-songs'
+        />
         <PeriodSelector
           period={sectionPeriods['loved-songs']}
           periodMap={periodMap}
@@ -295,7 +307,12 @@ const bandcampAlbums = await getCollection('music')
       <!-- top artists sub-section -->
       <div class='w-full space-y-6'>
         <div class='flex items-center justify-between gap-4'>
-          <Heading headingLevel='h3' title='Top Artists' class='mb-0' />
+          <Heading
+            headingLevel='h3'
+            title='Top Artists'
+            class='mb-0'
+            id='top-artists'
+          />
           <PeriodSelector
             period={sectionPeriods['top-artists']}
             periodMap={periodMap}
@@ -341,7 +358,12 @@ const bandcampAlbums = await getCollection('music')
       <!-- top tracks sub-section -->
       <div class='w-full space-y-6'>
         <div class='flex items-center justify-between gap-4'>
-          <Heading headingLevel='h3' title='Top Tracks' class='mb-0' />
+          <Heading
+            headingLevel='h3'
+            title='Top Tracks'
+            class='mb-0'
+            id='top-tracks'
+          />
           <PeriodSelector
             period={sectionPeriods['top-tracks']}
             periodMap={periodMap}
@@ -388,7 +410,8 @@ const bandcampAlbums = await getCollection('music')
     <Heading
       title='Featured Playlist'
       subtitle='my favorite music on Spotify'
-      headingLevel='h2'>
+      headingLevel='h2'
+      id='spotify-playlist'>
       <Link
         slot='link'
         icon={true}

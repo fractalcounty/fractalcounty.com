@@ -12,14 +12,14 @@ const navItems = getNavItems()
 // Dynamically set header classes based on page type
 const headerClasses =
   is404 ?
-    'fixed left-1/2 top-0 z-50 w-full max-w-[42rem] -translate-x-1/2 px-5 py-4 bg-transparent'
-  : 'bg-theme-900/80 fixed left-1/2 top-0 z-50 w-full max-w-[42rem] -translate-x-1/2 px-5 py-4 backdrop-blur-md shadow-sm shadow-theme-900/50'
+    'fixed left-1/2 top-0 z-40 w-full max-w-[42rem] -translate-x-1/2 px-5 py-4 bg-transparent'
+  : 'bg-theme-900/80 fixed left-1/2 top-0 z-40 w-full max-w-[42rem] -translate-x-1/2 px-5 py-4 backdrop-blur-md shadow-sm shadow-theme-900/50'
 ---
 
 <header role='banner' class={headerClasses} transition:persist>
   <a
     href='#main-content'
-    class='sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-theme-neutral focus:px-4 focus:py-2 focus:text-theme-content focus:outline-none focus:ring-2 focus:ring-theme-content'
+    class='sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-theme-neutral focus:px-4 focus:py-2 focus:text-theme-content focus:outline-none focus:ring-2 focus:ring-theme-content'
     tabindex='0'>
     Skip to main content
   </a>

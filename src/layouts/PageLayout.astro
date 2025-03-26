@@ -6,8 +6,8 @@ import BaseHead from '@/components/meta/BaseHead.astro'
 import FediverseMeta from '@/components/meta/FediverseMeta.astro'
 import OpenGraph from '@/components/meta/OpenGraph.astro'
 import { getCanonicalUrl } from '@/lib/utils'
-import { ClientRouter } from 'astro:transitions'
 import { Head } from 'astro-capo'
+import { ClientRouter } from 'astro:transitions'
 import '@/global.css'
 
 type Props = {
@@ -49,7 +49,7 @@ const titleTemplate = site.titleTemplate
   lang='en'
   data-theme='woofwoof'
   transition:persist='theme'
-  class='bg-theme-900 text-theme-300'
+  class='scroll-pt-24 scroll-smooth bg-theme-900 text-theme-300'
   data-page-404={is404 ? 'true' : null}>
   <Head>
     <!-- global meta -->

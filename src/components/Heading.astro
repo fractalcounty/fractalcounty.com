@@ -3,6 +3,7 @@ import Button from '@/components/Button.astro'
 import Date from '@/components/Date.astro'
 import Divider from '@/components/Divider.astro'
 import Link from '@/components/Link.astro'
+import { Icon } from 'astro-icon/components'
 
 interface Props {
   headingLevel?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
@@ -24,6 +25,8 @@ interface Props {
     url?: string
   }>
   metadataPosition?: 'top' | 'bottom'
+  id?: string
+  anchorLink?: boolean
 }
 
 const {
@@ -42,13 +45,23 @@ const {
   metadata = [],
   metadataPosition = 'top',
   class: classProp,
+  id,
+  anchorLink = true,
 } = Astro.props
 
 // helper to determine if heading is h3 or lower
 const isSubHeader = ['h3', 'h4', 'h5', 'h6'].includes(headingLevel)
+
+// Generate URL-friendly ID from title if not provided
+const headingId =
+  id ||
+  title
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
 ---
 
-<header class:list={['animate space-y-2', classProp]}>
+<header class:list={['animate space-y-2', classProp]} id={headingId}>
   {
     (() => {
       const metadataContent =
@@ -113,13 +126,29 @@ const isSubHeader = ['h3', 'h4', 'h5', 'h6'].includes(headingLevel)
               {(() => {
                 const Heading = headingLevel
                 return (
-                  <Heading
-                    class:list={[
-                      'whitespace-nowrap font-semibold uppercase',
-                      'text-theme-300', // weaker text for sub-headings
-                    ]}>
-                    {title}
-                  </Heading>
+                  <div class='flex items-center gap-2'>
+                    <Heading
+                      id={headingId}
+                      class:list={[
+                        'whitespace-nowrap font-semibold uppercase',
+                        'text-theme-300', // weaker text for sub-headings
+                      ]}>
+                      {title}
+                    </Heading>
+                    {anchorLink && (
+                      <a
+                        href={`#${headingId}`}
+                        class='copy-link inline-flex items-center opacity-0 transition-opacity hover:opacity-100 group-hover:opacity-70'
+                        aria-label={`Link to ${title} section`}
+                        data-heading-id={headingId}
+                        data-heading-title={title}>
+                        <Icon
+                          name='lucide:link'
+                          class='size-4 align-middle text-theme-400 hover:text-theme-accent'
+                        />
+                      </a>
+                    )}
+                  </div>
                 )
               })()}
               <div class='flex-1'>
@@ -134,13 +163,31 @@ const isSubHeader = ['h3', 'h4', 'h5', 'h6'].includes(headingLevel)
                 {(() => {
                   const Heading = headingLevel
                   return (
-                    <Heading
-                      class:list={[
-                        'font-brand font-bold text-theme-200',
-                        isPost ? 'text-xl normal-case' : 'text-base uppercase',
-                      ]}>
-                      {title}
-                    </Heading>
+                    <div class='group flex items-center gap-2'>
+                      <Heading
+                        id={headingId}
+                        class:list={[
+                          'font-brand font-bold text-theme-200',
+                          isPost ?
+                            'text-xl normal-case'
+                          : 'text-base uppercase',
+                        ]}>
+                        {title}
+                      </Heading>
+                      {anchorLink && (
+                        <a
+                          href={`#${headingId}`}
+                          class='copy-link inline-flex items-center opacity-0 transition-opacity hover:opacity-100 group-hover:opacity-70'
+                          aria-label={`Link to ${title} section`}
+                          data-heading-id={headingId}
+                          data-heading-title={title}>
+                          <Icon
+                            name='lucide:link'
+                            class='size-4 align-middle text-theme-400 hover:text-theme-accent'
+                          />
+                        </a>
+                      )}
+                    </div>
                   )
                 })()}
                 <div class='text-sm'>
@@ -185,3 +232,170 @@ const isSubHeader = ['h3', 'h4', 'h5', 'h6'].includes(headingLevel)
     })()
   }
 </header>
+
+<!-- Toast container that will be used for notifications -->
+<div id='toast-container' class='toast toast-end toast-bottom fixed z-50'></div>
+
+<style>
+  /* Add a scroll margin to improve focus position when navigating to hash fragments */
+  header {
+    scroll-margin-top: 2rem;
+  }
+
+  /* Toast animations */
+  @keyframes toast-in {
+    from {
+      transform: translateY(1rem);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes toast-out {
+    from {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateY(1rem);
+      opacity: 0;
+    }
+  }
+
+  :global(.toast .alert) {
+    animation: toast-in 0.3s ease-out forwards;
+    background-color: #1f2335; /* theme-800 explicit color */
+    color: #a9b1d6; /* theme-200 explicit color */
+    border: 1px solid #41496b; /* theme-500 explicit color */
+    border-radius: 0.5rem;
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.2),
+      0 2px 4px -2px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease-in-out;
+    padding: 0.75rem;
+    opacity: 1;
+    position: relative;
+    z-index: 50;
+    text-align: center;
+  }
+
+  :global(.toast .alert:hover) {
+    background-color: #24283b; /* theme-700 explicit color */
+    border-color: #7aa2f7; /* theme-accent explicit color */
+    box-shadow:
+      0 10px 15px -3px rgba(0, 0, 0, 0.2),
+      0 4px 6px -4px rgba(0, 0, 0, 0.2);
+  }
+
+  :global(.toast .alert-success) {
+    border-left: 3px solid #7aa2f7; /* theme-accent explicit color */
+    padding-left: calc(0.75rem - 1px); /* Adjust for the thicker left border */
+  }
+
+  :global(.toast .alert-error) {
+    border-left: 3px solid #f87171; /* error red color */
+    padding-left: calc(0.75rem - 1px); /* Adjust for the thicker left border */
+  }
+
+  :global(.toast-message) {
+    color: #a9b1d6; /* theme-200 explicit color */
+    transition: color 0.2s ease-in-out;
+  }
+
+  :global(.alert:hover .toast-message) {
+    color: #c0caf5; /* theme-100 explicit color */
+  }
+
+  :global(.toast .fade-out) {
+    animation: toast-out 0.3s ease-in forwards;
+  }
+
+  /* Ensure the copy link button aligns perfectly with text */
+  :global(.copy-link) {
+    vertical-align: middle;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* Special alignment for h1 headings */
+  :global(h1 + .copy-link) {
+    margin-top: -0.3em; /* Further increase negative margin to move link higher */
+  }
+</style>
+
+<script>
+  // Find all the copy-link elements
+  const copyLinks = document.querySelectorAll('.copy-link')
+
+  // Create toast notification function
+  function showToast(message: string, type = 'info', duration = 3000) {
+    // Create toast element
+    const toast = document.createElement('div')
+    toast.className = `alert alert-${type} shadow-md`
+
+    // Set toast content without icons, centered text
+    toast.innerHTML = `
+      <div class="flex w-full justify-center items-center">
+        <span class="toast-message text-center px-1">${message}</span>
+      </div>
+    `
+
+    // Add to toast container
+    const container = document.getElementById('toast-container')
+    if (container) {
+      container.appendChild(toast)
+
+      // Remove after duration
+      setTimeout(() => {
+        toast.classList.add('fade-out')
+        setTimeout(() => {
+          container.removeChild(toast)
+        }, 300)
+      }, duration)
+    }
+  }
+
+  // Add click event listener to each copy link
+  copyLinks.forEach((link) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault()
+
+      // Get the heading ID and title from data attributes
+      const headingId = link.getAttribute('data-heading-id') || ''
+      const headingTitle = link.getAttribute('data-heading-title') || 'section'
+
+      // Create the full URL with the hash
+      const url = new URL(window.location.href)
+      url.hash = headingId
+
+      // Copy to clipboard
+      navigator.clipboard
+        .writeText(url.toString())
+        .then(() => {
+          showToast(`Copied link to "${headingTitle}" to clipboard`, 'success')
+        })
+        .catch((err) => {
+          console.error('Could not copy text: ', err)
+          showToast('Failed to copy link to clipboard', 'error')
+        })
+    })
+  })
+
+  // Adjust position for h1 headings
+  copyLinks.forEach((link) => {
+    const prevElement = link.previousElementSibling
+    if (prevElement && prevElement.tagName === 'H1') {
+      ;(link as HTMLElement).style.position = 'relative'
+      ;(link as HTMLElement).style.top = '-3px' // Further increased to move higher
+
+      // Extra adjustment for "Hello, I'm Chip" heading specifically
+      const headingTitle = link.getAttribute('data-heading-title') || ''
+      if (headingTitle.includes('Chip')) {
+        ;(link as HTMLElement).style.top = '-4px' // Special case adjustment
+      }
+    }
+  })
+</script>
