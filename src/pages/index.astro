@@ -107,7 +107,7 @@ const topTracks = await fetchTopTracks(
         topTracks.map((track: any, index: number) => (
           <Link
             href={track.url}
-            class={`group flex h-auto w-full items-center gap-4 rounded-lg bg-theme-800 p-3 shadow-md outline outline-theme-500 transition-all duration-200 hover:bg-theme-700 hover:text-theme-200 hover:shadow-lg hover:outline hover:outline-theme-accent/75 ${
+            class={`group flex h-auto w-full items-center gap-4 rounded-lg border border-theme-500 bg-theme-800 p-3 shadow-md transition-all duration-200 hover:border hover:border-theme-accent/75 hover:bg-theme-700 hover:text-theme-200 hover:shadow-lg ${
               index === 3 ? 'hidden sm:flex' : ''
             }`}
             underline={false}
@@ -122,7 +122,7 @@ const topTracks = await fetchTopTracks(
               formats={['avif']}
               fallbackFormat='webp'
               loading='lazy'
-              class='size-16 rounded-lg object-cover shadow-md outline outline-theme-500 transition-all duration-200 group-hover:outline-theme-accent/40'
+              class='size-16 rounded-lg border border-theme-500 object-cover shadow-md transition-all duration-200 group-hover:border-theme-accent/40'
             />
             <div class='min-w-0 flex-1'>
               <h3 class='line-clamp-1 font-medium text-theme-200 transition-all duration-200 group-hover:text-theme-100'>

@@ -126,7 +126,7 @@ const getOptimizedImageUrl = (image: ImageMetadata) => {
             {enableFullResLink ?
               <Link
                 href={getOptimizedImageUrl(image)}
-                class='tooltip tooltip-accent block w-full text-center focus-visible:outline-theme-100'
+                class='tooltip tooltip-accent block w-full text-center focus-visible:border-theme-100'
                 title={`View full resolution ${resolvedTitle}${resolvedImages.length > 1 ? ` - ${index + 1}` : ''}`}
                 aria-label={`View full resolution version of ${resolvedTitle || 'image'}${
                   resolvedImages.length > 1 ? ` - ${index + 1}` : ''
@@ -148,7 +148,7 @@ const getOptimizedImageUrl = (image: ImageMetadata) => {
                     'mx-auto',
                     style && 'rounded-xl shadow-md',
                     imageClass,
-                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-theme-200',
+                    'focus-visible:border-none focus-visible:ring-2 focus-visible:ring-theme-200',
                   ]}
                   role='img'
                   aria-describedby={`image-desc-${index}`}
