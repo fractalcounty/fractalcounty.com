@@ -1,0 +1,47 @@
+---
+interface Props {
+  period: string
+  periodMap: Record<string, string>
+  class?: string
+  section: string
+}
+
+const { period, periodMap, class: className = '', section } = Astro.props
+---
+
+<div class:list={['dropdown dropdown-end', className]} data-section={section}>
+  <div
+    tabindex='0'
+    role='button'
+    class='group flex cursor-pointer items-center gap-1.5 rounded-md px-2 py-1 text-theme-300 transition-all duration-200 hover:bg-theme-700/50 hover:text-theme-accent'>
+    <span class='font-normal'>{periodMap[period]}</span>
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      stroke-width='2'
+      stroke-linecap='round'
+      stroke-linejoin='round'
+      class='size-3.5 opacity-70 transition-transform duration-200 ease-in-out group-hover:opacity-100'
+      ><polyline points='6 9 12 15 18 9'></polyline></svg
+    >
+  </div>
+  <ul
+    tabindex='0'
+    class='dropdown-content z-10 w-44 rounded-lg border border-theme-500 bg-theme-800 p-2 shadow-lg'>
+    {
+      Object.entries(periodMap).map(([key, label]) => (
+        <li class='mb-1 last:mb-0'>
+          <a
+            href={`#${section}`}
+            data-period={key}
+            data-section={section}
+            class={`block rounded-md px-3 py-2 text-sm transition-colors duration-200 ${period === key ? 'bg-theme-accent font-medium text-theme-900' : 'text-theme-200 hover:bg-theme-700 hover:text-theme-100'}`}>
+            {label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>

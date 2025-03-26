@@ -76,6 +76,7 @@ export async function fetchLastFmData(
   username: string,
   apiKey: string,
   spotifyToken: string,
+  period: string = '12month',
 ): Promise<{
   userInfo: LastFmUserInfo
   artists: LastFmArtist[]
@@ -86,11 +87,11 @@ export async function fetchLastFmData(
     const [topArtists, topAlbums, userInfo, topTracks] = await Promise.all([
       // get top artists - increasing from 5 to 6
       fetch(
-        `https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=${username}&api_key=${apiKey}&period=overall&limit=6&format=json&extended=1`,
+        `https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=${username}&api_key=${apiKey}&period=${period}&limit=6&format=json&extended=1`,
       ).then(async (res) => res.json() as Promise<LastFmResponse>),
       // get top albums - increasing from 5 to 8 to fill grid
       fetch(
-        `https://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=${username}&api_key=${apiKey}&period=overall&limit=12&format=json`,
+        `https://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=${username}&api_key=${apiKey}&period=${period}&limit=12&format=json`,
       ).then(async (res) => res.json() as Promise<LastFmResponse>),
       // get user info
       fetch(
@@ -98,7 +99,7 @@ export async function fetchLastFmData(
       ).then(async (res) => res.json() as Promise<LastFmResponse>),
       // get top tracks
       fetch(
-        `https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${username}&api_key=${apiKey}&limit=12&extended=1&format=json`,
+        `https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${username}&api_key=${apiKey}&period=${period}&limit=12&extended=1&format=json`,
       ).then(async (res) => res.json() as Promise<LastFmResponse>),
     ])
 
@@ -297,5 +298,46 @@ export async function fetchTopTracks(
   } catch (error) {
     console.error('Error fetching top tracks:', error)
     return []
+  }
+}
+
+// fetch data for multiple periods at build time for static site
+export async function fetchMultiPeriodLastFmData(
+  username: string,
+  apiKey: string,
+  spotifyToken: string,
+  periods: string[] = ['1month', '12month', 'overall'],
+): Promise<Record<string, {
+  userInfo: LastFmUserInfo
+  artists: LastFmArtist[]
+  albums: LastFmAlbum[]
+  topTracks: LastFmTrack[]
+}>> {
+  try {
+    // Create an object to store data for each period
+    const multiPeriodData: Record<string, {
+      userInfo: LastFmUserInfo
+      artists: LastFmArtist[]
+      albums: LastFmAlbum[]
+      topTracks: LastFmTrack[]
+    }> = {}
+
+    // Fetch data for each period in parallel
+    await Promise.all(
+      periods.map(async (period) => {
+        const periodData = await fetchLastFmData(
+          username,
+          apiKey,
+          spotifyToken,
+          period,
+        )
+        multiPeriodData[period] = periodData
+      }),
+    )
+
+    return multiPeriodData
+  } catch (error) {
+    console.error('Error fetching multi-period data:', error)
+    return {}
   }
 }
