@@ -59,6 +59,8 @@ const playlistData = await getPlaylistDetails(PLAYLIST_ID, spotifyToken)
 // Get data for the initial period
 const headerData =
   allPeriodData[sectionPeriods.header] || allPeriodData[defaultPeriod]
+const lovedSongsData =
+  allPeriodData[sectionPeriods['loved-songs']] || allPeriodData[defaultPeriod]
 const topAlbumsData =
   allPeriodData[sectionPeriods['top-albums']] || allPeriodData[defaultPeriod]
 const topArtistsData =
@@ -68,6 +70,7 @@ const topTracksData =
 
 // Extract data for each section
 const { userInfo } = headerData
+const lovedSongsTracks = lovedSongsData.topTracks.slice(0, 6)
 const topAlbums = topAlbumsData.albums
 const topArtists = topArtistsData.artists
 const topTracks = topTracksData.topTracks
@@ -246,6 +249,55 @@ const bandcampAlbums = await getCollection('music')
       </div>
     </div>
 
+    <!-- loved songs (this month) -->
+    <div id='loved-songs' class='space-y-6'>
+      <Heading
+        headingLevel='h3'
+        title='Loved Songs'
+        class='mb-0'
+        id='loved-songs'>
+        <PeriodSelector
+          slot='link'
+          period={sectionPeriods['loved-songs']}
+          periodMap={periodMap}
+          section='loved-songs'
+        />
+      </Heading>
+
+      <div
+        class='grid grid-cols-1 gap-4 sm:grid-cols-2'
+        id='loved-songs-container'>
+        {
+          lovedSongsTracks.map((track: any) => (
+            <Link
+              href={track.url}
+              class='group flex h-auto w-full items-center gap-4 rounded-lg border border-theme-500 bg-theme-800 p-3 shadow-md transition-all duration-200 hover:border hover:border-theme-accent/75 hover:bg-theme-700 hover:text-theme-200 hover:shadow-lg'
+              underline={false}
+              externalInNewTab={true}>
+              <Image
+                src={track.albumArt || '/images/album.webp'}
+                alt={`Album artwork for ${track.name} by ${track.artist.name}`}
+                width={64}
+                height={64}
+                inferSize
+                loading='lazy'
+                class='size-16 rounded-lg border border-theme-500 object-cover shadow-md'
+              />
+              <div class='min-w-0 flex-1'>
+                <h4 class='line-clamp-1 font-medium text-theme-200 transition-all duration-200 group-hover:text-theme-100'>
+                  {track.name}
+                </h4>
+                <p class='line-clamp-1 text-sm text-theme-300 transition-all duration-200 group-hover:text-theme-200'>
+                  {track.artist.name} •{' '}
+                  {Number(track.playcount).toLocaleString()} plays
+                </p>
+              </div>
+            </Link>
+          ))
+        }
+      </div>
+    </div>
+
     <!-- top artists and tracks columns -->
     <div class='grid w-full grid-cols-1 gap-8 md:grid-cols-2'>
       <!-- top artists sub-section -->
@@ -299,18 +351,20 @@ const bandcampAlbums = await getCollection('music')
 
       <!-- top tracks sub-section -->
       <div class='w-full space-y-6'>
-        <Heading
-          headingLevel='h3'
-          title='Top Tracks'
-          class='mb-0'
-          id='top-tracks'>
-          <PeriodSelector
-            slot='link'
-            period={sectionPeriods['top-tracks']}
-            periodMap={periodMap}
-            section='top-tracks'
-          />
-        </Heading>
+        <div class='flex items-center justify-between gap-4'>
+          <Heading
+            headingLevel='h3'
+            title='Top Tracks'
+            class='mb-0'
+            id='top-tracks'>
+            <PeriodSelector
+              slot='link'
+              period={sectionPeriods['top-tracks']}
+              periodMap={periodMap}
+              section='top-tracks'
+            />
+          </Heading>
+        </div>
 
         <div class='space-y-3' id='top-tracks-container'>
           {
@@ -559,17 +613,13 @@ const bandcampAlbums = await getCollection('music')
         updateTracksList('top-tracks-container', periodData.topTracks)
         break
       }
-      default: {
-        // No matching section
-        break
-      }
     }
 
     // Update the period selector for this section
     updatePeriodSelector(section, newPeriod)
   }
 
-  // Function to update a specific period selector's state
+  // Update a specific period selector's state
   function updatePeriodSelector(section, newPeriod) {
     // Find the dropdown for this section
     const dropdown = document.querySelector(
@@ -614,68 +664,42 @@ const bandcampAlbums = await getCollection('music')
     const container = document.getElementById(containerId)
     if (!container) return
 
-    // Apply exit animation to current items
-    const existingItems = container.querySelectorAll('a')
-    existingItems.forEach((item, i) => {
-      item.style.transition = `transform 300ms ease-out ${i * 30}ms, opacity 300ms ease-out ${i * 30}ms`
-      item.style.transform = 'translateY(10px)'
-      item.style.opacity = '0'
+    // Clear existing content
+    container.innerHTML = ''
+
+    // Add new tracks
+    tracks.forEach((track) => {
+      const trackElement = document.createElement('a')
+      trackElement.href = track.url
+      trackElement.className =
+        'group flex h-auto w-full items-center gap-4 rounded-lg border border-theme-500 bg-theme-800 p-3 shadow-md transition-all duration-200 hover:border hover:border-theme-accent/75 hover:bg-theme-700 hover:text-theme-200 hover:shadow-lg'
+      trackElement.target = '_blank'
+      trackElement.rel = 'noopener'
+
+      const albumArt = track.albumArt || '/images/album.webp'
+      const isLovedSongs = containerId === 'loved-songs-container'
+
+      trackElement.innerHTML = `
+        <img 
+          src="${albumArt}" 
+          alt="Album artwork for ${track.name} by ${track.artist.name}" 
+          width="${isLovedSongs ? '64' : '48'}" 
+          height="${isLovedSongs ? '64' : '48'}" 
+          class="${isLovedSongs ? 'size-16' : 'size-12'} ${isLovedSongs ? '' : 'flex-shrink-0'} rounded-lg border border-theme-500 object-cover shadow-md"
+          loading="lazy"
+        />
+        <div class="min-w-0 flex-1">
+          <h4 class="line-clamp-1 font-medium text-theme-200 transition-all duration-200 group-hover:text-theme-100">
+            ${track.name}
+          </h4>
+          <p class="line-clamp-1 text-sm text-theme-300 transition-all duration-200 group-hover:text-theme-200">
+            ${track.artist.name} • ${Number(track.playcount).toLocaleString()} plays
+          </p>
+        </div>
+      `
+
+      container.appendChild(trackElement)
     })
-
-    // Wait for animation to complete before updating content
-    setTimeout(
-      () => {
-        // Clear existing content
-        container.innerHTML = ''
-
-        // Add new tracks
-        tracks.forEach((track, i) => {
-          const trackElement = document.createElement('a')
-          trackElement.href = track.url
-          trackElement.className =
-            'group flex h-auto w-full items-center gap-4 rounded-lg border border-theme-500 bg-theme-800 p-3 shadow-md transition-all duration-200 hover:border hover:border-theme-accent/75 hover:bg-theme-700 hover:text-theme-200 hover:shadow-lg'
-          trackElement.target = '_blank'
-          trackElement.rel = 'noopener'
-          // Set initial state for entrance animation
-          trackElement.style.opacity = '0'
-          trackElement.style.transform = 'translateY(10px)'
-          trackElement.style.transition = `transform 400ms ease-out ${i * 30}ms, opacity 400ms ease-out ${i * 30}ms`
-
-          const albumArt = track.albumArt || '/images/album.webp'
-          const isLovedSongs = containerId === 'loved-songs-container'
-
-          trackElement.innerHTML = `
-          <img 
-            src="${albumArt}" 
-            alt="Album artwork for ${track.name} by ${track.artist.name}" 
-            width="${isLovedSongs ? '64' : '48'}" 
-            height="${isLovedSongs ? '64' : '48'}" 
-            class="${isLovedSongs ? 'size-16' : 'size-12'} ${isLovedSongs ? '' : 'flex-shrink-0'} rounded-lg border border-theme-500 object-cover shadow-md"
-            loading="lazy"
-          />
-          <div class="min-w-0 flex-1">
-            <h4 class="line-clamp-1 font-medium text-theme-200 transition-all duration-200 group-hover:text-theme-100">
-              ${track.name}
-            </h4>
-            <p class="line-clamp-1 text-sm text-theme-300 transition-all duration-200 group-hover:text-theme-200">
-              ${track.artist.name} • ${Number(track.playcount).toLocaleString()} plays
-            </p>
-          </div>
-        `
-
-          container.appendChild(trackElement)
-
-          // Trigger entrance animation in the next frame
-          requestAnimationFrame(() => {
-            setTimeout(() => {
-              trackElement.style.opacity = '1'
-              trackElement.style.transform = 'translateY(0)'
-            }, 10)
-          })
-        })
-      },
-      existingItems.length > 0 ? 300 : 0,
-    )
   }
 
   // Helper function to update albums list
@@ -683,83 +707,52 @@ const bandcampAlbums = await getCollection('music')
     const container = document.getElementById(containerId)
     if (!container) return
 
-    // Apply exit animation to current items
-    const existingItems = container.querySelectorAll('a')
-    existingItems.forEach((item, i) => {
-      const col = i % 4
-      const delay = col * 50
-      item.style.transition = `transform 300ms ease-out ${delay}ms, opacity 300ms ease-out ${delay}ms`
-      item.style.transform = 'scale(0.95)'
-      item.style.opacity = '0'
-    })
+    // Clear existing content
+    container.innerHTML = ''
 
-    // Wait for animation to complete before updating content
-    setTimeout(
-      () => {
-        // Clear existing content
-        container.innerHTML = ''
+    // Add new albums
+    albums.forEach((album, index) => {
+      const albumElement = document.createElement('a')
+      albumElement.href = album.url
+      albumElement.className =
+        'group relative aspect-square overflow-hidden rounded-xl bg-base-300 shadow-md border-2 border-theme-500 transition-all duration-200 hover:border-theme-accent/75 hover:shadow-lg'
+      albumElement.target = '_blank'
+      albumElement.rel = 'noopener'
+      albumElement.dataset.index = index
 
-        // Add new albums
-        albums.forEach((album, index) => {
-          const albumElement = document.createElement('a')
-          albumElement.href = album.url
-          albumElement.className =
-            'group relative aspect-square overflow-hidden rounded-xl bg-base-300 shadow-md border-2 border-theme-700 transition-all duration-200 hover:border-theme-accent/75 hover:shadow-lg'
-          albumElement.target = '_blank'
-          albumElement.rel = 'noopener'
-          albumElement.dataset.index = index
+      const albumArt =
+        album.image[3]['#text'] ||
+        album.image[2]['#text'] ||
+        '/images/album.webp'
 
-          // Set initial state for entrance animation
-          const col = index % 4
-          const delay = col * 50
-          albumElement.style.opacity = '0'
-          albumElement.style.transform = 'scale(0.95)'
-          albumElement.style.transition = `transform 400ms ease-out ${delay}ms, opacity 400ms ease-out ${delay}ms`
-
-          const albumArt =
-            album.image[3]['#text'] ||
-            album.image[2]['#text'] ||
-            '/images/album.webp'
-
-          albumElement.innerHTML = `
-          <img 
-            src="${albumArt}" 
-            alt="Album art for ${album.name} by ${album.artist.name}" 
-            width="300" 
-            height="300" 
-            class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-            loading="eager"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-theme-800/70 via-theme-800/30 to-transparent transition-all duration-200" role="presentation">
-            <div class="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-theme-800/70 via-theme-800/30 to-transparent p-3 transition-all duration-200">
-              <div class="space-y-0">
-                <span class="inline-flex items-center gap-x-1 text-xs font-bold opacity-0 transition-all duration-200 group-hover:text-theme-accent group-hover:opacity-100">
-                  ${Number(album.playcount).toLocaleString()} plays
-                </span>
-                <h4 class="line-clamp-2 text-lg font-semibold text-theme-100 sm:text-sm">
-                  ${album.name}
-                </h4>
-                <p class="line-clamp-1 text-xs text-theme-200">
-                  ${album.artist.name}
-                </p>
-              </div>
+      albumElement.innerHTML = `
+        <img 
+          src="${albumArt}" 
+          alt="Album art for ${album.name} by ${album.artist.name}" 
+          width="300" 
+          height="300" 
+          class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          loading="eager"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-theme-800/70 via-theme-800/30 to-transparent transition-all duration-200" role="presentation">
+          <div class="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-theme-800/70 via-theme-800/30 to-transparent p-3 transition-all duration-200">
+            <div class="space-y-0">
+              <span class="inline-flex items-center gap-x-1 text-xs font-bold opacity-0 transition-all duration-200 group-hover:text-theme-accent group-hover:opacity-100">
+                ${Number(album.playcount).toLocaleString()} plays
+              </span>
+              <h4 class="line-clamp-2 text-lg font-semibold text-theme-100 sm:text-sm">
+                ${album.name}
+              </h4>
+              <p class="line-clamp-1 text-xs text-theme-200">
+                ${album.artist.name}
+              </p>
             </div>
           </div>
-        `
+        </div>
+      `
 
-          container.appendChild(albumElement)
-
-          // Trigger entrance animation in the next frame
-          requestAnimationFrame(() => {
-            setTimeout(() => {
-              albumElement.style.opacity = '1'
-              albumElement.style.transform = 'scale(1)'
-            }, 10)
-          })
-        })
-      },
-      existingItems.length > 0 ? 350 : 0,
-    )
+      container.appendChild(albumElement)
+    })
   }
 
   // Helper function to update artists list
@@ -767,71 +760,44 @@ const bandcampAlbums = await getCollection('music')
     const container = document.getElementById(containerId)
     if (!container) return
 
-    // Apply exit animation to current items
-    const existingItems = container.querySelectorAll('a')
-    existingItems.forEach((item, i) => {
-      item.style.transition = `transform 300ms ease-out ${i * 30}ms, opacity 300ms ease-out ${i * 30}ms`
-      item.style.transform = 'translateX(-10px)'
-      item.style.opacity = '0'
+    // Clear existing content
+    container.innerHTML = ''
+
+    // Add new artists
+    artists.forEach((artist) => {
+      const artistElement = document.createElement('a')
+      artistElement.href = artist.url
+      artistElement.className =
+        'group flex h-auto w-full items-center gap-4 rounded-lg border border-theme-500 bg-theme-800 p-3 shadow-md transition-all duration-200 hover:border hover:border-theme-accent/75 hover:bg-theme-700 hover:text-theme-200 hover:shadow-lg'
+      artistElement.target = '_blank'
+      artistElement.rel = 'noopener'
+
+      const artistImage =
+        artist.image[3]['#text'] ||
+        artist.image[2]['#text'] ||
+        '/images/album.webp'
+
+      artistElement.innerHTML = `
+        <img 
+          src="${artistImage}" 
+          alt="${artist.name}" 
+          width="48" 
+          height="48" 
+          class="size-12 flex-shrink-0 rounded-lg object-cover"
+          loading="lazy"
+        />
+        <div class="min-w-0 flex-1">
+          <h4 class="line-clamp-1 font-semibold text-theme-200 transition-all duration-200 group-hover:text-theme-100">
+            ${artist.name}
+          </h4>
+          <p class="line-clamp-1 text-sm font-normal text-theme-300 transition-all duration-200 group-hover:text-theme-300">
+            ${Number(artist.playcount).toLocaleString()} plays
+          </p>
+        </div>
+      `
+
+      container.appendChild(artistElement)
     })
-
-    // Wait for animation to complete before updating content
-    setTimeout(
-      () => {
-        // Clear existing content
-        container.innerHTML = ''
-
-        // Add new artists
-        artists.forEach((artist, i) => {
-          const artistElement = document.createElement('a')
-          artistElement.href = artist.url
-          artistElement.className =
-            'group flex h-auto w-full items-center gap-4 rounded-lg border border-theme-500 bg-theme-800 p-3 shadow-md transition-all duration-200 hover:border hover:border-theme-accent/75 hover:bg-theme-700 hover:text-theme-200 hover:shadow-lg'
-          artistElement.target = '_blank'
-          artistElement.rel = 'noopener'
-
-          // Set initial state for entrance animation
-          artistElement.style.opacity = '0'
-          artistElement.style.transform = 'translateX(10px)'
-          artistElement.style.transition = `transform 400ms ease-out ${i * 30}ms, opacity 400ms ease-out ${i * 30}ms`
-
-          const artistImage =
-            artist.image[3]['#text'] ||
-            artist.image[2]['#text'] ||
-            '/images/album.webp'
-
-          artistElement.innerHTML = `
-          <img 
-            src="${artistImage}" 
-            alt="${artist.name}" 
-            width="48" 
-            height="48" 
-            class="size-12 flex-shrink-0 rounded-lg object-cover"
-            loading="lazy"
-          />
-          <div class="min-w-0 flex-1">
-            <h4 class="line-clamp-1 font-semibold text-theme-200 transition-all duration-200 group-hover:text-theme-100">
-              ${artist.name}
-            </h4>
-            <p class="line-clamp-1 text-sm font-normal text-theme-300 transition-all duration-200 group-hover:text-theme-300">
-              ${Number(artist.playcount).toLocaleString()} plays
-            </p>
-          </div>
-        `
-
-          container.appendChild(artistElement)
-
-          // Trigger entrance animation in the next frame
-          requestAnimationFrame(() => {
-            setTimeout(() => {
-              artistElement.style.opacity = '1'
-              artistElement.style.transform = 'translateX(0)'
-            }, 10)
-          })
-        })
-      },
-      existingItems.length > 0 ? 300 : 0,
-    )
   }
 
   // Add event listeners to period selectors

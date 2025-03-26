@@ -14,7 +14,9 @@ const { period, periodMap, class: className = '', section } = Astro.props
     tabindex='0'
     role='button'
     class='group flex cursor-pointer items-center gap-1.5 rounded-md px-2 py-1 text-sm text-theme-300 transition-all duration-200 hover:bg-theme-700/50 hover:text-theme-accent'>
-    <span class='font-normal'>{periodMap[period]}</span>
+    <span class='font-normal transition-all duration-200'
+      >{periodMap[period]}</span
+    >
     <svg
       xmlns='http://www.w3.org/2000/svg'
       viewBox='0 0 24 24'
@@ -23,21 +25,21 @@ const { period, periodMap, class: className = '', section } = Astro.props
       stroke-width='2'
       stroke-linecap='round'
       stroke-linejoin='round'
-      class='size-3.5 opacity-70 transition-transform duration-200 ease-in-out group-hover:opacity-100'
+      class='size-3.5 opacity-70 transition-transform duration-300 ease-in-out group-hover:opacity-100 group-focus:rotate-180'
       ><polyline points='6 9 12 15 18 9'></polyline></svg
     >
   </div>
   <ul
     tabindex='0'
-    class='dropdown-content z-10 w-44 rounded-lg border border-theme-500 bg-theme-800 p-2 shadow-lg'>
+    class='dropdown-content z-10 w-44 origin-top-right scale-95 transform rounded-lg border border-theme-500 bg-theme-800 p-2 opacity-0 shadow-lg transition-all duration-200 ease-out data-[dropdown-open=true]:scale-100 data-[dropdown-open=true]:opacity-100'>
     {
       Object.entries(periodMap).map(([key, label]) => (
-        <li class='mb-1 last:mb-0'>
+        <li class='mb-1 transform opacity-90 transition-all duration-200 last:mb-0 hover:opacity-100'>
           <a
             href={`#${section}`}
             data-period={key}
             data-section={section}
-            class={`block rounded-md px-3 py-2 text-sm transition-colors duration-200 ${period === key ? 'bg-theme-accent font-medium text-theme-900' : 'text-theme-200 hover:bg-theme-700 hover:text-theme-100'}`}>
+            class={`block rounded-md px-3 py-2 text-sm transition-all duration-200 ${period === key ? 'bg-theme-accent font-medium text-theme-900' : 'text-theme-200 hover:translate-x-0.5 hover:bg-theme-700 hover:text-theme-100'}`}>
             {label}
           </a>
         </li>
@@ -45,3 +47,64 @@ const { period, periodMap, class: className = '', section } = Astro.props
     }
   </ul>
 </div>
+
+<!-- Script to handle dropdown animation -->
+<script>
+  // Find all dropdowns
+  const dropdowns = document.querySelectorAll('.dropdown')
+
+  // Add event listeners to each dropdown
+  dropdowns.forEach((dropdown) => {
+    const trigger = dropdown.querySelector('[role="button"]')
+    const content = dropdown.querySelector('.dropdown-content')
+
+    if (trigger && content) {
+      // Open dropdown
+      trigger.addEventListener('click', () => {
+        content.setAttribute('data-dropdown-open', 'true')
+
+        // Staggered animation for list items
+        const items = content.querySelectorAll('li')
+        items.forEach((item, index) => {
+          item.style.transitionDelay = `${index * 30}ms`
+          item.style.transform = 'translateY(0)'
+          item.style.opacity = '1'
+        })
+      })
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!dropdown.contains(e.target as Node)) {
+          content.removeAttribute('data-dropdown-open')
+
+          // Reset item animations
+          const items = content.querySelectorAll('li')
+          items.forEach((item) => {
+            item.style.transitionDelay = '0ms'
+          })
+        }
+      })
+
+      // Close dropdown when an option is selected
+      const options = content.querySelectorAll('a')
+      options.forEach((option) => {
+        option.addEventListener('click', () => {
+          content.removeAttribute('data-dropdown-open')
+
+          // Reset item animations
+          const items = content.querySelectorAll('li')
+          items.forEach((item) => {
+            item.style.transitionDelay = '0ms'
+          })
+        })
+      })
+
+      // Set initial state for list items
+      const items = content.querySelectorAll('li')
+      items.forEach((item, _index) => {
+        item.style.transform = 'translateY(8px)'
+        item.style.opacity = '0'
+      })
+    }
+  })
+</script>

@@ -143,7 +143,7 @@ const headingId =
                     {anchorLink && (
                       <a
                         href={`#${headingId}`}
-                        class='copy-link absolute -right-6 top-1/2 -translate-y-1/2 opacity-0 transition-opacity hover:opacity-100 group-hover:opacity-70'
+                        class='copy-link absolute -right-5 top-1/2 -translate-y-1/2 opacity-0 transition-opacity hover:opacity-100 group-hover:opacity-70'
                         aria-label={`Link to ${title} section`}
                         data-heading-id={headingId}
                         data-heading-title={title}>
@@ -168,7 +168,7 @@ const headingId =
                 {(() => {
                   const Heading = headingLevel
                   return (
-                    <div class='group relative'>
+                    <div class='group flex items-center gap-2'>
                       <Heading
                         id={headingId}
                         class:list={[
@@ -182,7 +182,7 @@ const headingId =
                       {anchorLink && (
                         <a
                           href={`#${headingId}`}
-                          class='copy-link absolute -right-6 top-1/2 -translate-y-1/2 opacity-0 transition-opacity hover:opacity-100 group-hover:opacity-70'
+                          class='copy-link absolute -right-5 top-1/2 -translate-y-1/2 opacity-0 transition-opacity hover:opacity-100 group-hover:opacity-70'
                           aria-label={`Link to ${title} section`}
                           data-heading-id={headingId}
                           data-heading-title={title}>
@@ -323,17 +323,33 @@ const headingId =
     display: inline-flex;
     align-items: center;
     z-index: 10;
-    margin-left: 0.5rem;
   }
 
-  /* Style for copy link icon */
+  /* Special alignment for h1 headings */
+  :global(h1 + .copy-link) {
+    margin-top: -0.3em; /* Further increase negative margin to move link higher */
+  }
+
+  /* Special alignment for h1 headings is no longer needed with absolute positioning */
+
+  /* Make heading itself trigger the link hover */
+  :global(h1:hover + .copy-link),
+  :global(h2:hover + .copy-link),
+  :global(h3:hover + .copy-link),
+  :global(h4:hover + .copy-link),
+  :global(h5:hover + .copy-link),
+  :global(h6:hover + .copy-link) {
+    opacity: 0.7 !important;
+  }
+
+  /* Ensure the anchor link button aligns perfectly with text */
   :global(.copy-link) {
     display: inline-flex;
     align-items: center;
     z-index: 10;
   }
 
-  /* Make the copy link visible when hovering the heading's container */
+  /* Make heading itself trigger the link hover - absolute positioning version */
   :global(.group:hover .copy-link) {
     opacity: 0.7 !important;
   }
@@ -407,5 +423,20 @@ const headingId =
     })
   })
 
-  // No need for manual positioning adjustments now that we use consistent absolute positioning
+  // Adjust position for h1 headings
+  copyLinks.forEach((link) => {
+    const prevElement = link.previousElementSibling
+    if (prevElement && prevElement.tagName === 'H1') {
+      ;(link as HTMLElement).style.position = 'relative'
+      ;(link as HTMLElement).style.top = '-3px' // Further increased to move higher
+
+      // Extra adjustment for "Hello, I'm Chip" heading specifically
+      const headingTitle = link.getAttribute('data-heading-title') || ''
+      if (headingTitle.includes('Chip')) {
+        ;(link as HTMLElement).style.top = '-4px' // Special case adjustment
+      }
+    }
+  })
+
+  /* No longer needed with CSS-based absolute positioning */
 </script>

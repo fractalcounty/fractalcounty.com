@@ -37,6 +37,8 @@ interface LastFmResponse {
   topalbums: { album: LastFmAlbum[] }
   toptracks: { track: LastFmTrack[] }
   user: LastFmUserInfo
+  error?: number
+  message?: string
 }
 
 export interface LastFmData {
@@ -53,6 +55,8 @@ interface LastFmTrackInfoResponse {
       image?: LastFmImage[]
     }
   }
+  error?: number
+  message?: string
 }
 
 // add this interface
@@ -60,6 +64,8 @@ interface LastFmTopTracksResponse {
   toptracks?: {
     track?: LastFmTrack[] | null
   } | null
+  error?: number
+  message?: string
 }
 
 // add this interface
@@ -69,6 +75,48 @@ interface LastFmUserInfo {
     unixtime: number
   }
   // ... other fields
+}
+
+// Map of LastFM error codes to messages
+const LASTFM_ERRORS = {
+  2: 'Invalid service - This service does not exist',
+  3: 'Invalid Method - No method with that name in this package',
+  4: 'Authentication Failed - You do not have permissions to access the service',
+  5: 'Invalid format - This service doesn\'t exist in that format',
+  6: 'Invalid parameters - Your request is missing a required parameter',
+  7: 'Invalid resource specified',
+  8: 'Operation failed - Something else went wrong',
+  9: 'Invalid session key - Please re-authenticate',
+  10: 'Invalid API key - You must be granted a valid key by last.fm',
+  11: 'Service Offline - This service is temporarily offline. Try again later.',
+  13: 'Invalid method signature supplied',
+  16: 'There was a temporary error processing your request. Please try again',
+  26: 'Suspended API key - Access for your account has been suspended',
+  29: 'Rate limit exceeded - Your IP has made too many requests in a short period',
+}
+
+// Helper to check and handle LastFM API errors
+async function handleLastFmResponse<T>(response: Response, endpoint: string): Promise<T> {
+  if (!response.ok) {
+    const statusError = `LastFM API HTTP error: ${response.status} ${response.statusText} for ${endpoint}`
+    console.error(statusError)
+    throw new Error(statusError)
+  }
+  
+  const data = await response.json() as (T & { error?: number; message?: string })
+  
+  if (data.error !== undefined) {
+    const errorCode = data.error
+    const errorMessage = data.message !== undefined && data.message !== '' 
+      ? data.message 
+      : (errorCode in LASTFM_ERRORS ? LASTFM_ERRORS[errorCode as keyof typeof LASTFM_ERRORS] : 'Unknown LastFM error')
+    const formattedError = `LastFM API error ${errorCode}: ${errorMessage} for ${endpoint}`
+    
+    console.error(formattedError)
+    throw new Error(formattedError)
+  }
+  
+  return data as T
 }
 
 // fetch last.fm data with spotify enhancements
@@ -84,35 +132,41 @@ export async function fetchLastFmData(
   topTracks: LastFmTrack[]
 }> {
   try {
+    // Create API endpoint URLs
+    const topArtistsUrl = `https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=${username}&api_key=${apiKey}&period=${period}&limit=6&format=json&extended=1`
+    const topAlbumsUrl = `https://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=${username}&api_key=${apiKey}&period=${period}&limit=20&format=json`
+    const userInfoUrl = `https://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=${username}&api_key=${apiKey}&format=json`
+    const topTracksUrl = `https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${username}&api_key=${apiKey}&period=${period}&limit=12&extended=1&format=json`
+    
     const [topArtists, topAlbums, userInfo, topTracks] = await Promise.all([
-      // get top artists - increasing from 5 to 6
-      fetch(
-        `https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=${username}&api_key=${apiKey}&period=${period}&limit=6&format=json&extended=1`,
-      ).then(async (res) => res.json() as Promise<LastFmResponse>),
-      // get top albums - increasing from 5 to 8 to fill grid
-      fetch(
-        `https://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=${username}&api_key=${apiKey}&period=${period}&limit=12&format=json`,
-      ).then(async (res) => res.json() as Promise<LastFmResponse>),
+      // get top artists
+      (async () => fetch(topArtistsUrl).then(async res => handleLastFmResponse<LastFmResponse>(res, 'user.gettopartists')))(),
+      // get top albums
+      (async () => fetch(topAlbumsUrl).then(async res => handleLastFmResponse<LastFmResponse>(res, 'user.gettopalbums')))(),
       // get user info
-      fetch(
-        `https://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=${username}&api_key=${apiKey}&format=json`,
-      ).then(async (res) => res.json() as Promise<LastFmResponse>),
+      (async () => fetch(userInfoUrl).then(async res => handleLastFmResponse<LastFmResponse>(res, 'user.getinfo')))(),
       // get top tracks
-      fetch(
-        `https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${username}&api_key=${apiKey}&period=${period}&limit=12&extended=1&format=json`,
-      ).then(async (res) => res.json() as Promise<LastFmResponse>),
+      (async () => fetch(topTracksUrl).then(async res => handleLastFmResponse<LastFmResponse>(res, 'user.gettoptracks')))(),
     ])
 
     // fetch additional track info to get album art
     const tracksWithAlbumArt = await Promise.all(
       topTracks.toptracks.track.map(async (track: LastFmTrack) => {
-        const trackInfo = await fetch(
-          `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&user=${username}&api_key=${apiKey}&artist=${encodeURIComponent(track.artist.name)}&track=${encodeURIComponent(track.name)}&format=json`,
-        ).then(async (res) => res.json() as Promise<LastFmTrackInfoResponse>)
+        try {
+          const trackInfoUrl = `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&user=${username}&api_key=${apiKey}&artist=${encodeURIComponent(track.artist.name)}&track=${encodeURIComponent(track.name)}&format=json`
+          const trackInfo = await fetch(trackInfoUrl)
+            .then(async res => handleLastFmResponse<LastFmTrackInfoResponse>(res, 'track.getInfo'))
 
-        return {
-          ...track,
-          albumArt: trackInfo?.track?.album?.image?.[3]?.['#text'] ?? null,
+          return {
+            ...track,
+            albumArt: trackInfo?.track?.album?.image?.[3]?.['#text'] ?? null,
+          }
+        } catch (error) {
+          console.warn(`Error fetching track info for ${track.name} by ${track.artist.name}:`, error)
+          return {
+            ...track,
+            albumArt: null,
+          }
         }
       }),
     )
@@ -131,29 +185,40 @@ export async function fetchLastFmData(
           return acc
         }, [])
         .map(async (track: LastFmTrack) => {
-          const spotifyInfo = await getSpotifyTrackInfo(
-            track.name,
-            track.artist.name,
-            spotifyToken,
-          )
-          return {
-            ...track,
-            albumArt: (() => {
-              if (
-                typeof spotifyInfo?.albumArt === 'string' &&
-                spotifyInfo.albumArt.length > 0
-              ) {
-                return spotifyInfo.albumArt
-              }
-              if (
-                typeof track?.albumArt === 'string' &&
-                track.albumArt.length > 0
-              ) {
-                return track.albumArt
-              }
-              return 'images/album.webp'
-            })(),
-            previewUrl: spotifyInfo?.previewUrl ?? null,
+          try {
+            const spotifyInfo = await getSpotifyTrackInfo(
+              track.name,
+              track.artist.name,
+              spotifyToken,
+            )
+            return {
+              ...track,
+              albumArt: (() => {
+                if (
+                  typeof spotifyInfo?.albumArt === 'string' &&
+                  spotifyInfo.albumArt.length > 0
+                ) {
+                  return spotifyInfo.albumArt
+                }
+                if (
+                  typeof track?.albumArt === 'string' &&
+                  track.albumArt.length > 0
+                ) {
+                  return track.albumArt
+                }
+                return 'images/album.webp'
+              })(),
+              previewUrl: spotifyInfo?.previewUrl ?? null,
+            }
+          } catch (error) {
+            console.warn(`Error enhancing track with Spotify data for ${track.name}:`, error)
+            return {
+              ...track,
+              albumArt: typeof track?.albumArt === 'string' && track.albumArt.length > 0 
+                ? track.albumArt 
+                : 'images/album.webp',
+              previewUrl: null,
+            }
           }
         }),
     )
@@ -161,21 +226,26 @@ export async function fetchLastFmData(
     // enhance artists with spotify images
     const enhancedArtists = await Promise.all(
       topArtists.topartists.artist.map(async (artist: LastFmArtist) => {
-        const spotifyImage = await getSpotifyArtistImage(
-          artist.name,
-          spotifyToken,
-        )
-        return {
-          ...artist,
-          image: artist.image.map((img: LastFmImage, i: number) => ({
-            ...img,
-            '#text':
-              i === 3 ?
-                spotifyImage !== null ?
-                  spotifyImage
-                : img['#text']
-              : img['#text'],
-          })),
+        try {
+          const spotifyImage = await getSpotifyArtistImage(
+            artist.name,
+            spotifyToken,
+          )
+          return {
+            ...artist,
+            image: artist.image.map((img: LastFmImage, i: number) => ({
+              ...img,
+              '#text':
+                i === 3 ?
+                  spotifyImage !== null ?
+                    spotifyImage
+                  : img['#text']
+                : img['#text'],
+            })),
+          }
+        } catch (error) {
+          console.warn(`Error fetching Spotify artist image for ${artist.name}:`, error)
+          return artist
         }
       }),
     )
@@ -183,22 +253,27 @@ export async function fetchLastFmData(
     // enhance albums with spotify images
     const enhancedAlbums = await Promise.all(
       topAlbums.topalbums.album.map(async (album: LastFmAlbum) => {
-        const spotifyAlbumArt = await getSpotifyAlbumInfo(
-          album.name,
-          album.artist.name,
-          spotifyToken,
-        )
-        return {
-          ...album,
-          image: album.image.map((img: LastFmImage, i: number) => ({
-            ...img,
-            '#text':
-              i === 3 ?
-                spotifyAlbumArt !== null ?
-                  spotifyAlbumArt
-                : img['#text']
-              : img['#text'],
-          })),
+        try {
+          const spotifyAlbumArt = await getSpotifyAlbumInfo(
+            album.name,
+            album.artist.name,
+            spotifyToken,
+          )
+          return {
+            ...album,
+            image: album.image.map((img: LastFmImage, i: number) => ({
+              ...img,
+              '#text':
+                i === 3 ?
+                  spotifyAlbumArt !== null ?
+                    spotifyAlbumArt
+                  : img['#text']
+                : img['#text'],
+            })),
+          }
+        } catch (error) {
+          console.warn(`Error fetching Spotify album art for ${album.name}:`, error)
+          return album
         }
       }),
     )
@@ -210,7 +285,7 @@ export async function fetchLastFmData(
       topTracks: uniqueArtistTracks,
     }
   } catch (error) {
-    console.error('Error fetching data:', error)
+    console.error('Error fetching LastFM data:', error)
     return {
       artists: [],
       albums: [],
@@ -232,17 +307,30 @@ export async function fetchTopTracks(
 ): Promise<LastFmTrack[]> {
   try {
     // increase limit to ensure we have enough tracks after filtering
-    const response = await fetch(
-      `https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${username}&api_key=${apiKey}&period=1month&limit=20&format=json&extended=1`,
-    )
+    const topTracksUrl = `https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${username}&api_key=${apiKey}&period=1month&limit=20&format=json&extended=1`
+    const response = await fetch(topTracksUrl)
+    
+    // Check for HTTP errors
+    if (!response.ok) {
+      throw new Error(`LastFM API HTTP error: ${response.status} ${response.statusText}`)
+    }
 
     // handle potential json parse error
     let data: LastFmTopTracksResponse
     try {
-      data = (await response.json()) as LastFmTopTracksResponse
+      data = await response.json() as LastFmTopTracksResponse
     } catch (e) {
       console.error('Failed to parse LastFM response:', e)
       return []
+    }
+
+    // Check for LastFM API errors
+    if (data.error !== undefined) {
+      const errorCode = data.error
+      const errorMessage = data.message !== undefined && data.message !== '' 
+        ? data.message 
+        : (errorCode in LASTFM_ERRORS ? LASTFM_ERRORS[errorCode as keyof typeof LASTFM_ERRORS] : 'Unknown LastFM error')
+      throw new Error(`LastFM API error ${errorCode}: ${errorMessage}`)
     }
 
     // validate response shape
@@ -288,7 +376,7 @@ export async function fetchTopTracks(
             })),
           }
         } catch (error) {
-          console.error(`Error fetching Spotify data for ${track.name}:`, error)
+          console.warn(`Error fetching Spotify data for ${track.name}:`, error)
           return track
         }
       }),
@@ -325,13 +413,27 @@ export async function fetchMultiPeriodLastFmData(
     // Fetch data for each period in parallel
     await Promise.all(
       periods.map(async (period) => {
-        const periodData = await fetchLastFmData(
-          username,
-          apiKey,
-          spotifyToken,
-          period,
-        )
-        multiPeriodData[period] = periodData
+        try {
+          const periodData = await fetchLastFmData(
+            username,
+            apiKey,
+            spotifyToken,
+            period,
+          )
+          multiPeriodData[period] = periodData
+        } catch (error) {
+          console.error(`Error fetching LastFM data for period ${period}:`, error)
+          // Add empty data for this period so the site doesn't crash
+          multiPeriodData[period] = {
+            artists: [],
+            albums: [],
+            userInfo: {
+              playcount: '0',
+              registered: { unixtime: 0 },
+            },
+            topTracks: [],
+          }
+        }
       }),
     )
 
