@@ -19,7 +19,3 @@ node_modules/
 .LSOverride
 .temp
 .tmp
-
-# user-specific files
-**/.cursorignore
-**/.cursorrules
