@@ -1,6 +1,6 @@
 ---
 import Image from '@/components/content/ContentImage.astro'
-import Heading from '@/components/Heading.astro'
+import ContentHeading from '@/components/ContentHeading.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
 import { getCollection, render } from 'astro:content'
 
@@ -28,28 +28,36 @@ const { Content } = await render(post)
   tags={post.data.tags}
   isContentPage={true}>
   <section>
-    <Heading
+    <ContentHeading
       title={post.data.title}
+      subtitle={post.data.subtitle || post.data.description}
       publishDate={post.data.publishDate}
       updatedDate={post.data.updatedDate}
-      backUrl='/art'
-      backLabel='Back'
-      isPost={true}
       links={post.data.links}
+      collection='art'
     />
 
     <article id='main-content'>
-      <Image
-        src={post.data.images}
-        title={post.data.title}
-        collection='art'
-        type={post.data.type}
-        style={post.data.thumbnailStyle ?? true}
-        alt={post.data.thumbnailCaption}
-        captionType={post.data.thumbnailCaptionType ?? 'original'}
-        class=''
-        loading='eager'
-      />
+      <div class='mb-10 mt-4'>
+        <Image
+          src={post.data.images}
+          title={post.data.title}
+          collection='art'
+          type={post.data.type}
+          style={post.data.thumbnailStyle ?? true}
+          alt={post.data.thumbnailCaption}
+          captionType={post.data.thumbnailCaptionType ?? 'original'}
+          loading='eager'
+        />
+        {
+          post.data.thumbnailCaption &&
+            post.data.thumbnailCaptionType !== 'hidden' && (
+              <p class='mt-3 text-center text-sm italic text-theme-400'>
+                {post.data.thumbnailCaption}
+              </p>
+            )
+        }
+      </div>
       <Content />
     </article>
   </section>

@@ -6,6 +6,7 @@ const basePostSchema = ({ image }: SchemaContext) =>
   z.object({
     title: z.string(),
     description: z.string(),
+    subtitle: z.string().optional(),
     publishDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     draft: z.boolean().optional(),

@@ -66,30 +66,35 @@ const headingId =
     (() => {
       const metadataContent =
         isPost && publishDate ?
-          <div class='flex items-center gap-1.5 text-sm text-theme-300'>
-            <Date date={publishDate} />
+          <div class='flex flex-wrap items-center gap-2 text-sm text-theme-300'>
+            <span class='inline-flex items-center whitespace-nowrap'>
+              <Date date={publishDate} />
+            </span>
 
             {updatedDate && (
-              <>
-                <span aria-hidden='true'>&bull; last edited</span>
-                <Date date={updatedDate} format='relative' />
-              </>
+              <span class='inline-flex items-center whitespace-nowrap'>
+                <span aria-hidden='true'>&bull;</span>
+                <span class='ml-1.5'>edited</span>
+                <span class='ml-1.5'>
+                  <Date date={updatedDate} format='relative' />
+                </span>
+              </span>
             )}
 
             {readingTime && (
-              <>
+              <span class='inline-flex items-center whitespace-nowrap'>
                 <span aria-hidden='true'>&bull;</span>
-                <span>{readingTime}</span>
-              </>
+                <span class='ml-1.5'>{readingTime}</span>
+              </span>
             )}
 
             {pages && (
-              <>
+              <span class='inline-flex items-center whitespace-nowrap'>
                 <span aria-hidden='true'>&bull;</span>
-                <span>
+                <span class='ml-1.5'>
                   {pages} {pages === 1 ? 'page' : 'pages'}
                 </span>
-              </>
+              </span>
             )}
           </div>
         : metadata.length > 0 ?

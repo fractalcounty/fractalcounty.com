@@ -73,9 +73,9 @@ const formatTwitterDate = (date: Date | string | undefined) => {
       />
     </div>
 
-    <div class='flex-grow'>
+    <div class='flex-grow overflow-hidden'>
       <div class='flex items-center justify-between'>
-        <div class='info'>
+        <div class='info overflow-hidden'>
           <span class='username font-semibold text-theme-200'>{name}</span>
           <span
             class='handle font-normal text-theme-400'
@@ -84,10 +84,12 @@ const formatTwitterDate = (date: Date | string | undefined) => {
           {
             date && (
               <>
-                <span class='date-separator text-theme-400' aria-hidden='true'>
+                <span
+                  class='date-separator hidden text-theme-400 sm:inline-block'
+                  aria-hidden='true'>
                   ·
                 </span>
-                <span class='date text-theme-400'>
+                <span class='date hidden text-theme-400 sm:inline-block'>
                   {formatTwitterDate(date)}
                 </span>
               </>
@@ -96,7 +98,7 @@ const formatTwitterDate = (date: Date | string | undefined) => {
         </div>
       </div>
 
-      {text && <p class='body text-theme-200'>{text}</p>}
+      {text && <p class='body break-words text-theme-200'>{text}</p>}
 
       {
         imageUrl && (
@@ -106,7 +108,7 @@ const formatTwitterDate = (date: Date | string | undefined) => {
               alt='Tweet media'
               style={true}
               class='w-full'
-              imageClass='w-full h-auto object-cover rounded-lg'
+              imageClass='w-full -mb-4 h-auto object-cover rounded-lg'
               captionType='hidden'
               enableFullResLink={false}
             />
@@ -117,10 +119,10 @@ const formatTwitterDate = (date: Date | string | undefined) => {
       {
         quotedTweet && (
           <div
-            class='quoted-tweet mb-3 mt-3 rounded-lg border border-theme-500 bg-theme-800 pb-3 pl-3 pr-3 pt-2'
+            class='quoted-tweet mb-3 mt-3 max-w-full overflow-hidden rounded-lg border border-theme-500 bg-theme-800 pb-3 pl-3 pr-3 pt-2'
             role='article'
             aria-label={`Quoted tweet by ${quotedTweet.name}`}>
-            <div class='flex items-center gap-2'>
+            <div class='flex items-center gap-2 overflow-hidden'>
               <span class='quoted-pfp size-6 flex-shrink-0 overflow-hidden rounded-full'>
                 <ContentImage
                   src={quotedTweet.pfp}
@@ -133,7 +135,7 @@ const formatTwitterDate = (date: Date | string | undefined) => {
                 />
               </span>
 
-              <div class='info'>
+              <div class='info overflow-hidden text-ellipsis whitespace-nowrap'>
                 <span class='username font-medium text-theme-300'>
                   {quotedTweet.name}
                 </span>
@@ -146,7 +148,7 @@ const formatTwitterDate = (date: Date | string | undefined) => {
             </div>
 
             {quotedTweet.text && (
-              <p class='body text-theme-300'>{quotedTweet.text}</p>
+              <p class='body break-words text-theme-300'>{quotedTweet.text}</p>
             )}
 
             {quotedTweet.imageUrl && (
@@ -162,6 +164,16 @@ const formatTwitterDate = (date: Date | string | undefined) => {
                 />
               </div>
             )}
+          </div>
+        )
+      }
+
+      {
+        date && (
+          <div class='mb-1 mt-2 block hidden sm:hidden'>
+            <span class='date text-sm text-theme-400'>
+              {formatTwitterDate(date)}
+            </span>
           </div>
         )
       }
@@ -229,6 +241,7 @@ const formatTwitterDate = (date: Date | string | undefined) => {
     max-width: 640px !important;
     min-width: 0;
     @apply break-words;
+    @apply overflow-hidden;
   }
 
   .tweet * {
@@ -241,14 +254,21 @@ const formatTwitterDate = (date: Date | string | undefined) => {
 
   .tweet :global(p) {
     @apply !m-0;
+    @apply break-words;
+    @apply overflow-wrap-anywhere;
+    max-width: 100%;
   }
 
   .info {
     @apply flex flex-row items-center justify-center space-x-1;
+    @apply max-w-full;
   }
 
   .body {
     @apply !m-0 leading-[1.4];
+    @apply break-words;
+    @apply overflow-wrap-anywhere;
+    max-width: 100%;
   }
 
   .quoted-pfp {
@@ -310,10 +330,8 @@ const formatTwitterDate = (date: Date | string | undefined) => {
 
   .header {
     align-items: flex-start;
-  }
-
-  .tweet :global(p) {
-    @apply m-0;
+    @apply max-w-full;
+    @apply overflow-hidden;
   }
 
   .tweet-image {
@@ -334,5 +352,30 @@ const formatTwitterDate = (date: Date | string | undefined) => {
   .actions {
     min-width: 0;
     width: 100%;
+  }
+
+  .quoted-tweet {
+    @apply max-w-full;
+    @apply overflow-hidden;
+  }
+
+  /* Add custom utility for anywhere word wrapping */
+  .overflow-wrap-anywhere {
+    overflow-wrap: anywhere;
+    word-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+  }
+
+  /* Adjust padding for smaller screens */
+  @media (max-width: 640px) {
+    .tweet {
+      @apply px-3 py-4;
+      width: 98% !important;
+    }
+
+    .quoted-tweet {
+      @apply px-2 py-2;
+    }
   }
 </style>

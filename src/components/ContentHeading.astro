@@ -1,0 +1,170 @@
+---
+import Date from '@/components/Date.astro'
+import Link from '@/components/Link.astro'
+
+interface Props {
+  title: string
+  subtitle?: string
+  publishDate?: Date
+  updatedDate?: Date
+  readingTime?: string
+  pages?: number
+  links?: Array<{ label: string; url: string }>
+  class?: string
+  id?: string
+  collection?: 'blog' | 'art' | 'music'
+}
+
+const {
+  title,
+  subtitle,
+  publishDate,
+  updatedDate,
+  readingTime,
+  pages,
+  links = [],
+  class: className,
+  id,
+  collection,
+} = Astro.props
+
+// Generate URL-friendly ID from title if not provided
+const headingId =
+  id ||
+  title
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+
+// For blog posts, force uppercase title
+const formattedTitle = collection === 'blog' ? title.toUpperCase() : title
+---
+
+<header class:list={['mb-12 space-y-2', className]} id={headingId}>
+  <!-- Title -->
+  <h1
+    class='font-brand text-4xl font-bold leading-tight text-theme-100 md:text-4xl'>
+    {formattedTitle}
+  </h1>
+
+  <!-- Subtitle (if provided) -->
+  {
+    subtitle && (
+      <p class='pb-2 text-xl font-normal leading-relaxed text-theme-200 md:text-2xl'>
+        {subtitle}
+      </p>
+    )
+  }
+
+  <!-- All metadata in a single row -->
+  {
+    (publishDate || links.length > 0) && (
+      <div class='metadata-container text-theme-300'>
+        {/* Primary metadata (dates and reading info) */}
+        <div class='metadata-group primary-metadata'>
+          {publishDate && (
+            <span class='metadata-item'>
+              <Date date={publishDate} />
+            </span>
+          )}
+
+          {updatedDate && (
+            <span class='metadata-item'>
+              <span>updated</span>
+              <Date date={updatedDate} format='relative' />
+            </span>
+          )}
+
+          {readingTime && (
+            <span class='metadata-item'>
+              <span>{readingTime}</span>
+            </span>
+          )}
+
+          {pages && (
+            <span class='metadata-item'>
+              <span>
+                {pages} {pages === 1 ? 'page' : 'pages'}
+              </span>
+            </span>
+          )}
+        </div>
+
+        {/* Links group */}
+        {links.length > 0 && (
+          <div class='metadata-group links-metadata'>
+            {links.map((link) => (
+              <span class='metadata-item'>
+                <Link
+                  href={link.url}
+                  underline={true}
+                  icon={true}
+                  iconSize='sm'
+                  class='text-theme-300 decoration-theme-300 hover:text-theme-accent hover:decoration-theme-accent'>
+                  {link.label}
+                </Link>
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  }
+</header>
+
+<style>
+  /* Add a scroll margin to improve focus position when navigating to hash fragments */
+  header {
+    scroll-margin-top: 2rem;
+  }
+
+  /* Container for all metadata */
+  .metadata-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  /* Metadata styling */
+  .metadata-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .metadata-item {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    gap: 0.25rem;
+  }
+
+  /* Add bullets between items using ::before */
+  .metadata-item:not(:first-child)::before {
+    content: '•';
+    margin-right: 0.25rem;
+  }
+
+  /* Mobile view: links on separate row */
+  @media (max-width: 640px) {
+    .metadata-group + .metadata-group {
+      margin-top: -0.22rem;
+    }
+  }
+
+  /* Desktop view: everything on one row with proper bullets */
+  @media (min-width: 641px) {
+    .metadata-container {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    /* Add bullet to first link when in desktop layout */
+    .links-metadata .metadata-item:first-child::before {
+      content: '•';
+      margin-right: 0.25rem;
+    }
+  }
+</style>

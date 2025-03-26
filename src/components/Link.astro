@@ -82,6 +82,7 @@ export interface Props {
   underline?: boolean
   externalInNewTab?: boolean
   icon?: boolean
+  iconSize?: 'sm' | 'md' | 'lg'
   rel?: string
   prefetch?: boolean
   itemprop?: string
@@ -97,6 +98,7 @@ const {
   externalInNewTab,
   underline = true,
   icon = false,
+  iconSize = 'md',
   prefetch = true,
   rel,
   class: className,
@@ -117,6 +119,13 @@ const shouldPrefetch =
 const finalRel = [rel, externalInNewTab ? 'noopener' : null]
   .filter(Boolean)
   .join(' ')
+
+// Map iconSize to actual pixel values
+const iconSizeMap = {
+  sm: 'size-3',
+  md: 'size-4',
+  lg: 'size-5',
+}
 ---
 
 <AstroLink
@@ -127,7 +136,7 @@ const finalRel = [rel, externalInNewTab ? 'noopener' : null]
   externalInNewTab={externalInNewTab}
   data-astro-prefetch={shouldPrefetch ? 'hover' : undefined}
   class={cn(
-    'inline-flex items-center gap-2',
+    icon ? 'inline-flex items-center gap-1.5' : 'inline',
     'transition-colors duration-300 ease-in-out',
     underline ?
       'underline decoration-theme-300 underline-offset-2 hover:decoration-theme-accent'
@@ -141,5 +150,5 @@ const finalRel = [rel, externalInNewTab ? 'noopener' : null]
   aria-label={ariaLabel}
   {...rest}>
   <slot />
-  {icon && <Icon name='lucide:external-link' class='size-4' />}
+  {icon && <Icon name='lucide:external-link' class={iconSizeMap[iconSize]} />}
 </AstroLink>
